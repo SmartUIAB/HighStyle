@@ -72,15 +72,13 @@ const CheckoutPage = () => {
   
   const setStateFromInput = (event) => {
     obj[event.target.name] = event.target.value;
-    setObj(obj);
+    setObj({ ...obj });
   };
-
-  
 
   const renderSuccess = () => {
     return (
       <div className="sr-field-success message">
-        <h1>Your test payment succeeded</h1>
+        <h1>Your payment succeeded</h1>
         <p>View PaymentIntent response:</p>
         <pre className="sr-callout">
           <code>{JSON.stringify(metadata, null, 2)}</code>
@@ -123,7 +121,7 @@ const CheckoutPage = () => {
                       <div className="field-label">First Name</div>
                       <input
                         type="text"
-                        className={`${errors.first_name ? "error_border" : ""}`}
+                        className={`form-control ${errors.first_name ? "error_border" : ""}`}
                         name="first_name"
                         {...register("first_name", { required: true })}
                       />
@@ -135,7 +133,7 @@ const CheckoutPage = () => {
                       <div className="field-label">Last Name</div>
                       <input
                         type="text"
-                        className={`${errors.last_name ? "error_border" : ""}`}
+                        className={`form-control ${errors.last_name ? "error_border" : ""}`}
                         name="last_name"
                         {...register("last_name", { required: true })}
                       />
@@ -148,17 +146,17 @@ const CheckoutPage = () => {
                       <input
                         type="text"
                         name="phone"
-                        className={`${errors.phone ? "error_border" : ""}`}
+                        className={`form-control ${errors.phone ? "error_border" : ""}`}
                         {...register("phone", { pattern: /\d+/ })}
                       />
                       <span className="error-message">
-                        {errors.phone && "Please enter number for phone."}
+                        {errors.phone && "Please enter a valid phone number"}
                       </span>
                     </div>
                     <div className="form-group col-md-6 col-sm-6 col-xs-12">
                       <div className="field-label">Email Address</div>
                       <input
-                        className={`${errors.email ? "error_border" : ""}`}
+                        className={`form-control ${errors.email ? "error_border" : ""}`}
                         type="text"
                         name="email"
                         {...register("email", {
@@ -167,62 +165,63 @@ const CheckoutPage = () => {
                         })}
                       />
                       <span className="error-message">
-                        {errors.email && "Please enter proper email address ."}
+                        {errors.email && "Please enter a valid email address"}
                       </span>
                     </div>
                     <div className="form-group col-md-12 col-sm-12 col-xs-12">
                       <div className="field-label">Country</div>
                       <select
                         name="country"
+                        className={`form-control ${errors.country ? "error_border" : ""}`}
                         {...register("country", { required: true })}
                       >
+                        <option value="">Select Country</option>
                         <option>India</option>
                         <option>South Africa</option>
-                        <option>United State</option>
+                        <option>United States</option>
                         <option>Australia</option>
                       </select>
+                      <span className="error-message">
+                        {errors.country && "Please select a country"}
+                      </span>
                     </div>
                     <div className="form-group col-md-12 col-sm-12 col-xs-12">
                       <div className="field-label">Address</div>
                       <input
-                        className={`${errors.address ? "error_border" : ""}`}
+                        className={`form-control ${errors.address ? "error_border" : ""}`}
                         type="text"
                         name="address"
-                        {...register("address", {
-                          required: true,
-                          min: 20,
-                          max: 120,
-                        })}
+                        {...register("address", { required: true, minLength: 20, maxLength: 120 })}
                         placeholder="Street address"
                       />
                       <span className="error-message">
-                        {errors.address && "Please right your address ."}
+                        {errors.address && "Please enter a valid address"}
                       </span>
                     </div>
                     <div className="form-group col-md-12 col-sm-12 col-xs-12">
                       <div className="field-label">Town/City</div>
                       <input
                         type="text"
-                        className={`${errors.city ? "error_border" : ""}`}
+                        className={`form-control ${errors.city ? "error_border" : ""}`}
                         name="city"
                         {...register("city", { required: true })}
                         onChange={setStateFromInput}
                       />
                       <span className="error-message">
-                        {errors.city && "select one city"}
+                        {errors.city && "Please enter a city"}
                       </span>
                     </div>
                     <div className="form-group col-md-12 col-sm-6 col-xs-12">
                       <div className="field-label">State / County</div>
                       <input
                         type="text"
-                        className={`${errors.state ? "error_border" : ""}`}
+                        className={`form-control ${errors.state ? "error_border" : ""}`}
                         name="state"
                         {...register("state", { required: true })}
                         onChange={setStateFromInput}
                       />
                       <span className="error-message">
-                        {errors.state && "select one state"}
+                        {errors.state && "Please enter a state"}
                       </span>
                     </div>
                     <div className="form-group col-md-12 col-sm-6 col-xs-12">
@@ -230,11 +229,11 @@ const CheckoutPage = () => {
                       <input
                         type="text"
                         name="pincode"
-                        className={`${errors.pincode ? "error_border" : ""}`}
+                        className={`form-control ${errors.pincode ? "error_border" : ""}`}
                         {...register("pincode", { pattern: /\d+/ })}
                       />
                       <span className="error-message">
-                        {errors.pincode && "Required integer"}
+                        {errors.pincode && "Please enter a valid postal code"}
                       </span>
                     </div>
                     <div className="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -325,7 +324,7 @@ const CheckoutPage = () => {
                               name="name"
                               placeholder="Name"
                               autoComplete="cardholder"
-                              className="sr-input"
+                              className="form-control sr-input"
                               {...register("name", { required: true })}
                             />
                           </div>
@@ -343,7 +342,7 @@ const CheckoutPage = () => {
                         )}
 
                         <button
-                          className="btn"
+                          className="btn btn-primary"
                           disabled={processing || !clientSecret || !stripe}
                         >
                           {processing ? "Processing…" : "Pay"}
@@ -351,7 +350,10 @@ const CheckoutPage = () => {
                       </div>
                     </div>
                   ) : (
-                    ""
+                    <div className="empty-cart-message">
+                      <h4>Your cart is empty</h4>
+                      <p>Please add items to your cart before proceeding to checkout.</p>
+                    </div>
                   )}
                 </Col>
               </Row>
