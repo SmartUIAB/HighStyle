@@ -2,7 +2,6 @@
     Admin CSS Start
 ==========================**/
 .no-arrow {
-
   .slick-prev,
   .slick-next {
     display: none !important;
@@ -56,17 +55,16 @@
       .rdt_TableBody {
         .rdt_TableRow {
           .rdt_TableCell {
-
             &:first-child,
             &:nth-child(4) {
-              >div {
+              > div {
                 background-color: $auth-bg-color;
               }
             }
 
             &:nth-child(2),
             &:last-child {
-              >div {
+              > div {
                 background-color: $white;
               }
             }
@@ -99,7 +97,7 @@
           padding: 0;
 
           // border-right: 1px solid rgba($black, 0.05);
-          +.rdt_TableCol {
+          + .rdt_TableCol {
             border-left: 1px solid rgba($black, 0.05);
           }
 
@@ -127,7 +125,7 @@
           // border-right: 1px solid rgba($black, 0.05);
           background-color: $white;
 
-          +.rdt_TableCell {
+          + .rdt_TableCell {
             border-left: 1px solid rgba($black, 0.05);
           }
 
@@ -140,7 +138,7 @@
           //   }
           // }
 
-          >div {
+          > div {
             padding: 0;
             // background-color: $auth-bg-color;
             flex: unset;
@@ -184,10 +182,9 @@
     .rdt_TableBody {
       .rdt_TableRow {
         .rdt_TableCell {
-
           &:first-child,
           &:nth-child(4) {
-            >div {
+            > div {
               background-color: $auth-bg-color !important;
             }
           }
@@ -226,7 +223,7 @@
           padding: 0;
           // border-right: 1px solid rgba($black, 0.05);
 
-          +.rdt_TableCol {
+          + .rdt_TableCol {
             border-left: 1px solid rgba($black, 0.05);
           }
 
@@ -263,12 +260,12 @@
           &:first-child,
           &:nth-child(4),
           &:last-child {
-            >div {
+            > div {
               background-color: $white;
             }
           }
 
-          >div {
+          > div {
             // padding: 5px;
             // background-color: $auth-bg-color;
             flex: unset;
@@ -276,7 +273,7 @@
             line-height: 1.5;
           }
 
-          +.rdt_TableCell {
+          + .rdt_TableCell {
             border-left: 1px solid rgba($black, 0.05);
           }
 
@@ -722,15 +719,11 @@ a {
         margin-bottom: 0;
       }
 
-      @each $shape-name,
-      $shape-color in (primary, $primary-color),
-      (secondary, $secondary-color),
-      (success, $success-color),
-      (danger, $danger-color),
-      (info, $info-color),
-      (light, $light-color),
-      (dark, $dark-color),
-      (warning, $warning-color) {
+      @each $shape-name, $shape-color in (primary, $primary-color),
+        (secondary, $secondary-color), (success, $success-color),
+        (danger, $danger-color), (info, $info-color), (light, $light-color),
+        (dark, $dark-color), (warning, $warning-color)
+      {
         .order-shape-#{$shape-name} {
           background-color: $shape-color;
           width: 18px;
@@ -741,15 +734,11 @@ a {
       }
     }
 
-    @each $order-name,
-    $order-color in (primary, $primary-color),
-    (secondary, $secondary-color),
-    (success, $success-color),
-    (danger, $danger-color),
-    (info, $info-color),
-    (light, $light-color),
-    (dark, $dark-color),
-    (warning, $warning-color) {
+    @each $order-name, $order-color in (primary, $primary-color),
+      (secondary, $secondary-color), (success, $success-color),
+      (danger, $danger-color), (info, $info-color), (light, $light-color),
+      (dark, $dark-color), (warning, $warning-color)
+    {
       .order-color-#{$order-name} {
         background-color: $order-color;
         width: 8px;
@@ -806,7 +795,7 @@ a {
   .custom-checkbox {
     .custom-control-input {
       &:checked {
-        ~.custom-control-label {
+        ~ .custom-control-label {
           &::before {
             background-color: $primary-color;
           }
@@ -870,6 +859,8 @@ a {
     margin-top: 12px;
     font-weight: 400;
     padding: 11px 45px;
+    max-width: 168px;
+    width: 100%;
   }
 
   .form-footer {
@@ -878,7 +869,7 @@ a {
     border-top: 1px solid #f3f3f3;
     margin-top: 25px;
 
-    >span {
+    > span {
       position: absolute;
       top: -11px;
       padding-right: 20px;
@@ -1622,7 +1613,7 @@ a {
         padding-left: 20px;
       }
 
-      +.attribute-blocks {
+      + .attribute-blocks {
         h5 {
           margin-top: 30px;
         }
@@ -1698,7 +1689,7 @@ a {
       }
     }
 
-    input[type="checkbox"]:checked+label::before {
+    input[type="checkbox"]:checked + label::before {
       font-family: $font-ICO;
       content: "\efab";
       text-align: center;
@@ -1708,7 +1699,7 @@ a {
   }
 
   .checkbox-primary {
-    input[type="checkbox"]:checked+label::before {
+    input[type="checkbox"]:checked + label::before {
       border-color: $primary-color;
       color: $primary-color;
     }
@@ -1743,16 +1734,20 @@ a {
 /**=====================
       Button CSS start
 ==========================**/
-@mixin btn-gradien($deg,
+@mixin btn-gradien(
+  $deg,
   $leftcolor,
   $leftcolor-per,
   $rightcolor,
   $rightcolor-per,
-  $font-color) {
-  background-image: linear-gradient(to right,
-      $leftcolor 0%,
-      $rightcolor 51%,
-      $leftcolor 100%);
+  $font-color
+) {
+  background-image: linear-gradient(
+    to right,
+    $leftcolor 0%,
+    $rightcolor 51%,
+    $leftcolor 100%
+  );
   border: none;
   color: $font-color;
   background-size: auto 200%;
@@ -1808,15 +1803,11 @@ a {
 }
 
 // forms //
-@each $btn-name,
-$btn-color in (primary, $primary-color),
-(secondary, $secondary-color),
-(success, $success-color),
-(danger, $danger-color),
-(info, $info-color),
-(light, $light-color),
-(dark, $dark-color),
-(warning, $warning-color) {
+@each $btn-name, $btn-color in (primary, $primary-color),
+  (secondary, $secondary-color), (success, $success-color),
+  (danger, $danger-color), (info, $info-color), (light, $light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .input-air-#{$btn-name} {
     box-shadow: 0 3px 5px 1px rgba(88, 103, 221, 0.15) !important;
 
@@ -1827,24 +1818,18 @@ $btn-color in (primary, $primary-color),
 }
 
 //input background //
-@each $btn-name,
-$btn-color in (primary, $primary-color),
-(secondary, $secondary-color),
-(success, $success-color),
-(danger, $danger-color),
-(info, $info-color),
-(light, $light-color),
-(dark, $dark-color),
-(warning, $warning-color) {
+@each $btn-name, $btn-color in (primary, $primary-color),
+  (secondary, $secondary-color), (success, $success-color),
+  (danger, $danger-color), (info, $info-color), (light, $light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .form-bg-#{$btn-name} {
     background: $btn-color;
     border-color: $btn-color;
 
     @if ($btn-name==light) {
       color: $dark-color;
-    }
-
-    @else {
+    } @else {
       color: $white;
     }
 
@@ -1854,9 +1839,7 @@ $btn-color in (primary, $primary-color),
 
       @if ($btn-name==light) {
         color: $dark-color;
-      }
-
-      @else {
+      } @else {
         color: $white;
       }
 
@@ -1866,9 +1849,7 @@ $btn-color in (primary, $primary-color),
 
         @if ($btn-name==light) {
           color: $dark-color;
-        }
-
-        @else {
+        } @else {
           color: $white;
         }
       }
@@ -1886,34 +1867,40 @@ $btn-color in (primary, $primary-color),
 }
 
 .btn-primary-gradien {
-  @include btn-gradien(60,
+  @include btn-gradien(
+    60,
     lighten($primary-color, 8%),
     0%,
     darken($primary-color, 8%),
     100%,
-    $white);
+    $white
+  );
 
   &:focus,
   &:active,
   &.active {
     transition: 1.5s;
     background-position: right center;
-    background-image: linear-gradient(to right,
-        lighten($primary-color, 8%),
-        0%,
-        darken($primary-color, 8%),
-        100%,
-        $white) !important;
+    background-image: linear-gradient(
+      to right,
+      lighten($primary-color, 8%),
+      0%,
+      darken($primary-color, 8%),
+      100%,
+      $white
+    ) !important;
   }
 }
 
 .btn-secondary-gradien {
-  @include btn-gradien(60,
+  @include btn-gradien(
+    60,
     lighten($secondary-color, 8%),
     0%,
     darken($secondary-color, 8%),
     100%,
-    $white);
+    $white
+  );
 
   &:hover,
   &:focus,
@@ -1922,22 +1909,26 @@ $btn-color in (primary, $primary-color),
   &.hover {
     transition: 1.5s;
     background-position: right center;
-    background-image: linear-gradient(to right,
-        lighten($secondary-color, 8%),
-        0%,
-        darken($secondary-color, 8%),
-        100%,
-        $white) !important;
+    background-image: linear-gradient(
+      to right,
+      lighten($secondary-color, 8%),
+      0%,
+      darken($secondary-color, 8%),
+      100%,
+      $white
+    ) !important;
   }
 }
 
 .btn-success-gradien {
-  @include btn-gradien(60,
+  @include btn-gradien(
+    60,
     lighten($success-color, 8%),
     0%,
     darken($success-color, 8%),
     100%,
-    $white);
+    $white
+  );
 
   &:hover,
   &:focus,
@@ -1946,22 +1937,26 @@ $btn-color in (primary, $primary-color),
   &.hover {
     transition: 1.5s;
     background-position: right center;
-    background-image: linear-gradient(to right,
-        lighten($success-color, 8%),
-        0%,
-        darken($success-color, 8%),
-        100%,
-        $white) !important;
+    background-image: linear-gradient(
+      to right,
+      lighten($success-color, 8%),
+      0%,
+      darken($success-color, 8%),
+      100%,
+      $white
+    ) !important;
   }
 }
 
 .btn-danger-gradien {
-  @include btn-gradien(60,
+  @include btn-gradien(
+    60,
     lighten($danger-color, 8%),
     0%,
     darken($danger-color, 8%),
     100%,
-    $white);
+    $white
+  );
 
   &:hover,
   &:focus,
@@ -1970,22 +1965,26 @@ $btn-color in (primary, $primary-color),
   &.hover {
     transition: 1.5s;
     background-position: right center;
-    background-image: linear-gradient(to right,
-        lighten($danger-color, 8%),
-        0%,
-        darken($danger-color, 8%),
-        100%,
-        $white) !important;
+    background-image: linear-gradient(
+      to right,
+      lighten($danger-color, 8%),
+      0%,
+      darken($danger-color, 8%),
+      100%,
+      $white
+    ) !important;
   }
 }
 
 .btn-warning-gradien {
-  @include btn-gradien(60,
+  @include btn-gradien(
+    60,
     lighten($warning-color, 8%),
     0%,
     darken($warning-color, 8%),
     100%,
-    $white);
+    $white
+  );
 
   &:hover,
   &:focus,
@@ -1994,22 +1993,26 @@ $btn-color in (primary, $primary-color),
   &.hover {
     transition: 1.5s;
     background-position: right center;
-    background-image: linear-gradient(to right,
-        lighten($warning-color, 8%),
-        0%,
-        darken($warning-color, 8%),
-        100%,
-        $white) !important;
+    background-image: linear-gradient(
+      to right,
+      lighten($warning-color, 8%),
+      0%,
+      darken($warning-color, 8%),
+      100%,
+      $white
+    ) !important;
   }
 }
 
 .btn-info-gradien {
-  @include btn-gradien(60,
+  @include btn-gradien(
+    60,
     lighten($info-color, 8%),
     0%,
     darken($info-color, 8%),
     100%,
-    $white);
+    $white
+  );
 
   &:hover,
   &:focus,
@@ -2018,12 +2021,14 @@ $btn-color in (primary, $primary-color),
   &.hover {
     transition: 1.5s;
     background-position: right center;
-    background-image: linear-gradient(to right,
-        lighten($info-color, 8%),
-        0%,
-        darken($info-color, 8%),
-        100%,
-        $white) !important;
+    background-image: linear-gradient(
+      to right,
+      lighten($info-color, 8%),
+      0%,
+      darken($info-color, 8%),
+      100%,
+      $white
+    ) !important;
   }
 }
 
@@ -2032,12 +2037,14 @@ $btn-color in (primary, $primary-color),
 }
 
 .btn-light-gradien {
-  @include btn-gradien(60,
+  @include btn-gradien(
+    60,
     lighten($light-color, 8%),
     0%,
     darken($light-color, 8%),
     100%,
-    $white);
+    $white
+  );
 
   &:hover,
   &:focus,
@@ -2046,22 +2053,26 @@ $btn-color in (primary, $primary-color),
   &.hover {
     transition: 1.5s;
     background-position: right center;
-    background-image: linear-gradient(to right,
-        lighten($light-color, 8%),
-        0%,
-        darken($light-color, 8%),
-        100%,
-        $white) !important;
+    background-image: linear-gradient(
+      to right,
+      lighten($light-color, 8%),
+      0%,
+      darken($light-color, 8%),
+      100%,
+      $white
+    ) !important;
   }
 }
 
 .btn-dark-gradien {
-  @include btn-gradien(60,
+  @include btn-gradien(
+    60,
     lighten($dark-color, 8%),
     0%,
     darken($dark-color, 8%),
     100%,
-    $white);
+    $white
+  );
 
   &:hover,
   &:focus,
@@ -2070,12 +2081,14 @@ $btn-color in (primary, $primary-color),
   &.hover {
     transition: 1.5s;
     background-position: right center;
-    background-image: linear-gradient(to right,
-        lighten($dark-color, 8%),
-        0%,
-        darken($dark-color, 8%),
-        100%,
-        $white) !important;
+    background-image: linear-gradient(
+      to right,
+      lighten($dark-color, 8%),
+      0%,
+      darken($dark-color, 8%),
+      100%,
+      $white
+    ) !important;
   }
 }
 
@@ -2117,7 +2130,7 @@ $btn-color in (primary, $primary-color),
       line-height: 24px;
     }
 
-    >span {
+    > span {
       font-size: $card-header-span-size;
       color: $card-header-span-color;
       margin-top: 5px;
@@ -2505,7 +2518,7 @@ $header-size: 80px;
         .breadcrumb-item {
           font-family: $font-nunito;
 
-          &+.breadcrumb-item {
+          & + .breadcrumb-item {
             &:before {
               content: $breadcrumb-content;
             }
@@ -2678,12 +2691,12 @@ $header-size: 80px;
         }
       }
 
-      >ul {
+      > ul {
         display: flex;
         justify-content: flex-end;
         align-items: center;
 
-        >li {
+        > li {
           position: relative;
           border-left: 1px solid $light-semi-gray;
           padding: 0 20px;
@@ -2730,7 +2743,7 @@ $header-size: 80px;
           }
 
           .search-form {
-            >.mb-3 {
+            > .mb-3 {
               margin: 0 !important;
             }
 
@@ -2968,7 +2981,6 @@ ul {
           }
 
           .shopping-color {
-
             path,
             line {
               color: $primary-color;
@@ -2976,7 +2988,6 @@ ul {
           }
 
           .download-color {
-
             path,
             line {
               color: $success-color;
@@ -2984,7 +2995,6 @@ ul {
           }
 
           .alert-color {
-
             path,
             line {
               color: $danger-color;
@@ -2996,7 +3006,7 @@ ul {
           margin-left: 30px;
         }
 
-        +li {
+        + li {
           &:hover {
             background-color: $light-color;
           }
@@ -3130,8 +3140,8 @@ ul {
           }
         }
 
-        >li {
-          >a {
+        > li {
+          > a {
             display: block;
             transition: $sidebar-transition;
 
@@ -3156,7 +3166,7 @@ ul {
                 content: $sidebar-close-icon;
               }
 
-              &~i {
+              & ~ i {
                 margin-right: 0;
               }
             }
@@ -3172,11 +3182,11 @@ ul {
             text-transform: capitalize;
           }
 
-          &:hover>a {
+          &:hover > a {
             @extend %common;
           }
 
-          &.active>a {
+          &.active > a {
             @extend %common;
           }
         }
@@ -3190,8 +3200,8 @@ ul {
             transition: $sidebar-transition;
           }
 
-          >a {
-            >.fa-angle-down {
+          > a {
+            > .fa-angle-down {
               width: auto;
               height: auto;
               padding: 0;
@@ -3205,7 +3215,7 @@ ul {
           &.active {
             > {
               a {
-                >.fa-angle-right {
+                > .fa-angle-right {
                   &:before {
                     content: $sidebar-open-icon;
                     font-family: $sidebar-icon-font-family;
@@ -3215,7 +3225,7 @@ ul {
               }
             }
 
-            >.sidebar-submenu {
+            > .sidebar-submenu {
               display: block;
               transform: rotateX(0deg);
               transform-origin: 10% 10%;
@@ -3247,8 +3257,8 @@ ul {
             padding-top: 0 !important;
           }
 
-          >li {
-            >a {
+          > li {
+            > a {
               padding-bottom: 7px;
               padding-top: 7px;
               font-size: 14px;
@@ -3288,7 +3298,7 @@ ul {
               }
             }
 
-            &.active>a {
+            &.active > a {
               color: $theme-body-font-color;
 
               &.active {
@@ -3299,7 +3309,7 @@ ul {
         }
       }
 
-      ~.page-body {
+      ~ .page-body {
         margin-left: $sidebar-width;
         transition: $sidebar-transition;
       }
@@ -3308,17 +3318,17 @@ ul {
         display: block;
         margin-left: calc(-#{$sidebar-width + 5px});
 
-        ~.page-body {
+        ~ .page-body {
           margin-left: 0;
           transition: $sidebar-transition;
         }
 
-        ~footer {
+        ~ footer {
           margin-left: 0;
           padding-right: 15px;
         }
 
-        ~.footer-fix {
+        ~ .footer-fix {
           width: calc(100% - 0px);
         }
       }
@@ -3427,7 +3437,7 @@ $i: 0;
     padding: #{$i}px;
   }
 
-  $i: $i+5;
+  $i: $i + 5;
 }
 
 /*====== Padding css ends ======*/
@@ -3439,7 +3449,7 @@ $i: 0;
     padding-left: #{$i}px;
   }
 
-  $i: $i+5;
+  $i: $i + 5;
 }
 
 /*====== Padding-left css ends ======*/
@@ -3451,7 +3461,7 @@ $i: 0;
     padding-top: #{$i}px !important;
   }
 
-  $i: $i+5;
+  $i: $i + 5;
 }
 
 /*====== Padding-top css ends ======*/
@@ -3463,7 +3473,7 @@ $i: 0;
     padding-bottom: #{$i}px !important;
   }
 
-  $i: $i+5;
+  $i: $i + 5;
 }
 
 /*====== Padding-bottom css ends ======*/
@@ -3475,7 +3485,7 @@ $i: 0;
     padding-right: #{$i}px;
   }
 
-  $i: $i+5;
+  $i: $i + 5;
 }
 
 /*====== Padding-right css ends ======*/
@@ -3487,7 +3497,7 @@ $i: 0;
     margin: #{$i}px !important;
   }
 
-  $i: $i+5;
+  $i: $i + 5;
 }
 
 /*====== Margin css ends ======*/
@@ -3499,7 +3509,7 @@ $i: 0;
     margin-top: #{$i}px !important;
   }
 
-  $i: $i+5;
+  $i: $i + 5;
 }
 
 /*====== Margin-top css ends ======*/
@@ -3511,7 +3521,7 @@ $i: 0;
     margin-bottom: #{$i}px !important;
   }
 
-  $i: $i+5;
+  $i: $i + 5;
 }
 
 /*====== Margin-Bottom css ends ======*/
@@ -3523,7 +3533,7 @@ $i: 0;
     margin-left: #{$i}px !important;
   }
 
-  $i: $i+5;
+  $i: $i + 5;
 }
 
 /*====== Margin-left css ends ======*/
@@ -3535,7 +3545,7 @@ $i: 0;
     margin-right: #{$i}px;
   }
 
-  $i: $i+5;
+  $i: $i + 5;
 }
 
 /*====== Margin-right css ends ======*/
@@ -3547,7 +3557,7 @@ $i: 0;
     border-radius: #{$i}px !important;
   }
 
-  $i: $i+1;
+  $i: $i + 1;
 }
 
 /*====== Border-radius css ends ======*/
@@ -3559,17 +3569,12 @@ $i: 12;
     font-size: #{$i}px;
   }
 
-  $i: $i+2;
+  $i: $i + 2;
 }
 
 /*====== Font-size css ends ======*/
 /*====== Font-weight css starts ======*/
-$i: 100,
-300,
-400,
-600,
-700,
-900;
+$i: 100, 300, 400, 600, 700, 900;
 
 @each $val in $i {
   .f-w-#{$val} {
@@ -3579,11 +3584,7 @@ $i: 100,
 
 /*====== Font-weight css ends ======*/
 /*====== Font-style css starts ======*/
-$i: normal,
-italic,
-oblique,
-initial,
-inherit;
+$i: normal, italic, oblique, initial, inherit;
 
 @each $val in $i {
   .f-s-#{$val} {
@@ -3593,18 +3594,8 @@ inherit;
 
 /*====== Font-style css ends ======*/
 /*====== Text-Decoration css starts ======*/
-$i: overline,
-line-through,
-underline,
-dashed,
-blink,
-dotted,
-initial,
-none,
-solid,
-wavy,
-inherit,
-double;
+$i: overline, line-through, underline, dashed, blink, dotted, initial, none,
+  solid, wavy, inherit, double;
 
 @each $val in $i {
   .text-#{$val} {
@@ -3614,16 +3605,8 @@ double;
 
 /*====== Text-Decoration css ends ======*/
 /*====== Vertical-Align css starts ======*/
-$i: baseline,
-sub,
-super,
-top,
-text-top,
-middle,
-bottom,
-text-bottom,
-initial,
-inherit;
+$i: baseline, sub, super, top, text-top, middle, bottom, text-bottom, initial,
+  inherit;
 
 @each $val in $i {
   .#{$val} {
@@ -3633,12 +3616,7 @@ inherit;
 
 /*====== Vertical-Align css ends ======*/
 /*====== Position css starts ======*/
-$i: static,
-absolute,
-fixed,
-relative,
-initial,
-inherit;
+$i: static, absolute, fixed, relative, initial, inherit;
 
 @each $val in $i {
   .p-#{$val} {
@@ -3648,9 +3626,7 @@ inherit;
 
 /*====== Position css ends ======*/
 /*====== Float css starts ======*/
-$i: left,
-right,
-none;
+$i: left, right, none;
 
 @each $val in $i {
   .f-#{$val} {
@@ -3660,9 +3636,7 @@ none;
 
 /*====== Float css ends ======*/
 /*====== Overflow css starts ======*/
-$i: hidden,
-visible,
-auto;
+$i: hidden, visible, auto;
 
 @each $val in $i {
   .o-#{$val} {
@@ -3679,27 +3653,14 @@ $i: 10;
     width: #{$i}px !important;
   }
 
-  $i: $i+10;
+  $i: $i + 10;
 }
 
 /*====== Image-sizes css ends ======*/
 /*======= Text css starts ===========*/
-$text-name: primary,
-secondary,
-success,
-danger,
-info,
-light,
-dark,
-warning;
-$text-color: $primary-color,
-$secondary-color,
-$success-color,
-$danger-color,
-$info-color,
-$light-color,
-$dark-color,
-$warning-color;
+$text-name: primary, secondary, success, danger, info, light, dark, warning;
+$text-color: $primary-color, $secondary-color, $success-color, $danger-color,
+  $info-color, $light-color, $dark-color, $warning-color;
 
 @each $var in $text-name {
   $i: index($text-name, $var);
@@ -3722,22 +3683,9 @@ $warning-color;
 
 /*======= Label-color css ends  ======= */
 /*======= Badge-color css starts  ======= */
-$badge-name: primary,
-secondary,
-success,
-danger,
-info,
-light,
-dark,
-warning;
-$badge-color: $primary-color,
-$secondary-color,
-$success-color,
-$danger-color,
-$info-color,
-$light-color,
-$dark-color,
-$warning-color;
+$badge-name: primary, secondary, success, danger, info, light, dark, warning;
+$badge-color: $primary-color, $secondary-color, $success-color, $danger-color,
+  $info-color, $light-color, $dark-color, $warning-color;
 
 @each $var in $badge-name {
   $i: index($badge-name, $var);
@@ -3749,22 +3697,10 @@ $warning-color;
 
 /*======= Badge-color css end  ======= */
 /*======= Background-color css starts  ======= */
-$background-name: primary,
-secondary,
-success,
-danger,
-info,
-light,
-dark,
-warning;
-$background-color: $primary-color,
-$secondary-color,
-$success-color,
-$danger-color,
-$info-color,
-$light-color,
-$dark-color,
-$warning-color;
+$background-name: primary, secondary, success, danger, info, light, dark,
+  warning;
+$background-color: $primary-color, $secondary-color, $success-color,
+  $danger-color, $info-color, $light-color, $dark-color, $warning-color;
 
 @each $var in $background-name {
   $i: index($background-name, $var);
@@ -3777,39 +3713,19 @@ $warning-color;
 
 /*======= Background-color css end  ======= */
 /*======= Font-color css starts  ======= */
-$text-name: primary,
-secondary,
-success,
-danger,
-info,
-light,
-dark,
-warning,
-google-plus,
-twitter,
-linkedin,
-fb;
-$label-color: $primary-color,
-$secondary-color,
-$success-color,
-$danger-color,
-$info-color,
-$light-color,
-$dark-color,
-$warning-color;
+$text-name: primary, secondary, success, danger, info, light, dark, warning,
+  google-plus, twitter, linkedin, fb;
+$label-color: $primary-color, $secondary-color, $success-color, $danger-color,
+  $info-color, $light-color, $dark-color, $warning-color;
 
 /*======= Font-color css end  ======= */
 /*======= Button-color css starts  ======= */
 // btn--color//
-@each $btn-name,
-$btn-color in (primary, $primary-color),
-(secondary, $secondary-color),
-(success, $success-color),
-(danger, $danger-color),
-(info, $info-color),
-(light, $light-color),
-(dark, $dark-color),
-(warning, $warning-color) {
+@each $btn-name, $btn-color in (primary, $primary-color),
+  (secondary, $secondary-color), (success, $success-color),
+  (danger, $danger-color), (info, $info-color), (light, $light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .btn-#{$btn-name} {
     background-color: $btn-color !important;
     border-color: $btn-color !important;
@@ -3840,15 +3756,11 @@ $btn-color in (primary, $primary-color),
 
 /*======= Button-color css ends  ======= */
 //active button css //
-@each $btn-name,
-$btn-color in (primary, $primary-color),
-(secondary, $secondary-color),
-(success, $success-color),
-(danger, $danger-color),
-(info, $info-color),
-(light, $light-color),
-(dark, $dark-color),
-(warning, $warning-color) {
+@each $btn-name, $btn-color in (primary, $primary-color),
+  (secondary, $secondary-color), (success, $success-color),
+  (danger, $danger-color), (info, $info-color), (light, $light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .btn-#{$btn-name}:not([disabled]):not(.disabled).active {
     background-color: darken($btn-color, 10%);
     border-color: darken($btn-color, 10%);
@@ -3866,15 +3778,11 @@ $btn-color in (primary, $primary-color),
 }
 
 //* active button css end *//
-@each $btn-name,
-$btn-color in (primary, $primary-color),
-(secondary, $secondary-color),
-(success, $success-color),
-(danger, $danger-color),
-(info, $info-color),
-(light, $light-color),
-(dark, $dark-color),
-(warning, $warning-color) {
+@each $btn-name, $btn-color in (primary, $primary-color),
+  (secondary, $secondary-color), (success, $success-color),
+  (danger, $danger-color), (info, $info-color), (light, $light-color),
+  (dark, $dark-color), (warning, $warning-color)
+{
   .btn-outline-#{$btn-name}-2x:not([disabled]):not(.disabled).active {
     background-color: $btn-color;
     border-color: $btn-color;
@@ -3894,22 +3802,9 @@ $btn-color in (primary, $primary-color),
 }
 
 /*======= Table-Border-Bottom-color css starts  ======= */
-$border-name: primary,
-secondary,
-success,
-danger,
-info,
-light,
-dark,
-warning;
-$border-color: $primary-color,
-$secondary-color,
-$success-color,
-$danger-color,
-$info-color,
-$light-color,
-$dark-color,
-$warning-color;
+$border-name: primary, secondary, success, danger, info, light, dark, warning;
+$border-color: $primary-color, $secondary-color, $success-color, $danger-color,
+  $info-color, $light-color, $dark-color, $warning-color;
 
 @each $var in $border-name {
   $i: index($border-name, $var);
@@ -3923,22 +3818,9 @@ $warning-color;
 
 /*======= Table-Border-Bottom-color css ends  ======= */
 /*======= Table styling css starts  ======= */
-$table-name: primary,
-secondary,
-success,
-danger,
-info,
-light,
-dark,
-warning;
-$table-color: $primary-color,
-$secondary-color,
-$success-color,
-$danger-color,
-$info-color,
-$light-color,
-$dark-color,
-$warning-color;
+$table-name: primary, secondary, success, danger, info, light, dark, warning;
+$table-color: $primary-color, $secondary-color, $success-color, $danger-color,
+  $info-color, $light-color, $dark-color, $warning-color;
 
 @each $var in $table-name {
   $i: index($table-name, $var);
@@ -3958,22 +3840,9 @@ $warning-color;
 
 /*======= Table styling css ends  ======= */
 /*======= All-Borders-color css starts  ======= */
-$b-name: primary,
-secondary,
-success,
-danger,
-info,
-light,
-dark,
-warning;
-$b-color: $primary-color,
-$secondary-color,
-$success-color,
-$danger-color,
-$info-color,
-$light-color,
-$dark-color,
-$warning-color;
+$b-name: primary, secondary, success, danger, info, light, dark, warning;
+$b-color: $primary-color, $secondary-color, $success-color, $danger-color,
+  $info-color, $light-color, $dark-color, $warning-color;
 
 @each $var in $b-name {
   $i: index($b-name, $var);
@@ -4008,7 +3877,7 @@ $i: 1;
     border-width: #{$i}px !important;
   }
 
-  $i: $i+1;
+  $i: $i + 1;
 }
 
 /*====== Border width css ends ======*/
@@ -4231,7 +4100,7 @@ $i: 1;
       .rdt_TableBody {
         .rdt_TableRow {
           .rdt_TableCell {
-            &:nth-child(n+1) {
+            &:nth-child(n + 1) {
               width: 200px;
             }
           }
@@ -4247,7 +4116,7 @@ $i: 1;
       .rdt_TableBody {
         .rdt_TableRow {
           .rdt_TableCell {
-            &:nth-child(n+2) {
+            &:nth-child(n + 2) {
               width: 170px;
             }
           }
@@ -4299,7 +4168,7 @@ $i: 1;
       .rdt_TableBody {
         .rdt_TableRow {
           .rdt_TableCell {
-            +.rdt_TableCell {
+            + .rdt_TableCell {
               width: 150px;
             }
           }
@@ -4341,8 +4210,8 @@ $i: 1;
   .page-main-header {
     .main-header-right {
       .nav-right {
-        >ul {
-          >li {
+        > ul {
+          > li {
             &:first-child {
               width: 32%;
             }
@@ -4361,7 +4230,6 @@ $i: 1;
   .user-list {
     table {
       tr {
-
         td,
         th {
           &:nth-child(5) {
@@ -4374,8 +4242,7 @@ $i: 1;
 }
 
 @media only screen and (max-width: 1199px) {
-
-  // product detail    
+  // product detail
   .product-page-details {
     margin-top: 30px;
   }
@@ -4383,7 +4250,6 @@ $i: 1;
   .user-list {
     table {
       tr {
-
         th,
         td {
           width: 200px !important;
@@ -4405,7 +4271,6 @@ $i: 1;
   }
 
   .product-adding {
-
     .col-xl-5,
     .col-xl-7 {
       flex: 0 0 100%;
@@ -4420,7 +4285,6 @@ $i: 1;
   .user-list {
     table {
       tr {
-
         td,
         th {
           &:first-child {
@@ -4435,7 +4299,6 @@ $i: 1;
   .profile-table {
     table {
       tr {
-
         th,
         td {
           width: 200px !important;
@@ -4477,7 +4340,6 @@ $i: 1;
   }
 
   .card {
-
     .card-body,
     .card-header {
       padding: 20px;
@@ -4569,7 +4431,7 @@ $i: 1;
           position: unset;
           padding: 0;
 
-          >ul {
+          > ul {
             top: 60px;
             position: absolute;
             z-index: -1;
@@ -4586,12 +4448,12 @@ $i: 1;
             opacity: 0;
             visibility: hidden;
 
-            >li {
+            > li {
               margin: 10px 0;
             }
           }
 
-          >.mobile-toggle {
+          > .mobile-toggle {
             cursor: pointer;
             display: -webkit-box;
             display: -ms-flexbox;
@@ -4607,7 +4469,7 @@ $i: 1;
             }
           }
 
-          >ul.open {
+          > ul.open {
             z-index: 1;
             opacity: 1;
             -webkit-transform: translateY(0px) scaleY(1);
@@ -4696,12 +4558,11 @@ $i: 1;
   }
 
   .authentication-box {
-
     .form-footer,
     .form-button {
       text-align: center;
 
-      >span {
+      > span {
         padding: 0;
         left: 0;
         right: 0;
@@ -4712,8 +4573,8 @@ $i: 1;
   .page-main-header {
     .main-header-right {
       .nav-right {
-        >ul {
-          >li {
+        > ul {
+          > li {
             &:first-child {
               width: 40%;
             }
@@ -4726,7 +4587,6 @@ $i: 1;
   .products-table {
     table {
       tr {
-
         td,
         th {
           &:first-child {
@@ -4780,7 +4640,6 @@ $i: 1;
   // add product page
   .add-product-form {
     .form-group {
-
       .form-control,
       select {
         width: 100% !important;
@@ -4827,7 +4686,6 @@ $i: 1;
     }
 
     .form-group {
-
       select,
       .form-control {
         width: 100% !important;
@@ -4888,7 +4746,7 @@ $i: 1;
   .react-tabs {
     .needs-validation {
       .row {
-        >div[class*="col-"] {
+        > div[class*="col-"] {
           padding: 0 12px !important;
         }
       }
@@ -4960,7 +4818,7 @@ $i: 1;
         td {
           min-width: 100px;
 
-          +td {
+          + td {
             min-width: 150px;
           }
 
@@ -5039,11 +4897,11 @@ $i: 1;
         padding: 0 15px;
 
         .nav-right {
-          >ul {
+          > ul {
             padding: 0 0;
             justify-content: flex-start;
 
-            >li {
+            > li {
               &:first-child {
                 .search-form {
                   .form-group {
@@ -5232,7 +5090,7 @@ $i: 1;
           padding-left: 15px;
         }
 
-        +.attribute-blocks {
+        + .attribute-blocks {
           h5 {
             margin-top: 20px;
           }
@@ -5379,8 +5237,8 @@ $i: 1;
     .page-main-header {
       .main-header-right {
         .nav-right {
-          >ul {
-            >li {
+          > ul {
+            > li {
               padding: 0 13px;
 
               .dot {
@@ -5453,7 +5311,50 @@ $i: 1;
     }
   }
 }
+.loader {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  color: inherit;
+  vertical-align: middle;
+  pointer-events: none;
+  border: 4px solid transparent;
+  border-top-color: currentcolor;
+  border-radius: 50%;
+  animation: 1s loader linear infinite;
+  position: relative;
+  &::before {
+    content: "";
+    display: block;
+    width: inherit;
+    height: inherit;
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    border: 4px solid currentcolor;
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+}
 
+@keyframes loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.logout-btn {
+  padding: 12px 0;
+  border: 0;
+  background: transparent;
+  &:hover {
+    color: #ff8084 !important;
+    padding-left: 3px;
+    transition: 0.3s;
+  }
+}
 /*=====================
   Responsive CSS End
 ==========================*/
