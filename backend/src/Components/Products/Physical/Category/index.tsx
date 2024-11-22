@@ -17,7 +17,7 @@ import {
   ModalHeader,
   Row,
 } from "reactstrap";
-import { CREATE_CATEGORY } from "../../../../GraphQL/Mutations/authMutations";
+import { CREATE_CATEGORY } from "../../../../GraphQL/Mutations/categoryMutations";
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
 import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import Datatable from "@/CommonComponents/DataTable";
