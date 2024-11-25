@@ -94,9 +94,77 @@ const productTypeDef = gql`
     limit: Int
   }
 
+  type DigitalProduct {
+    id: ID!
+    title: String!
+    description: String
+    category: Category
+    subcategory: Subcategory
+    SKU: String!
+    price: Float!
+    discount: Float
+    licenseType: LicenseType!
+    fileFormat: String!
+    fileSize: String!
+    version: String
+    compatibility: [String]
+    tags: [String]
+    metaTitle: String
+    metaDescription: String
+    status: ProductStatus!
+    images: [String]
+    createdAt: String
+    updatedAt: String
+  }
+
+  type DigitalProductPagination {
+    products: [DigitalProduct]
+    currentPage: Int!
+    totalPages: Int!
+    total: Int!
+  }
+
+  input DigitalProductInput {
+    title: String!
+    description: String
+    category: ID!
+    subcategory: ID!
+    SKU: String!
+    price: Float!
+    discount: Float
+    licenseType: LicenseType!
+    fileFormat: String!
+    fileSize: String!
+    version: String
+    compatibility: [String]
+    tags: [String]!
+    metaTitle: String!
+    metaDescription: String!
+    status: ProductStatus!
+  }
+
+  input UpdateDigitalProductInput {
+    title: String
+    description: String
+    SKU: String
+    price: Float
+    discount: Float
+    licenseType: LicenseType
+    fileFormat: String
+    fileSize: String
+    version: String
+    compatibility: [String]
+    tags: [String]
+    metaTitle: String
+    metaDescription: String
+    status: ProductStatus
+  }
+
   type Query {
     physicalProduct(id: ID!): PhysicalProduct
     physicalProducts(pagination: PaginationInput): PhysicalProductPagination
+    digitalProduct(id: ID!): DigitalProduct
+    digitalProducts(pagination: PaginationInput): DigitalProductPagination
   }
 
   type Mutation {
@@ -111,6 +179,18 @@ const productTypeDef = gql`
       deleteImages: [String]
     ): PhysicalProduct
     deletePhysicalProduct(id: ID!): Boolean
+
+    createDigitalProduct(
+      input: DigitalProductInput
+      images: [Upload]
+    ): DigitalProduct
+    updateDigitalProduct(
+      id: ID!
+      input: UpdateDigitalProductInput
+      images: [Upload]
+      deleteImages: [String]
+    ): DigitalProduct
+    deleteDigitalProduct(id: ID!): Boolean
   }
 `;
 
