@@ -34,6 +34,17 @@ const couponResolver = {
       const result = await Coupon.deleteMany({ _id: { $in: ids } });
       return result.deletedCount > 0;
     },
+
+    //update coupon at once
+    updateCoupon: async (_, { id, input }) => {
+      const updatedCoupon = await Coupon.findByIdAndUpdate(id, input, {
+        new: true,
+      });
+      if (!updatedCoupon) {
+        throw new Error("Coupon not found");
+      }
+      return updatedCoupon;
+    },
   },
 };
 

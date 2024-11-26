@@ -61,6 +61,7 @@ const couponTypeDef = gql`
   type Mutation {
     createCoupon(input: CreateCouponInput!): Coupon!
     deleteCoupons(ids: [ID!]!): Boolean!
+    updateCoupon(id: ID!, input: CreateCouponInput!): Coupon!
   }
 `;
 

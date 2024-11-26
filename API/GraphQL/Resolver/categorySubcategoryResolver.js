@@ -9,7 +9,7 @@ const {
 const categorySubcategoryResolver = {
   /* ---------------------------------- Query --------------------------------- */
   Query: {
-    categories: async (_, { pagination }) => {
+    categories: async (_, { pagination }, context) => {
       const { page = 1, limit = 10 } = pagination || {};
       try {
         const categories = await Category.find()
@@ -19,7 +19,7 @@ const categorySubcategoryResolver = {
           categories,
           totalPages: Math.ceil((await Category.countDocuments()) / limit),
           currentPage: page,
-          totalCount: await Category.countDocuments(),
+          total: await Category.countDocuments(),
         };
       } catch (error) {
         throw new CustomError("Failed to fetch categories", 500);
@@ -42,7 +42,7 @@ const categorySubcategoryResolver = {
           subcategories,
           totalPages: Math.ceil((await Subcategory.countDocuments()) / limit),
           currentPage: page,
-          totalCount: await Subcategory.countDocuments(),
+          total: await Subcategory.countDocuments(),
         };
       } catch (error) {
         throw new CustomError("Failed to fetch subcategories", 500);
@@ -60,7 +60,6 @@ const categorySubcategoryResolver = {
   Mutation: {
     createCategory: async (_, { name, type, description, image }) => {
       try {
-        console.log(image, "------------------------------");
         let imagePath = null;
         if (image) {
           imagePath = await upload(image[0], "categories");

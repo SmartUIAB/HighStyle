@@ -9,7 +9,7 @@ const authenticateUser = async (token) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
-      userId = decoded.id;
+      userId = decoded.userId;
       user = await User.findById(userId);
     } catch (err) {
       console.error("Authentication error:", err);
