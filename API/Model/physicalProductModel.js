@@ -22,7 +22,7 @@ const physicalProductSchema = new Schema(
     status: {
       type: String,
       enum: ["Available", "Unavailable"],
-      default: "active",
+      default: "Available",
     },
     images: {
       type: [String],
@@ -30,6 +30,11 @@ const physicalProductSchema = new Schema(
         validator: (v) => v.length <= 5,
         message: "Exceeds the limit of 5 images",
       },
+    },
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
+      required: true,
     },
   },
   { timestamps: true }

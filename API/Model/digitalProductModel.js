@@ -34,6 +34,11 @@ const digitalProductSchema = new Schema(
         message: "Exceeds the limit of 5 images",
       },
     },
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
+      required: true,
+    },
   },
   { timestamps: true }
 );

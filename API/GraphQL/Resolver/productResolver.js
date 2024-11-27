@@ -1,11 +1,11 @@
 const PhysicalProduct = require("../../Model/physicalProductModel");
 const DigitalProduct = require("../../Model/digitalProductModel");
-const Subcategory = require("../../Model/subCategoryModel");
 const { upload } = require("../../Utilities/upload");
 const CustomError = require("../../Utilities/CustomError");
 const {
   deleteImageFromStorage,
 } = require("../../Utilities/miscellaneousUtils");
+const Company = require("../../Model/companyModel");
 
 const productResolvers = {
   Query: {
@@ -63,13 +63,13 @@ const productResolvers = {
   },
 
   Mutation: {
-    createPhysicalProduct: async (_, { input, images }) => {
+    createPhysicalProduct: async (_, { input, images }, context) => {
       try {
-        const subcategory = await Subcategory.findById(
-          input.subcategory
-        ).populate("category_id");
-
-        const product = new PhysicalProduct(input);
+        let company = await Company.findById(context.user.company);
+        const product = new PhysicalProduct({
+          ...input,
+          company: company._id,
+        });
         if (images && images.length > 0) {
           if (images.length > 5) {
             throw new CustomError("You can only upload up to 5 images.", 400);
@@ -77,7 +77,10 @@ const productResolvers = {
 
           const imagePaths = [];
           for (let image of images) {
-            const uploadedImagePath = await upload(image, `physicalProducts/`);
+            const uploadedImagePath = await upload(
+              image,
+              `${company.name.replace(/\s+/g, "")}/Products/physicalProducts`
+            );
             imagePaths.push(uploadedImagePath);
           }
 
@@ -91,15 +94,13 @@ const productResolvers = {
 
     updatePhysicalProduct: async (
       _,
-      { id, input, images = [], deleteImages = [] }
+      { id, input, images = [], deleteImages = [] },
+      context
     ) => {
       try {
+        let company = await Company.findById(context.user.company);
         const product = await PhysicalProduct.findById(id).populate("category");
         if (!product) throw new CustomError("Product not found", 404);
-
-        const subcategory = await Subcategory.findById(
-          product.subcategory
-        ).populate("category_id");
 
         const existingImages = product.images;
 
@@ -124,7 +125,12 @@ const productResolvers = {
         let uploadedImages = [];
         if (images && images.length > 0) {
           uploadedImages = await Promise.all(
-            images.map((image) => upload(image, `physicalProducts/`))
+            images.map((image) =>
+              upload(
+                image,
+                `${company.name.replace(/\s+/g, "")}/Products/physicalProducts`
+              )
+            )
           );
         }
 
@@ -163,9 +169,13 @@ const productResolvers = {
     },
 
     /* ----------- Digital product mutations with image upload support ---------- */
-    createDigitalProduct: async (_, { input, images }) => {
+    createDigitalProduct: async (_, { input, images }, context) => {
       try {
-        const product = new DigitalProduct(input);
+        let company = await Company.findById(context.user.company);
+        const product = new DigitalProduct({
+          ...input,
+          company: company._id,
+        });
 
         if (images && images.length > 0) {
           if (images.length > 5) {
@@ -174,7 +184,10 @@ const productResolvers = {
 
           const imagePaths = [];
           for (let image of images) {
-            const uploadedImagePath = await upload(image, "digitalProducts");
+            const uploadedImagePath = await upload(
+              image,
+              `${company.name.replace(/\s+/g, "")}/Products/digitalProducts`
+            );
             imagePaths.push(uploadedImagePath);
           }
 
@@ -191,9 +204,12 @@ const productResolvers = {
 
     updateDigitalProduct: async (
       _,
-      { id, input, images = [], deleteImages = [] }
+      { id, input, images = [], deleteImages = [] },
+      context
     ) => {
       try {
+        let company = await Company.findById(context.user.company);
+
         const product = await DigitalProduct.findById(id).populate("category");
         if (!product) throw new CustomError("Product not found", 404);
 
@@ -220,7 +236,12 @@ const productResolvers = {
         let uploadedImages = [];
         if (images && images.length > 0) {
           uploadedImages = await Promise.all(
-            images.map((image) => upload(image, `digitalProducts/`))
+            images.map((image) =>
+              upload(
+                image,
+                `${company.name.replace(/\s+/g, "")}/Products/digitalProducts`
+              )
+            )
           );
         }
 

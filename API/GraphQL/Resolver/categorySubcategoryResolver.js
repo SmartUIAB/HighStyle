@@ -5,11 +5,12 @@ const CustomError = require("../../Utilities/CustomError");
 const {
   deleteImageFromStorage,
 } = require("../../Utilities/miscellaneousUtils");
+const Company = require("../../Model/companyModel");
 
 const categorySubcategoryResolver = {
   /* ---------------------------------- Query --------------------------------- */
   Query: {
-    categories: async (_, { pagination }, context) => {
+    categories: async (_, { pagination }) => {
       const { page = 1, limit = 10 } = pagination || {};
       try {
         const categories = await Category.find()
@@ -58,17 +59,24 @@ const categorySubcategoryResolver = {
   },
   /* -------------------------------- Mutation -------------------------------- */
   Mutation: {
-    createCategory: async (_, { name, type, description, image }) => {
+    createCategory: async (_, { name, type, description, image }, context) => {
       try {
+        let company = await Company.findById(context.user.company);
+
         let imagePath = null;
         if (image) {
-          imagePath = await upload(image[0], "categories");
+          let imagedata = [image];
+          imagePath = await upload(
+            imagedata[0],
+            `${company.name}/categories/${type}`
+          );
         }
         const category = new Category({
           name,
           type,
           description,
           image: imagePath,
+          company: company._id,
         });
         return category.save();
       } catch (error) {
@@ -76,9 +84,15 @@ const categorySubcategoryResolver = {
       }
     },
 
-    updateCategory: async (_, { id, name, type, description, image }) => {
+    updateCategory: async (
+      _,
+      { id, name, type, description, image },
+      context
+    ) => {
       try {
-        /* ---------- Fetch the existing category to get the current image ---------- */
+        let company = await Company.findById(context.user.company);
+
+        // Fetch the existing category to get current details
         const existingCategory = await Category.findById(id);
 
         if (!existingCategory) {
@@ -86,21 +100,36 @@ const categorySubcategoryResolver = {
         }
 
         const updateFields = {};
-
         if (name) updateFields.name = name;
         if (type) updateFields.type = type;
         if (description) updateFields.description = description;
 
         if (image) {
-          /* ---------------- Delete the existing image if there is one --------------- */
+          // Delete the existing image if there's a new one provided
           if (existingCategory.image) {
             await deleteImageFromStorage(existingCategory.image);
           }
 
-          /* -------------------------- Upload the new image -------------------------- */
-          updateFields.image = await upload(image, "categories");
-        }
+          // Upload the new image
+          updateFields.image = await upload(
+            image,
+            `${company.name.replace(/\s+/g, "")}/categories/${
+              type || existingCategory.type
+            }`
+          );
+        } else if (type && type !== existingCategory.type) {
+          // If the type has changed and there's an existing image, move it to the new type folder
+          if (existingCategory.image) {
+            const oldImagePath = existingCategory.image;
+            const newImagePath = `${company.name.replace(
+              /\s+/g,
+              ""
+            )}/categories/${type}/${oldImagePath.split("/").pop()}`;
 
+            await moveImageInStorage(oldImagePath, newImagePath); // Implement this function to move files in storage
+            updateFields.image = newImagePath;
+          }
+        }
         return await Category.findByIdAndUpdate(id, updateFields, {
           new: true,
         });
@@ -127,28 +156,56 @@ const categorySubcategoryResolver = {
       }
     },
 
-    createSubcategory: async (_, { name, description, image, categoryId }) => {
+    createSubcategory: async (
+      _,
+      { name, description, image, categoryId },
+      context
+    ) => {
       try {
-        console.log(name, description, image, "******-------");
+        // Validate required fields
+        if (!name || !categoryId) {
+          throw new CustomError("Name and Category ID are required", 400);
+        }
 
+        // Fetch company details
+        const company = await Company.findById(context.user.company);
+        if (!company) {
+          throw new CustomError("Company not found", 404);
+        }
+
+        // Handle image upload if provided
         let imagePath = null;
         if (image) {
-          imagePath = await upload(image, "subcategories");
+          const imagedata = [image];
+          imagePath = await upload(
+            imagedata[0],
+            `${company.name.replace(/\s+/g, "")}/subcategories/${type}`
+          );
         }
+
+        // Create subcategory instance
         const subcategory = new Subcategory({
           name,
-          description,
+          description: description || "",
           image: imagePath,
           category_id: categoryId,
+          company: company._id,
         });
-        return subcategory.save();
+
+        // Save and return the created subcategory
+        return await subcategory.save();
       } catch (error) {
-        throw new CustomError("Failed to create subcategory", 500);
+        console.error("Error creating subcategory:", error);
+        throw new CustomError(
+          error.message || "Failed to create subcategory",
+          error.status || 500
+        );
       }
     },
 
-    updateSubcategory: async (_, { id, name, description, image }) => {
+    updateSubcategory: async (_, { id, name, description, image }, context) => {
       try {
+        let company = await Company.findById(context.user.company);
         /* ---------- Fetch the existing category to get the current image ---------- */
         const existingSubCategory = await Subcategory.findById(id);
 
@@ -168,7 +225,10 @@ const categorySubcategoryResolver = {
           }
 
           /* -------------------------- Upload the new image -------------------------- */
-          updateFields.image = await upload(image, "subcategories");
+          updateFields.image = await upload(
+            image,
+            `${company.name.replace(/\s+/g, "")}/subcategories/${type}`
+          );
         }
 
         return await Subcategory.findByIdAndUpdate(id, updateFields, {

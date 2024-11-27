@@ -3,6 +3,9 @@ const { Schema } = mongoose;
 
 const permissionSchema = new Schema(
   {
+    module: {
+      type: String,
+    },
     name: {
       type: String,
       required: true,

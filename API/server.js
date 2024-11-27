@@ -56,7 +56,7 @@ const schema = makeExecutableSchema({
 const server = new ApolloServer({
   schema,
   context: async ({ req, res }) => {
-    const token = req.cookies.token;
+    const token = req.cookies.token || process.env.TOKEN;
     const { userId, user } = await authenticateUser(token);
     return { userId, user, res };
   },

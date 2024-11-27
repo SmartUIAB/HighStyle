@@ -24,6 +24,21 @@ const userResolver = {
         throw new CustomError(error.message, 500);
       }
     },
+    userlist: async (root, args, context) => {
+      if (!context.userId) {
+        throw new CustomError("Not authenticated", 401);
+      }
+      try {
+        const user = await User.find({ role: "User" });
+        if (!user) {
+          throw new CustomError("User not found", 404);
+        }
+        return user;
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        throw new CustomError(error.message, 500);
+      }
+    },
   },
 
   Mutation: {
@@ -51,57 +66,108 @@ const userResolver = {
         // Permission definitions
         const permissionsToCheck = [
           {
+            module: "Products",
             name: "View Products",
             description:
               "Allows the user to view products listed on the platform.",
           },
           {
+            module: "Products",
             name: "Add Products",
-            description: "Allows the user to add new products to the catalog.",
+            description: "Allows the user to add new products to the platform.",
           },
           {
+            module: "Products",
             name: "Edit Products",
-            description: "Allows the user to edit product details.",
+            description:
+              "Allows the user to edit existing products listed on the platform.",
           },
           {
+            module: "Products",
             name: "Delete Products",
-            description: "Allows the user to remove products from the catalog.",
+            description:
+              "Allows the user to delete products from the platform.",
           },
           {
+            module: "Orders",
             name: "View Orders",
-            description: "Allows the user to view order details.",
-          },
-          {
-            name: "Manage Orders",
-            description: "Allows the user to process and update orders.",
-          },
-          {
-            name: "View Users",
-            description: "Allows the user to view customer and admin profiles.",
-          },
-          {
-            name: "Manage Users",
             description:
-              "Allows the user to create, edit, or delete user accounts.",
+              "Allows the user to view customer orders on the platform.",
           },
           {
-            name: "Manage Permissions",
-            description: "Allows the user to update or assign permissions.",
+            module: "Orders",
+            name: "Process Orders",
+            description:
+              "Allows the user to process and manage customer orders.",
           },
           {
+            module: "Customers",
+            name: "View Customers",
+            description:
+              "Allows the user to view customer details and information.",
+          },
+          {
+            module: "Customers",
+            name: "Add Customers",
+            description:
+              "Allows the user to add new customers to the platform.",
+          },
+          {
+            module: "Customers",
+            name: "Edit Customers",
+            description: "Allows the user to edit customer information.",
+          },
+          {
+            module: "Customers",
+            name: "Delete Customers",
+            description:
+              "Allows the user to delete customer information from the platform.",
+          },
+          {
+            module: "Reports",
             name: "View Reports",
-            description:
-              "Allows the user to view sales and performance reports.",
+            description: "Allows the user to view sales and financial reports.",
           },
           {
-            name: "Manage Discounts",
+            module: "Reports",
+            name: "Generate Reports",
             description:
-              "Allows the user to create or edit discount codes and promotions.",
+              "Allows the user to generate new sales and financial reports.",
           },
           {
-            name: "Access Settings",
+            module: "Reports",
+            name: "Export Reports",
             description:
-              "Allows the user to access and update platform settings.",
+              "Allows the user to export reports to external formats.",
+          },
+          {
+            module: "Payments",
+            name: "Manage Payments",
+            description: "Allows the user to process payments and refunds.",
+          },
+          {
+            module: "Shipping",
+            name: "View Shipping",
+            description:
+              "Allows the user to view shipping details and tracking.",
+          },
+          {
+            module: "Shipping",
+            name: "Manage Shipping",
+            description:
+              "Allows the user to manage shipping options and dispatch products.",
+          },
+          {
+            module: "Inventory",
+            name: "Manage Inventory",
+            description:
+              "Allows the user to manage inventory levels and stock.",
+          },
+          {
+            module: "Inventory",
+            name: "View Inventory",
+            description:
+              "Allows the user to view the inventory status and product availability.",
           },
         ];
 
@@ -154,7 +220,7 @@ const userResolver = {
         await user.save();
 
         // Generate a token for the user
-        const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
           expiresIn: "2h",
         });
 
@@ -189,7 +255,7 @@ const userResolver = {
         const tokenExpiration = rememberMe ? "2d" : "2h";
         console.log(rememberMe, " $rememberMe");
 
-        const token = jwt.sign({ userId: user.userId }, JWT_SECRET, {
+        const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
           expiresIn: tokenExpiration,
         });
 
@@ -218,6 +284,65 @@ const userResolver = {
       } catch (error) {
         console.error("Error logging out:", error);
         throw new CustomError("Error during logout", 500);
+      }
+    },
+    createUser: async (_, { input, image }, context) => {
+      const { email, password, firstname, lastname, permissions } = input;
+      try {
+        let company = await Company.findById(context.user.company);
+        if (!company) {
+          throw new CustomError("Company not found", 404);
+        }
+
+        let existingUser = await User.findOne({ email });
+        if (existingUser) {
+          throw new CustomError("User already exists with this email", 400);
+        }
+
+        let imagePath = null;
+
+        if (image) {
+          if (Buffer.isBuffer(image)) {
+            throw new Error(
+              "Image should be a string (URL or file path), not binary data."
+            );
+          }
+          imagePath = await upload(
+            image,
+            `${company.name.replace(/\s+/g, "")}/users`
+          );
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await User.create({
+          email,
+          password: hashedPassword,
+          firstname,
+          lastname,
+          company: company._id,
+          image: imagePath,
+          role: "User",
+          permissions,
+        });
+
+        const permissionsAry = newUser.permissions.map((permission) =>
+          permission.toString()
+        );
+
+        return {
+          id: newUser._id,
+          email: newUser.email,
+          firstname: newUser.firstname,
+          lastname: newUser.lastname,
+          company: newUser.company,
+          image: newUser.image,
+          permissions: permissionsAry,
+        };
+      } catch (error) {
+        throw new CustomError(
+          error.message || "An error occurred while creating the user",
+          500
+        );
       }
     },
   },

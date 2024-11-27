@@ -3,7 +3,7 @@ const { gql } = require("apollo-server-express");
 const userTypeDefs = gql`
   scalar Upload
 
-  type User {
+  type Users {
     id: ID!
     email: String!
     firstname: String
@@ -12,9 +12,41 @@ const userTypeDefs = gql`
     image: String
   }
 
+  type User {
+    id: ID!
+    email: String!
+    firstname: String
+    lastname: String
+    company: String
+    image: String
+    permissions: [UserPer!]!
+  }
+
   type AuthPayload {
-    user: User!
+    user: Users!
     token: String!
+  }
+
+  type UserPer {
+    id: ID!
+  }
+
+  type OutputUser {
+    id: ID!
+    email: String!
+    firstname: String!
+    lastname: String!
+    company: String
+    image: String
+    permissions: [ID!]!
+  }
+
+  input UserInput {
+    email: String!
+    password: String!
+    firstname: String!
+    lastname: String!
+    permissions: [ID!]!
   }
 
   input RegisterInput {
@@ -29,10 +61,13 @@ const userTypeDefs = gql`
     register(input: RegisterInput!, image: Upload): AuthPayload!
     login(email: String!, password: String!, rememberMe: Boolean!): AuthPayload!
     logout: Boolean!
+    createUser(input: UserInput!, image: Upload): OutputUser!
   }
 
   type Query {
-    me: User
+    me: Users
+    userlist: [OutputUser!]!
+    user(id: ID!): User
   }
 `;
 
