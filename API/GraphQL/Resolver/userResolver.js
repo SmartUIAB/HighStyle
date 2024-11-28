@@ -24,6 +24,7 @@ const userResolver = {
         throw new CustomError(error.message, 500);
       }
     },
+    /* ------------------------------- For all user list ------------------------------- */
     userlist: async (root, args, context) => {
       if (!context.userId) {
         throw new CustomError("Not authenticated", 401);
@@ -37,6 +38,87 @@ const userResolver = {
       } catch (error) {
         console.error("Error fetching user:", error);
         throw new CustomError(error.message, 500);
+      }
+    },
+    /* ------------------------------- For user pagination ------------------------------- */
+    users: async (_, { page = 1, limit = 10 }, context) => {
+      try {
+        const company = await Company.findById(context.user.company);
+        if (!company) {
+          throw new CustomError("Company not found", 404);
+        }
+
+        const skip = (page - 1) * limit;
+
+        const users = await User.find({ role: "User" }).skip(skip).limit(limit);
+
+        const totalCount = await User.countDocuments({
+          role: "User",
+        });
+
+        const userList = users.map((user) => ({
+          id: user._id,
+          email: user.email,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          company: user.company,
+          image: user.image,
+          role: user.role,
+          permissions: user.permissions.map((permission) =>
+            permission.toString()
+          ),
+        }));
+
+        return {
+          users: userList,
+          totalCount,
+          totalPages: Math.ceil(totalCount / limit),
+          currentPage: page,
+        };
+      } catch (error) {
+        throw new CustomError(
+          error.message || "An error occurred while fetching the user list",
+          500
+        );
+      }
+    },
+    /* ------------------------------- For user by ID ------------------------------- */
+    userById: async (_, { userId }, context) => {
+      try {
+        const company = await Company.findById(context.user.company);
+        if (!company) {
+          throw new CustomError("Company not found", 404);
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+          throw new CustomError("User not found", 404);
+        }
+
+        if (!user.company.equals(context.user.company)) {
+          throw new CustomError(
+            "Unauthorized: User does not belong to your company",
+            403
+          );
+        }
+
+        return {
+          id: user._id,
+          email: user.email,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          company: user.company,
+          image: user.image,
+          role: user.role,
+          permissions: user.permissions.map((permission) =>
+            permission.toString()
+          ),
+        };
+      } catch (error) {
+        throw new CustomError(
+          error.message || "An error occurred while fetching the user",
+          500
+        );
       }
     },
   },
@@ -286,6 +368,7 @@ const userResolver = {
         throw new CustomError("Error during logout", 500);
       }
     },
+    /* ------------------------------- For create user ------------------------------- */
     createUser: async (_, { input, image }, context) => {
       const { email, password, firstname, lastname, permissions } = input;
       try {
@@ -341,6 +424,111 @@ const userResolver = {
       } catch (error) {
         throw new CustomError(
           error.message || "An error occurred while creating the user",
+          500
+        );
+      }
+    },
+    /* ------------------------------- For update user ------------------------------- */
+    updateUser: async (_, { userId, input, image }, context) => {
+      const { email, password, firstname, lastname, permissions } = input;
+
+      try {
+        let company = await Company.findById(context.user.company);
+        if (!company) {
+          throw new CustomError("Company not found", 404);
+        }
+
+        let user = await User.findById(userId);
+        if (!user) {
+          throw new CustomError("User not found", 404);
+        }
+
+        if (email && email !== user.email) {
+          let existingUser = await User.findOne({ email });
+          if (existingUser) {
+            throw new CustomError(
+              "Another user already exists with this email",
+              400
+            );
+          }
+          user.email = email;
+        }
+
+        if (firstname) user.firstname = firstname;
+        if (lastname) user.lastname = lastname;
+
+        if (permissions) {
+          user.permissions = permissions.map((permission) =>
+            permission.toString()
+          );
+        }
+
+        if (password) {
+          user.password = await bcrypt.hash(password, 10);
+        }
+
+        if (image) {
+          if (Buffer.isBuffer(image)) {
+            throw new Error(
+              "Image should be a string (URL or file path), not binary data."
+            );
+          }
+          const imagePath = await upload(
+            image,
+            `${company.name.replace(/\s+/g, "")}/users`
+          );
+          user.image = imagePath;
+        }
+
+        await user.save();
+
+        return {
+          id: user._id,
+          email: user.email,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          company: company._id,
+          image: user.image,
+          permissions: user.permissions.map((permission) =>
+            permission.toString()
+          ),
+        };
+      } catch (error) {
+        throw new CustomError(
+          error.message || "An error occurred while updating the user",
+          500
+        );
+      }
+    },
+    /* ------------------------------- For delete user ------------------------------- */
+    deleteUser: async (_, { userId }, context) => {
+      try {
+        const company = await Company.findById(context.user.company);
+        if (!company) {
+          throw new CustomError("Company not found", 404);
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+          throw new CustomError("User not found", 404);
+        }
+
+        if (!user.company.equals(context.user.company)) {
+          throw new CustomError(
+            "Unauthorized: User does not belong to your company",
+            403
+          );
+        }
+
+        await User.findByIdAndDelete(userId);
+
+        return {
+          success: true,
+          message: `User with ID ${userId} has been deleted successfully.`,
+        };
+      } catch (error) {
+        throw new CustomError(
+          error.message || "An error occurred while deleting the user",
           500
         );
       }

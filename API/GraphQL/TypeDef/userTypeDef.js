@@ -38,7 +38,20 @@ const userTypeDefs = gql`
     lastname: String!
     company: String
     image: String
+    role: String
     permissions: [ID!]!
+  }
+
+  type DeleteUserResponse {
+    success: Boolean!
+    message: String!
+  }
+
+  type PaginatedUserList {
+    users: [OutputUser]
+    totalCount: Int!
+    totalPages: Int!
+    currentPage: Int!
   }
 
   input UserInput {
@@ -62,12 +75,15 @@ const userTypeDefs = gql`
     login(email: String!, password: String!, rememberMe: Boolean!): AuthPayload!
     logout: Boolean!
     createUser(input: UserInput!, image: Upload): OutputUser!
+    updateUser(userId: ID!, input: UserInput!, image: String): OutputUser!
+    deleteUser(userId: ID!): DeleteUserResponse!
   }
 
   type Query {
     me: Users
     userlist: [OutputUser!]!
-    user(id: ID!): User
+    userById(userId: ID!): OutputUser!
+    users(page: Int, limit: Int): PaginatedUserList!
   }
 `;
 
