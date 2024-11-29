@@ -4,6 +4,7 @@ const categorySubcategoryTypeDef = require("./categorySubcategoryTypeDef");
 const productTypeDef = require("./productTypeDef");
 const couponTypeDef = require("./couponTypeDef");
 const permissionsTypeDef = require("./permissionsTypeDef");
+const vendorTypeDefs = require("./vendorTypeDef");
 
 const typeDefs = gql`
   ${userTypeDefs}
@@ -11,6 +12,7 @@ const typeDefs = gql`
   ${productTypeDef}
   ${couponTypeDef}
   ${permissionsTypeDef}
+  ${vendorTypeDefs}
 `;
 
 module.exports = typeDefs;

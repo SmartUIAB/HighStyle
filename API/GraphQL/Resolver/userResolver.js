@@ -372,11 +372,13 @@ const userResolver = {
     createUser: async (_, { input, image }, context) => {
       const { email, password, firstname, lastname, permissions } = input;
       try {
+        // Find the company of the user creating this new user
         let company = await Company.findById(context.user.company);
         if (!company) {
           throw new CustomError("Company not found", 404);
         }
 
+        // Check if the email already exists
         let existingUser = await User.findOne({ email });
         if (existingUser) {
           throw new CustomError("User already exists with this email", 400);
@@ -384,6 +386,7 @@ const userResolver = {
 
         let imagePath = null;
 
+        // Validate and upload image if provided
         if (image) {
           if (Buffer.isBuffer(image)) {
             throw new Error(
@@ -397,6 +400,14 @@ const userResolver = {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
+
+        const AllPermission = await Permission.find();
+
+        if (AllPermission.length === permissions.length) {
+          throw new CustomError("User can not add all permissions", 403);
+        }
+
+        // Create the new user with the filtered permissions
         const newUser = await User.create({
           email,
           password: hashedPassword,
@@ -428,6 +439,7 @@ const userResolver = {
         );
       }
     },
+
     /* ------------------------------- For update user ------------------------------- */
     updateUser: async (_, { userId, input, image }, context) => {
       const { email, password, firstname, lastname, permissions } = input;
@@ -507,10 +519,14 @@ const userResolver = {
         if (!company) {
           throw new CustomError("Company not found", 404);
         }
-
         const user = await User.findById(userId);
+
         if (!user) {
           throw new CustomError("User not found", 404);
+        }
+
+        if (user.image) {
+          await deleteImageFromStorage(user.image);
         }
 
         if (!user.company.equals(context.user.company)) {

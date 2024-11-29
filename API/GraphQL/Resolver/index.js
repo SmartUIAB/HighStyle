@@ -4,6 +4,7 @@ const fieldResolver = require("./fieldResolver");
 const permissionsResolver = require("./permissionsResolver");
 const productResolvers = require("./productResolver");
 const userResolver = require("./userResolver");
+const vendorResolver = require("./vendorResolver");
 
 const resolver = {
   Query: {
@@ -12,12 +13,14 @@ const resolver = {
     ...couponResolver.Query,
     ...productResolvers.Query,
     ...permissionsResolver.Query,
+    ...vendorResolver.Query,
   },
   Mutation: {
     ...userResolver.Mutation,
     ...categorySubcategoryResolver.Mutation,
     ...productResolvers.Mutation,
     ...couponResolver.Mutation,
+    ...vendorResolver.Mutation,
   },
   Category: {
     ...fieldResolver.Category,
