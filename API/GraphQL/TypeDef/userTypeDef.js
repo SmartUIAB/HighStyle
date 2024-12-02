@@ -3,15 +3,6 @@ const { gql } = require("apollo-server-express");
 const userTypeDefs = gql`
   scalar Upload
 
-  type Users {
-    id: ID!
-    email: String!
-    firstname: String
-    lastname: String
-    company: String
-    image: String
-  }
-
   type User {
     id: ID!
     email: String!
@@ -19,16 +10,12 @@ const userTypeDefs = gql`
     lastname: String
     company: String
     image: String
-    permissions: [UserPer!]!
+    permissions: [ID!]
   }
 
   type AuthPayload {
-    user: Users!
+    user: User!
     token: String!
-  }
-
-  type UserPer {
-    id: ID!
   }
 
   type OutputUser {
@@ -88,7 +75,7 @@ const userTypeDefs = gql`
   }
 
   type Query {
-    me: Users
+    me: User
     userlist: [OutputUser!]!
     userById(userId: ID!): OutputUser!
     users(page: Int, limit: Int): PaginatedUserList!
