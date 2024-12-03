@@ -6,6 +6,9 @@ const CustomError = require("../../Utilities/CustomError");
 const { upload } = require("../../Utilities/upload");
 const Company = require("../../Model/companyModel");
 const Permission = require("../../Model/permissionModel");
+const {
+  deleteImageFromStorage,
+} = require("../../Utilities/miscellaneousUtils");
 
 const userResolver = {
   Query: {

@@ -4,6 +4,9 @@ const { upload } = require("../../Utilities/upload");
 const Company = require("../../Model/companyModel");
 const Permission = require("../../Model/permissionModel");
 const Vendor = require("../../Model/vendorModel");
+const {
+  deleteImageFromStorage,
+} = require("../../Utilities/miscellaneousUtils");
 
 const vendorResolver = {
   Query: {
