@@ -12,6 +12,11 @@ const subCategorySchema = new Schema(
       type: String,
       trim: true,
     },
+    type: {
+      type: String,
+      enum: ["Physical", "Digital"],
+      required: true,
+    },
     category_id: {
       type: Schema.Types.ObjectId,
       ref: "Category",

@@ -21,6 +21,7 @@ const categorySubcategoryTypeDef = gql`
     id: ID!
     name: String!
     image: String
+    type: ItemType!
     description: String!
     category: Category!
   }
@@ -47,6 +48,7 @@ const categorySubcategoryTypeDef = gql`
   type Query {
     categories(pagination: PaginationInput): PaginatedCategories
     category(id: ID!): Category
+    categorieslist: [Category!]!
     subcategories(pagination: PaginationInput): PaginatedSubcategories
     subcategory(id: ID!): Subcategory
   }
@@ -71,11 +73,13 @@ const categorySubcategoryTypeDef = gql`
       name: String!
       description: String
       image: Upload
+      type: ItemType
       categoryId: ID!
     ): Subcategory
     updateSubcategory(
       id: ID!
       name: String
+      type: ItemType
       description: String
       image: Upload
     ): Subcategory

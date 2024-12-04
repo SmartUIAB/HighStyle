@@ -1,98 +1,93 @@
-import { Fragment, useState } from "react";
-import { useMutation } from "@apollo/client";
-import "react-toastify/dist/ReactToastify.css";
-import {
-  Button,
-  Card,
-  CardBody,
-  Col,
-  Container,
-  Form,
-  FormGroup,
-  Input,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Row,
-} from "reactstrap";
-import { CREATE_CATEGORY } from "../../../../GraphQL/Mutations/categoryMutations";
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
 import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import Datatable from "@/CommonComponents/DataTable";
-import { ProductCategoryData } from "@/Data/Product/Physical";
+import { Fragment, useState } from "react";
+import "react-toastify/dist/ReactToastify.css";
+import { Button, Card, CardBody, Col, Container, Form, FormGroup, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
+import { useMutation, useQuery } from "@apollo/client";
+import { CREATE_CATEGORY } from "../../../../GraphQL/Mutations/categoryMutations";
+import { GET_CATEGORY } from "../../../../GraphQL/Queries/categoryQueries";
+
+import { toast } from "react-toastify";
 
 const Category = () => {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    type: "Physical",
-    image: null,
-  });
-  const [CreateCategory, { loading }] = useMutation(CREATE_CATEGORY);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [type, setType] = useState("");
+  const [image, setImage] = useState<File | null>(null);
 
-  const onOpenModal = () => setOpen(true);
-  const onCloseModal = () => {
-    setOpen(false);
-    setFormData({ name: "", description: "", type: "Physical", image: null });
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+
+  const handleSelect = (selectedType: string) => {
+    setType(selectedType);
   };
 
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+  const [createCategory] = useMutation(CREATE_CATEGORY);
 
   const handleFileChange = (e: any) => {
-    const file = e.target.files[0]; // Safely access the first file
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setImage(files[0]);
+    }
+  };
 
-    if (file) {
-      console.log("Selected file:", file);
+  const { data, loading, error, refetch } = useQuery(GET_CATEGORY, {
+    variables: {
+      pagination: {
+        page,
+        limit,
+      },
+    },
+  });
 
-      // Update state with the selected file
-      setFormData((prevData) => ({
-        ...prevData,
-        image: file,
-      }));
-    } else {
-      console.log("No file selected.");
+  const categoriesData = data?.categories?.categories.filter((item: any) => item.type == 'Physical') || [];
+  const handleSave = async () => {
+    try {
+      if (!name || !type) {
+        console.error("Name and Type are required fields.");
+        return;
+      }
+      if (!image) {
+        console.error("Image is required.");
+        return;
+      }
+
+      const { data } = await createCategory({
+        variables: {
+          name: name,
+          description: description,
+          image: image,
+          type: type,
+        },
+      });
+
+      if (data) {
+        toast.success("Category created successfully");
+        setOpen(false);
+        refetch();
+      }
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
 
-  const handleCreateCategory = async () => {
-    const { name, description, type, image } = formData;
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
 
-    if (!name.trim() || !description.trim()) {
-      alert("Please fill out both the name and description fields.");
-      return;
-    }
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setPage(1);
+  };
 
-    try {
-      if (image) {
-        console.log("first", image);
-        try {
-          const { data } = await CreateCategory({
-            variables: { name, description, type, image },
-          });
-          console.log("Category created:", data);
-          alert("Category created successfully!");
-          onCloseModal();
-        } catch (error) {
-          console.error("Error creating category:", error);
-          alert("Failed to create category. Please try again.");
-        }
-      }
-    } catch (error) {
-      const errorMessage =
-        error.graphQLErrors?.[0]?.message || "Failed to create category.";
-      console.error("Error creating category:", error);
-      alert(errorMessage);
-    }
+  const onOpenModal = () => {
+    setOpen(true);
+  };
+  const onCloseModal = () => {
+    setOpen(false);
   };
 
   return (
@@ -117,27 +112,11 @@ const Category = () => {
                     <ModalBody>
                       <Form>
                         <FormGroup>
-                          <Label htmlFor="name" className="col-form-label">
-                            Category Name:
-                          </Label>
+                          <Label>Category Name:</Label>
                           <Input
-                            id="name"
                             type="text"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                          />
-                        </FormGroup>
-                        <FormGroup>
-                          <Label htmlFor="description" className="col-form-label">
-                            Description:
-                          </Label>
-                          <Input
-                            id="description"
-                            type="textarea"
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                           />
                         </FormGroup>
                         <FormGroup>
@@ -148,33 +127,33 @@ const Category = () => {
                             id="type"
                             type="select"
                             name="type"
-                            value={formData.type}
-                            onChange={handleChange}
+                            value={type || "Select type"}
+                            onChange={(e) => handleSelect(e.target.value)}
                           >
+                            <option value="" disabled>
+                              Select type
+                            </option>
                             <option value="Physical">Physical</option>
                             <option value="Digital">Digital</option>
                           </Input>
                         </FormGroup>
                         <FormGroup>
-                          <Label htmlFor="image" className="col-form-label">
-                            Category Image:
-                          </Label>
+                          <Label>Category Description:</Label>
                           <Input
-                            id="image"
-                            type="file"
-                            name="image"
-                            onChange={handleFileChange}
+                            type="text"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
                           />
+                        </FormGroup>
+                        <FormGroup>
+                          <Label>Category Image:</Label>
+                          <Input type="file" onChange={handleFileChange} />
                         </FormGroup>
                       </Form>
                     </ModalBody>
                     <ModalFooter>
-                      <Button
-                        color="primary"
-                        onClick={handleCreateCategory}
-                        disabled={loading}
-                      >
-                        {loading ? "Saving..." : "Save"}
+                      <Button color="primary" onClick={handleSave}>
+                        Save
                       </Button>
                       <Button color="secondary" onClick={onCloseModal}>
                         Close
@@ -185,10 +164,14 @@ const Category = () => {
                 <div className="clearfix"></div>
                 <div id="basicScenario" className="product-physical">
                   <Datatable
-                    myData={ProductCategoryData}
+                    myData={categoriesData}
                     multiSelectOption={false}
-                    pageSize={10}
-                    pagination={true}
+                    pagination={{
+                      onChangePage: handlePageChange,
+                      onChangeRowsPerPage: handleLimitChange,
+                      pageSize: limit,
+                      totalItem: categoriesData?.length
+                    }}
                     class="-striped -highlight"
                   />
                 </div>

@@ -26,6 +26,21 @@ const categorySubcategoryResolver = {
         throw new CustomError("Failed to fetch categories", 500);
       }
     },
+    categorieslist: async (root, args, context) => {
+      if (!context.userId) {
+        throw new CustomError("Not authenticated", 401);
+      }
+      try {
+        const user = await Category.find();
+        if (!user) {
+          throw new CustomError("User not found", 404);
+        }
+        return user;
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        throw new CustomError(error.message, 500);
+      }
+    },
     category: async (_, { id }) => {
       try {
         return await Category.findById(id);
@@ -65,9 +80,8 @@ const categorySubcategoryResolver = {
 
         let imagePath = null;
         if (image) {
-          let imagedata = [image];
           imagePath = await upload(
-            imagedata[0],
+            image[0],
             `${company.name}/categories/${type}`
           );
         }
@@ -105,20 +119,19 @@ const categorySubcategoryResolver = {
         if (description) updateFields.description = description;
 
         if (image) {
-          // Delete the existing image if there's a new one provided
           if (existingCategory.image) {
             await deleteImageFromStorage(existingCategory.image);
           }
 
           // Upload the new image
+          console.log(image, "image");
           updateFields.image = await upload(
-            image,
+            image[0],
             `${company.name.replace(/\s+/g, "")}/categories/${
               type || existingCategory.type
             }`
           );
         } else if (type && type !== existingCategory.type) {
-          // If the type has changed and there's an existing image, move it to the new type folder
           if (existingCategory.image) {
             const oldImagePath = existingCategory.image;
             const newImagePath = `${company.name.replace(
@@ -126,7 +139,7 @@ const categorySubcategoryResolver = {
               ""
             )}/categories/${type}/${oldImagePath.split("/").pop()}`;
 
-            await moveImageInStorage(oldImagePath, newImagePath); // Implement this function to move files in storage
+            await moveImageInStorage(oldImagePath, newImagePath);
             updateFields.image = newImagePath;
           }
         }
@@ -158,41 +171,36 @@ const categorySubcategoryResolver = {
 
     createSubcategory: async (
       _,
-      { name, description, image, categoryId },
+      { name, description, type, image, categoryId },
       context
     ) => {
       try {
-        // Validate required fields
         if (!name || !categoryId) {
           throw new CustomError("Name and Category ID are required", 400);
         }
 
-        // Fetch company details
         const company = await Company.findById(context.user.company);
         if (!company) {
           throw new CustomError("Company not found", 404);
         }
 
-        // Handle image upload if provided
         let imagePath = null;
         if (image) {
-          const imagedata = [image];
           imagePath = await upload(
-            imagedata[0],
+            image,
             `${company.name.replace(/\s+/g, "")}/subcategories/${type}`
           );
         }
 
-        // Create subcategory instance
         const subcategory = new Subcategory({
           name,
           description: description || "",
           image: imagePath,
+          type: type,
           category_id: categoryId,
           company: company._id,
         });
 
-        // Save and return the created subcategory
         return await subcategory.save();
       } catch (error) {
         console.error("Error creating subcategory:", error);
@@ -203,10 +211,13 @@ const categorySubcategoryResolver = {
       }
     },
 
-    updateSubcategory: async (_, { id, name, description, image }, context) => {
+    updateSubcategory: async (
+      _,
+      { id, name, description, type, image },
+      context
+    ) => {
       try {
         let company = await Company.findById(context.user.company);
-        /* ---------- Fetch the existing category to get the current image ---------- */
         const existingSubCategory = await Subcategory.findById(id);
 
         if (!existingSubCategory) {
@@ -217,14 +228,13 @@ const categorySubcategoryResolver = {
 
         if (name) updateFields.name = name;
         if (description) updateFields.description = description;
+        if (type) updateFields.type = type;
 
         if (image) {
-          /* ---------------- Delete the existing image if there is one --------------- */
           if (existingSubCategory.image) {
             await deleteImageFromStorage(existingSubCategory.image);
           }
 
-          /* -------------------------- Upload the new image -------------------------- */
           updateFields.image = await upload(
             image,
             `${company.name.replace(/\s+/g, "")}/subcategories/${type}`

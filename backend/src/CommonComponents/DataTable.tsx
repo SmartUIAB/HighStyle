@@ -1,206 +1,237 @@
 //@ts-nocheck
 import dynamic from "next/dynamic";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Button, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Button, Card, CardBody, Col, Container, Form, FormGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
+import { DELETE_CATEGORY, UPDATE_CATEGORY } from '../GraphQL/Mutations/categoryMutations'
+import { useMutation } from "@apollo/client";
+
 const DataTable = dynamic(() => import("react-data-table-component"), { ssr: false });
 
 const Datatable = ({ myData, myClass, multiSelectOption, pagination }: any) => {
+  const { onChangePage, onChangeRowsPerPage, pageSize, totalItem } = pagination;
   const [open, setOpen] = useState(false);
+  const [selectedRow, setSelectedRow] = useState<any>(null);
+
+  const apiBaseUrl = "http://localhost:2024";
   const [checkedValues, setCheckedValues] = useState([]);
   const [data, setData] = useState(myData);
-  const selectRow = (e, i) => {
-    if (!e.target.checked) {
-      setCheckedValues(checkedValues.filter((item, j) => i !== item));
-    } else {
-      checkedValues.push(i);
-      setCheckedValues(checkedValues);
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [type, setType] = useState("");
+  const [image, setImage] = useState<File | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+
+  const [deleteCategory] = useMutation(DELETE_CATEGORY);
+  const [updateCategory] = useMutation(UPDATE_CATEGORY);
+
+
+  const toggleModal = (row?: any) => {
+    setSelectedRow(row || null);
+    setOpen((prevState) => !prevState);
+  };
+
+  useEffect(() => {
+    setData(myData);
+  }, [myData]);
+
+  const handleFileChange = (e: any) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      setImage(files[0]);
+      setImagePreview(URL.createObjectURL(files[0]));
     }
   };
 
-  const handleRemoveRow = () => {
-    const updatedData = myData.filter(function (el) {
-      return checkedValues.indexOf(el.id) < 0;
-    });
-    setData([...updatedData]);
-    toast.success("Successfully Deleted !");
+  const handleSelect = (type: string) => {
+    setType(type);
+    setDropdownOpen(false);
   };
 
-  const renderEditable = (cellInfo) => {
-    return (
-      <div
-        style={{ backgroundColor: "#fafafa" }}
-        contentEditable
-        suppressContentEditableWarning
-        onBlur={(e) => {
-          data[cellInfo.index][cellInfo.index.id] = e.target.innerHTML;
-          setData({ myData: data });
-        }}
-        dangerouslySetInnerHTML={{
-          __html: myData[cellInfo.index][cellInfo.index.id],
-        }}
-      />
-    );
+  const handleDeleteCategory = async (row?: any) => {
+    try {
+      const { data } = await deleteCategory({
+        variables: { deleteCategoryId: row.id },
+      });
+
+      if (data) {
+        toast.success("Deleted Category successfully");
+        refetch();
+      }
+    } catch (error) {
+      toast.error("Failed to delete category. Please try again.");
+    }
   };
 
-  const handleDelete = (index: number) => {
-    if (window.confirm("Are you sure you wish to delete this item?")) {
-      const del = data;
-      del.splice(index, 1);
-      setData([...del]);
+
+  const handleUpdateCategory = async () => {
+    try {
+      const { data } = await updateCategory({
+        variables: {
+          updateCategoryId: selectedRow.id,
+          name: name === '' ? selectedRow.name : name,
+          type: type === '' ? selectedRow.type : type,
+          description: description === '' ? selectedRow.description : description,
+          image: image === '' ? selectedRow.image : [image],
+        },
+      });
+
+      if (data) {
+        toast.success("Category Updated Successfully");
+        setOpen(false);
+        refetch();
+      }
+    } catch (error) {
+      console.error("Error updating category:", error);
+      toast.error("Failed to update category. Please try again.");
     }
-    toast.success("Successfully Deleted !");
   };
-  const onOpenModal = () => {
-    setOpen(true);
-  };
 
-  const onCloseModal = () => {
-    setOpen(false);
-  };
 
-  const Capitalize = (str: string) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
-
-  const columns = [];
-  for (const key in myData[0]) {
-    let editable = renderEditable;
-    if (key === "image") {
-      editable = null;
-    }
-    if (key === "status") {
-      editable = null;
-    }
-    if (key === "avtar") {
-      editable = null;
-    }
-    if (key === "vendor") {
-      editable = null;
-    }
-    if (key === "order_status") {
-      editable = null;
-    }
-
-    columns.push({
-      name: <b>{Capitalize(key.toString())}</b>,
-      header: <b>{Capitalize(key.toString())}</b>,
-      selector: (row) => row[key],
-      Cell: editable,
-      style: {
-        textAlign: "center",
-      },
-    });
-  }
-
-  if (multiSelectOption === true) {
-    columns.push({
-      name: (
-        <Button
-          color="danger"
-          size="sm"
-          className=" btn-delete mb-0 b-r-4"
-          onClick={(e) => {
-            if (window.confirm("Are you sure you wish to delete this item?")) handleRemoveRow();
-          }}
-        >
-          Delete
-        </Button>
+  const columns = [
+    {
+      name: <b>Image</b>,
+      selector: (row: any) => row.image,
+      cell: (row: any) => (
+        <img
+          src={apiBaseUrl + row.image}
+          alt={row.name}
+          style={{ width: 50, height: 50, objectFit: "cover" }}
+        />
       ),
-      id: "delete",
-      accessor: () => "delete",
-      cell: (row) => (
-        <div>
-          <span>
-            <Input type="checkbox" name={row.id} defaultChecked={checkedValues.includes(row.id)} onChange={(e) => selectRow(e, row.id)} />
-          </span>
-        </div>
-      ),
-      style: {
-        textAlign: "center",
-      },
       sortable: false,
-    });
-  } else {
-    columns.push({
+      style: { textAlign: "center" },
+    },
+    {
+      name: <b>Name</b>,
+      selector: (row: any) => row.name,
+      sortable: true,
+    },
+    {
+      name: <b>Description</b>,
+      selector: (row: any) => row.description,
+      sortable: true,
+    },
+    {
+      name: <b>Type</b>,
+      selector: (row: any) => row.type,
+      sortable: true,
+    },
+    {
       name: <b>Action</b>,
-      id: "delete",
-      accessor: (str) => "delete",
-      cell: (row, index) => (
-        <div>
-          <span onClick={() => handleDelete(index)}>
+      cell: (row: any, index: number) => (
+        <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+          <span style={{ cursor: "pointer" }} onClick={() => toggleModal(row)}>
+            <i
+              className="fa fa-pencil"
+              style={{ color: "rgb(40, 167, 69)", fontSize: "18px" }}
+            />
+          </span>
+          <span style={{ cursor: "pointer" }} onClick={() => handleDeleteCategory(row)}>
             <i
               className="fa fa-trash"
-              style={{
-                width: 35,
-                fontSize: 20,
-                padding: 11,
-                color: "#e4566e",
-                cursor: "pointer",
-              }}
-            ></i>
-          </span>
-
-          <span>
-            <i
-              onClick={onOpenModal}
-              className="fa fa-pencil"
-              style={{
-                width: 35,
-                fontSize: 20,
-                padding: 11,
-                color: "rgb(40, 167, 69)",
-                cursor: "pointer",
-              }}
-            ></i>
-            <Modal isOpen={open} toggle={onCloseModal} style={{ overlay: { opacity: 0.1 } }}>
-              <ModalHeader toggle={onCloseModal}>
-                <h5 className="modal-title f-w-600" id="exampleModalLabel2">
-                  Edit Product
-                </h5>
-              </ModalHeader>
-              <ModalBody>
-                <Form>
-                  <FormGroup>
-                    <Label htmlFor="recipient-name" className="col-form-label">
-                      Category Name :
-                    </Label>
-                    <Input type="text" />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label htmlFor="message-text" className="col-form-label">
-                      Category Image :
-                    </Label>
-                    <Input id="validationCustom02" type="file" />
-                  </FormGroup>
-                </Form>
-              </ModalBody>
-              <ModalFooter>
-                <Button type="button" color="primary" onClick={() => onCloseModal("VaryingMdo")}>
-                  Update
-                </Button>
-                <Button type="button" color="secondary" onClick={() => onCloseModal("VaryingMdo")}>
-                  Close
-                </Button>
-              </ModalFooter>
-            </Modal>
+              style={{ color: "#e4566e", fontSize: "18px" }}
+            />
           </span>
         </div>
       ),
-      style: {
-        textAlign: "center",
-      },
+      style: { textAlign: "center" },
       sortable: false,
-    });
-  }
+    },
+  ];
+
   return (
     <div>
       <Fragment>
-        <DataTable data={data} columns={columns} className={myClass} pagination={pagination} striped={true} center={true} />
-
+        <DataTable
+          data={data}
+          columns={columns}
+          className={myClass}
+          pagination
+          paginationServer
+          paginationTotalRows={totalItem}
+          paginationPerPage={pageSize}
+          onChangePage={(page) => {
+            if (onChangePage) onChangePage(page);
+          }}
+          onChangeRowsPerPage={(newPageSize) => {
+            if (onChangeRowsPerPage) onChangeRowsPerPage(newPageSize);
+          }}
+          striped
+          center
+        />
         <ToastContainer />
       </Fragment>
+
+      <Modal isOpen={open} toggle={() => toggleModal()}>
+        <ModalHeader toggle={() => toggleModal()}>
+          <h5 className="modal-title f-w-600" id="exampleModalLabel2">
+            {selectedRow ? "Edit Category" : "Add Category"}
+          </h5>
+        </ModalHeader>
+        <ModalBody>
+          <Form>
+            <FormGroup>
+              <Label>Category Name:</Label>
+              <Input
+                type="text"
+                value={name || selectedRow?.name || ""}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="type" className="col-form-label">
+                Type:
+              </Label>
+              <Input
+                id="type"
+                type="select"
+                name="type"
+                value={type || selectedRow?.type || "Select type"}
+                onChange={(e) => handleSelect(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select type
+                </option>
+                <option value="Physical">Physical</option>
+                <option value="Digital">Digital</option>
+              </Input>
+            </FormGroup>
+            <FormGroup>
+              <Label>Category Description:</Label>
+              <Input
+                type="text"
+                value={description || selectedRow?.description || ""}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label>Category Image:</Label>
+              <Input type="file" onChange={handleFileChange} />
+              <div className="mt-3">
+                <img
+                  src={imagePreview || (selectedRow?.image ? apiBaseUrl + selectedRow?.image : '')}
+                  alt="Image Preview"
+                  style={{ width: '100%', height: '261px' }}
+                />
+              </div>
+            </FormGroup>
+          </Form>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={() => handleUpdateCategory()}>
+            Update
+          </Button>
+          <Button color="secondary" onClick={() => toggleModal()}>
+            Close
+          </Button>
+        </ModalFooter>
+      </Modal>
+
     </div>
   );
 };

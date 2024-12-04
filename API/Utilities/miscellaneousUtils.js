@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const CustomError = require("./CustomError");
 
 async function deleteImageFromStorage(imagePath) {
   const fullPath = path.join(__dirname, "../", imagePath); // Adjust path as needed
