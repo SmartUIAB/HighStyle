@@ -4,8 +4,10 @@ import { Fragment, useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, Card, CardBody, Col, Container, Form, FormGroup, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
-import { DELETE_CATEGORY, UPDATE_CATEGORY } from '../GraphQL/Mutations/categoryMutations'
-import { useMutation } from "@apollo/client";
+import { DELETE_CATEGORY, DELETE_SUB_CATEGORY, UPDATE_CATEGORY, UPDATE_SUB_CATEGORY } from '../GraphQL/Mutations/categoryMutations'
+import { useMutation, useQuery } from "@apollo/client";
+import { usePathname } from "next/navigation";
+import { GET_ALL_CATEGORY, SUB_CATEGORY_ID } from "@/GraphQL/Queries/categoryQueries";
 
 const DataTable = dynamic(() => import("react-data-table-component"), { ssr: false });
 
@@ -13,8 +15,6 @@ const Datatable = ({ myData, myClass, multiSelectOption, pagination }: any) => {
   const { onChangePage, onChangeRowsPerPage, pageSize, totalItem } = pagination;
   const [open, setOpen] = useState(false);
   const [selectedRow, setSelectedRow] = useState<any>(null);
-
-  const apiBaseUrl = "http://localhost:2024";
   const [checkedValues, setCheckedValues] = useState([]);
   const [data, setData] = useState(myData);
   const [name, setName] = useState("");
@@ -23,17 +23,30 @@ const Datatable = ({ myData, myClass, multiSelectOption, pagination }: any) => {
   const [image, setImage] = useState<File | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+  const [category, setCategory] = useState("");
+
+  const [deleteCategory] = useMutation(DELETE_CATEGORY);
+  const [deleteSubCategory] = useMutation(DELETE_SUB_CATEGORY);
+  const [updateCategory] = useMutation(UPDATE_CATEGORY);
+  const [updateSubCategory] = useMutation(UPDATE_SUB_CATEGORY);
+  const { data: allCategoriesData } = useQuery(GET_ALL_CATEGORY);
+
+  const apiBaseUrl = "http://localhost:2024";
+  const route = usePathname();
 
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
 
-  const [deleteCategory] = useMutation(DELETE_CATEGORY);
-  const [updateCategory] = useMutation(UPDATE_CATEGORY);
-
-
   const toggleModal = (row?: any) => {
+    console.log(row);
     setSelectedRow(row || null);
     setOpen((prevState) => !prevState);
   };
+
+  const { data: subcategoryid, loading, error, refetch } = useQuery(SUB_CATEGORY_ID, {
+    variables: {
+      subcategoryId: selectedRow?.id
+    },
+  });
 
   useEffect(() => {
     setData(myData);
@@ -54,40 +67,73 @@ const Datatable = ({ myData, myClass, multiSelectOption, pagination }: any) => {
 
   const handleDeleteCategory = async (row?: any) => {
     try {
-      const { data } = await deleteCategory({
-        variables: { deleteCategoryId: row.id },
-      });
+      if (route === '/en/products/physical/category' || route === '/en/products/digital/digital-category') {
+        const { data } = await deleteCategory({
+          variables: { deleteCategoryId: row.id },
+        });
 
-      if (data) {
-        toast.success("Deleted Category successfully");
-        refetch();
+        if (data) {
+          toast.success("Deleted Category successfully");
+        }
+      } else if (route === '/en/products/physical/sub-category' || route === '/en/products/digital/digital-sub-category') {
+        const { data } = await deleteSubCategory({
+          variables: { deleteSubcategoryId: row.id },
+        });
+
+        if (data) {
+          toast.success("Deleted Sub Category successfully");
+        }
       }
+
     } catch (error) {
-      toast.error("Failed to delete category. Please try again.");
+      toast.error(`Failed to Delete ${selectedRow?.__typename}. Please try again.`);
     }
   };
 
-
   const handleUpdateCategory = async () => {
     try {
-      const { data } = await updateCategory({
-        variables: {
-          updateCategoryId: selectedRow.id,
-          name: name === '' ? selectedRow.name : name,
-          type: type === '' ? selectedRow.type : type,
-          description: description === '' ? selectedRow.description : description,
-          image: image === '' ? selectedRow.image : [image],
-        },
-      });
+      if (route === '/en/products/physical/category' || route === '/en/products/digital/digital-category') {
+        const { data } = await updateCategory({
+          variables: {
+            updateCategoryId: selectedRow.id,
+            name: name === '' ? selectedRow.name : name,
+            type: type === '' ? selectedRow.type : type,
+            description: description === '' ? selectedRow.description : description,
+            image: image === '' ? selectedRow.image : image,
+          },
+        });
 
-      if (data) {
-        toast.success("Category Updated Successfully");
-        setOpen(false);
-        refetch();
+        if (data) {
+          toast.success("Category Updated Successfully");
+          setName('');
+          setType('');
+          setDescription('');
+          setImage(null);
+          setOpen(false);
+        }
+      } else if (route === '/en/products/physical/sub-category' || route === '/en/products/digital/digital-sub-category') {
+        const { data } = await updateSubCategory({
+          variables: {
+            updateSubcategoryId: selectedRow.id,
+            name: name === '' ? selectedRow.name : name,
+            type: type === '' ? selectedRow.type : type,
+            description: description === '' ? selectedRow.description : description,
+            image: image === '' ? selectedRow.image : image,
+          },
+        });
+
+        if (data) {
+          toast.success("Sub Category Updated Successfully");
+          setName('');
+          setType('');
+          setDescription('');
+          setCategory('');
+          setImage(null);
+          setOpen(false);
+        }
       }
     } catch (error) {
-      console.error("Error updating category:", error);
-      toast.error("Failed to update category. Please try again.");
+      toast.error(`Failed to Update ${selectedRow?.typename}. Please try again.`);
     }
   };
 
@@ -167,7 +213,7 @@ const Datatable = ({ myData, myClass, multiSelectOption, pagination }: any) => {
         <ToastContainer />
       </Fragment>
 
-      <Modal isOpen={open} toggle={() => toggleModal()}>
+      {(route === '/en/products/physical/category' || route === '/en/products/digital/digital-category') && <Modal isOpen={open} toggle={() => toggleModal()}>
         <ModalHeader toggle={() => toggleModal()}>
           <h5 className="modal-title f-w-600" id="exampleModalLabel2">
             {selectedRow ? "Edit Category" : "Add Category"}
@@ -216,7 +262,7 @@ const Datatable = ({ myData, myClass, multiSelectOption, pagination }: any) => {
                 <img
                   src={imagePreview || (selectedRow?.image ? apiBaseUrl + selectedRow?.image : '')}
                   alt="Image Preview"
-                  style={{ width: '100%', height: '261px' }}
+                  style={{ width: '100%', height: '215px' }}
                 />
               </div>
             </FormGroup>
@@ -230,7 +276,98 @@ const Datatable = ({ myData, myClass, multiSelectOption, pagination }: any) => {
             Close
           </Button>
         </ModalFooter>
-      </Modal>
+      </Modal>}
+
+      {(route === '/en/products/physical/sub-category' || route === '/en/products/digital/digital-sub-category') && <Modal isOpen={open} toggle={() => toggleModal()}>
+        <ModalHeader toggle={() => toggleModal()}>
+          <h5 className="modal-title f-w-600" id="exampleModalLabel2">
+            Add Sub Category
+          </h5>
+        </ModalHeader>
+        <ModalBody>
+          <Form>
+            <FormGroup>
+              <Label htmlFor="category" className="col-form-label">
+                Category:
+              </Label>
+              <Input
+                disabled
+                id="category"
+                type="select"
+                name="category"
+                value={category || subcategoryid?.subcategory.category.name || ""}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select category
+                </option>
+                {allCategoriesData?.categorieslist
+                  ?.filter((item: any) => item.type === subcategoryid?.subcategory.category.type)
+                  .map((item: any) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
+              </Input>
+            </FormGroup>
+
+            <FormGroup>
+              <Label>Sub Category Name:</Label>
+              <Input
+                type="text"
+                value={name || selectedRow?.name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label htmlFor="type" className="col-form-label">
+                Type:
+              </Label>
+              <Input
+                id="type"
+                type="select"
+                name="type"
+                value={type || selectedRow?.type || "Select type"}
+                onChange={(e) => handleSelect(e.target.value)}
+              >
+                <option value="" disabled>
+                  Select type
+                </option>
+                <option value="Physical">Physical</option>
+                <option value="Digital">Digital</option>
+              </Input>
+            </FormGroup>
+
+            <FormGroup>
+              <Label>Sub Category Description:</Label>
+              <Input
+                type="text"
+                value={description || selectedRow?.description || ""}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label>Sub Category Image:</Label>
+              <Input type="file" onChange={handleFileChange} />
+              <div className="mt-3">
+                <img
+                  src={imagePreview || (selectedRow?.image ? apiBaseUrl + selectedRow?.image : '')}
+                  alt="Image Preview"
+                  style={{ width: '100%', height: '215px' }}
+                />
+              </div>
+            </FormGroup>
+          </Form>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="primary" onClick={handleUpdateCategory}>
+            Save
+          </Button>
+          <Button color="secondary" onClick={() => toggleModal()}>
+            Close
+          </Button>
+        </ModalFooter>
+      </Modal>}
 
     </div>
   );

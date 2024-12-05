@@ -92,6 +92,11 @@ const SubCategory = () => {
       if (data) {
         toast.success("SubCategory created successfully");
         setOpen(false);
+        setName('');
+        setType('');
+        setDescription('');
+        setCategory('');
+        setImage(null);
         refetch();
       }
     } catch (error) {

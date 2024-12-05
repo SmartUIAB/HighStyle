@@ -80,10 +80,7 @@ const categorySubcategoryResolver = {
 
         let imagePath = null;
         if (image) {
-          imagePath = await upload(
-            image[0],
-            `${company.name}/categories/${type}`
-          );
+          imagePath = await upload(image, `${company.name}/categories/${type}`);
         }
         const category = new Category({
           name,
@@ -126,7 +123,7 @@ const categorySubcategoryResolver = {
           // Upload the new image
           console.log(image, "image");
           updateFields.image = await upload(
-            image[0],
+            image,
             `${company.name.replace(/\s+/g, "")}/categories/${
               type || existingCategory.type
             }`

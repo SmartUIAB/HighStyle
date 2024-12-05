@@ -66,6 +66,10 @@ const Category = () => {
       if (data) {
         toast.success("Category created successfully");
         setOpen(false);
+        setName('');
+        setType('');
+        setDescription('');
+        setImage(null);
         refetch();
       }
     } catch (error) {
@@ -127,7 +131,7 @@ const Category = () => {
                             id="type"
                             type="select"
                             name="type"
-                            value={type || "Select type"}
+                            value={type || ""}
                             onChange={(e) => handleSelect(e.target.value)}
                           >
                             <option value="" disabled>

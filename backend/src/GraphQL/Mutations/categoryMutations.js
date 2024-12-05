@@ -75,3 +75,33 @@ export const CREATE_SUB_CATEGORY = gql`
     }
   }
 `;
+
+export const DELETE_SUB_CATEGORY = gql`
+  mutation DeleteSubcategory($deleteSubcategoryId: ID!) {
+    deleteSubcategory(id: $deleteSubcategoryId)
+  }
+`;
+
+export const UPDATE_SUB_CATEGORY = gql`
+  mutation UpdateSubcategory(
+    $updateSubcategoryId: ID!
+    $name: String
+    $type: ItemType
+    $description: String
+    $image: Upload
+  ) {
+    updateSubcategory(
+      id: $updateSubcategoryId
+      name: $name
+      type: $type
+      description: $description
+      image: $image
+    ) {
+      id
+      name
+      image
+      type
+      description
+    }
+  }
+`;
