@@ -50,6 +50,7 @@ const categorySubcategoryTypeDef = gql`
     category(id: ID!): Category
     categorieslist: [Category!]!
     subcategories(pagination: PaginationInput): PaginatedSubcategories
+    subcategorieslist: [Subcategory!]!
     subcategory(id: ID!): Subcategory
   }
 

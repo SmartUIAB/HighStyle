@@ -31,13 +31,13 @@ const categorySubcategoryResolver = {
         throw new CustomError("Not authenticated", 401);
       }
       try {
-        const user = await Category.find();
-        if (!user) {
-          throw new CustomError("User not found", 404);
+        const category = await Category.find();
+        if (!category) {
+          throw new CustomError("Category not found", 404);
         }
-        return user;
+        return category;
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("Error fetching category:", error);
         throw new CustomError(error.message, 500);
       }
     },
@@ -62,6 +62,21 @@ const categorySubcategoryResolver = {
         };
       } catch (error) {
         throw new CustomError("Failed to fetch subcategories", 500);
+      }
+    },
+    subcategorieslist: async (root, args, context) => {
+      if (!context.userId) {
+        throw new CustomError("Not authenticated", 401);
+      }
+      try {
+        const subcategory = await Subcategory.find();
+        if (!subcategory) {
+          throw new CustomError("Subcategory not found", 404);
+        }
+        return subcategory;
+      } catch (error) {
+        console.error("Error fetching subcategory:", error);
+        throw new CustomError(error.message, 500);
       }
     },
     subcategory: async (_, { id }) => {

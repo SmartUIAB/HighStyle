@@ -64,3 +64,18 @@ export const GET_SUB_CATEGORY = gql`
     }
   }
 `;
+
+export const GET_ALL_SUBCATEGORY = gql`
+  query Subcategorieslist {
+    subcategorieslist {
+      id
+      name
+      image
+      type
+      description
+      category {
+        id
+      }
+    }
+  }
+`;

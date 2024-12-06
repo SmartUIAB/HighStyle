@@ -1,17 +1,25 @@
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
-import { Href, ImagePath } from "@/Constants";
-import { ColorVariant, ProductListData, ProductRating } from "@/Data/Product/Physical";
+import { Href } from "@/Constants";
+import { ProductRating } from "@/Data/Product/Physical";
+import { useQuery } from "@apollo/client";
 import { Fragment } from "react";
 import { Edit, Trash2 } from "react-feather";
 import { Button, Card, CardBody, Col, Container, Row } from "reactstrap";
+import { GET_PHYSICAL_PRODUCT } from '../../../../GraphQL/Queries/productQueries'
 
 const ProductList = () => {
+
+  const apiBaseUrl = "http://localhost:2024";
+  const { data: allProductData } = useQuery(GET_PHYSICAL_PRODUCT);
+
+  console.log(allProductData, 'allProductData');
+
   return (
     <Fragment>
       <CommonBreadcrumb title="Product List" parent="Physical" />
       <Container fluid>
         <Row className="products-admin ratio_asos">
-          {ProductListData.map((item, i) => {
+          {allProductData?.physicalProducts?.products?.map((item: any, i: any) => {
             return (
               <Col xl="3" sm="6" key={i}>
                 <Card>
@@ -19,12 +27,11 @@ const ProductList = () => {
                     <CardBody className="product-box">
                       <div className="img-wrapper">
                         <div className="lable-block">
-                          {item.tag === "new" ? <span className="lable3">{item.tag}</span> : ""}
-                          {item.discount === "on sale" ? <span className="lable4">{item.discount}</span> : ""}
+                          <span className="lable3">{item.tags[0]}</span>
                         </div>
                         <div className="front">
                           <a href={Href} className="bg-size">
-                            <img alt="" className="img-fluid blur-up bg-img lazyloaded" src={`${ImagePath}${item.image}`} />
+                            <img alt="" className="img-fluid blur-up bg-img lazyloaded" src={apiBaseUrl + item.images[0]} />
                           </a>
                           <div className="product-hover">
                             <ul>
@@ -48,9 +55,20 @@ const ProductList = () => {
                           <h6>{item.title}</h6>
                         </a>
                         <h4>
-                          {item.price} <del>{item.discount_price}</del>
+                          {item.price} <del>{item.discount}</del>
                         </h4>
-                        {ColorVariant}
+                        {item.colors && (
+                          <ul className="color-variant">
+                            {item.colors.map((color: any, index: any) => (
+                              <li
+                                key={index}
+                                style={{ backgroundColor: color }}
+                                className="color-item"
+                              ></li>
+                            ))}
+                          </ul>
+                        )}
+
                       </div>
                     </CardBody>
                   </div>

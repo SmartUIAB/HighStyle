@@ -1,49 +1,75 @@
 import { useState } from "react";
 import { Button, Col, FormGroup, Input, InputGroup, InputGroupText, Label, Row } from "reactstrap";
 
-const TotalProducts = () => {
-  const [quantity, setQuantity] = useState(1);
+interface FormData {
+  product_stockquantity: number;
+}
+
+interface TotalProductsProps {
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+}
+
+const TotalProducts: React.FC<TotalProductsProps> = ({ formData, setFormData }) => {
+  const [quantity, setQuantity] = useState<number>(formData.product_stockquantity || 1);
 
   const IncrementItem = () => {
     if (quantity < 9) {
-      setQuantity(quantity + 1);
-    } else {
-      return null;
+      const newQuantity = quantity + 1;
+      setQuantity(newQuantity);
+      setFormData((prev) => ({ ...prev, product_stockquantity: newQuantity }));
     }
   };
+
   const DecreaseItem = () => {
     if (quantity > 0) {
-      setQuantity(quantity - 1);
-    } else {
-      return null;
+      const newQuantity = quantity - 1;
+      setQuantity(newQuantity);
+      setFormData((prev) => ({ ...prev, product_stockquantity: newQuantity }));
     }
   };
-  const handleChange = (event: any) => {
-    setQuantity(event.target.value);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newQuantity = parseInt(event.target.value, 10) || 0;
+    setQuantity(newQuantity);
+    setFormData((prev) => ({ ...prev, product_stockquantity: newQuantity }));
   };
 
   return (
-    <FormGroup className=" mb-3">
+    <FormGroup className="mb-3">
       <Row>
         <Col xl="3" sm="4">
-          <Label className=" fw-bold mb-0">Total Products :</Label>
+          <Label className="fw-bold mb-0">Stock Quantity:</Label>
         </Col>
         <fieldset className="qty-box ms-0">
           <InputGroup className="bootstrap-touchspin">
             <div className="input-group-prepend">
-              <Button color="primary" className=" btn-square bootstrap-touchspin-down" onClick={DecreaseItem}>
+              <Button
+                color="primary"
+                className="btn-square bootstrap-touchspin-down"
+                onClick={DecreaseItem}
+              >
                 <i className="fa fa-minus"></i>
               </Button>
             </div>
             <div className="input-group-prepend">
               <InputGroupText className="bootstrap-touchspin-prefix"></InputGroupText>
             </div>
-            <Input className="touchspin" type="text" value={quantity} onChange={handleChange} />
+            <Input
+              className="touchspin"
+              type="text"
+              value={quantity}
+              onChange={handleChange}
+            />
             <div className="input-group-append">
-              <InputGroupText className=" bootstrap-touchspin-postfix"></InputGroupText>
+              <InputGroupText className="bootstrap-touchspin-postfix"></InputGroupText>
             </div>
             <div className="input-group-append ms-0">
-              <Button color="primary" className="btn-square bootstrap-touchspin-up" onClick={IncrementItem}>
+              <Button
+                color="primary"
+                className="btn-square bootstrap-touchspin-up"
+                onClick={IncrementItem}
+              >
                 <i className="fa fa-plus"></i>
               </Button>
             </div>
