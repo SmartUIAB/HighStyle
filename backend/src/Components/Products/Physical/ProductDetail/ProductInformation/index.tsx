@@ -1,74 +1,137 @@
+//@ts-nocheck
 import { Href, ImagePath } from "@/Constants";
 import { SetStateAction, useState } from "react";
 import ReactStars from "react-rating-stars-component";
 import { Button, Col, Modal, ModalHeader } from "reactstrap";
 import ProductQuantity from "./ProductQuantity";
 import ProductTimer from "./ProductTimer";
-const ProductInformation = () => {
-  const sizes = ["s", "m", "l", "xl"];
+
+const ProductInformation = ({ data }) => {
   const [open, setOpen] = useState(false);
-  const [rating, setRating] = useState<number>(1);
+  const [rating, setRating] = useState<number>(data?.rating || 1);
   const [active, setActive] = useState(0);
+  const [quantity, setQuantity] = useState(data?.stockQuantity || 1);
+  const [color, setColor] = useState()
 
-  const onOpenModal = () => {
-    setOpen(true);
-  };
+  const onOpenModal = () => setOpen(true);
+  const onCloseModal = () => setOpen(false);
 
-  const onCloseModal = () => {
-    setOpen(false);
-  };
   const onStarClick = (nextValue: SetStateAction<number>) => {
     setRating(nextValue);
+  };
+
+  const handleAddToCart = () => {
+    const selectedSize = data?.sizes ? data.sizes[active] : null;
+
+    const cartData = {
+      id: data?.id || null,
+      title: data?.title || "Unknown Product",
+      price: data?.price || 0,
+      quantity,
+      size: selectedSize,
+      rating,
+      colors: color || data?.colors[0],
+      description: data?.description || "No description available",
+    };
+
+    console.log("Product added to cart:", cartData);
+
+    alert("Product added to cart! Check the console for details.");
   };
 
   return (
     <Col xl="8">
       <div className="product-page-details product-right mb-0">
-        <h2>WOMEN PINK SHIRT</h2>
+        <h2>{data?.title || "Product Title"}</h2>
+
         <div style={{ fontSize: 27, height: 31 }}>
-          <ReactStars count={5} onChange={onStarClick} size={40} activeColor="#ffd700" value={0} />
+          <ReactStars
+            count={5}
+            onChange={onStarClick}
+            size={40}
+            activeColor="#ffd700"
+            value={rating}
+          />
         </div>
+
         <hr />
-        <h6 className="product-title">product details</h6>
-        <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem,</p>
+
+        <h6 className="product-title">Product Details</h6>
+        <p>{data?.description || "No description available."}</p>
+
         <div className="product-price digits mt-2">
           <h3>
-            $26.00 <del>$350.00</del>
+            ${data?.price || "0.00"}{" "}
+            {data?.discount && <del>${data?.discount}</del>}
           </h3>
         </div>
-        <ul className="color-variant">
-          <li className="bg-light0"></li>
-          <li className="bg-light1"></li>
-          <li className="bg-light2"></li>
-        </ul>
+
+        {data?.colors && data.colors.length > 0 && (
+          <ul className="color-variant">
+            {data.colors.map((color: string, index: number) => (
+              <li
+                key={index}
+                style={{ backgroundColor: color }}
+                className="color-item"
+                onClick={() => setColor(color)}
+              ></li>
+            ))}
+          </ul>
+        )}
+
         <hr />
         <h6 className="product-title size-text">
-          select size
-          <span className="pull-right">
-            <a href={Href} data-toggle="modal" data-target="#sizemodal" onClick={onOpenModal}>
-              size chart
-            </a>
-          </span>
+          Select Size
+          {data?.category?.name === "Apparel" && (
+            <span className="pull-right">
+              <a
+                href={Href}
+                data-toggle="modal"
+                data-target="#sizemodal"
+                onClick={onOpenModal}
+              >
+                Size Chart
+              </a>
+            </span>
+          )}
         </h6>
-        <Modal className="size-modal" isOpen={open} toggle={onCloseModal}>
-          <ModalHeader toggle={onCloseModal}>
-            <img src={`${ImagePath}/size-chart.jpg`} alt="" className="img-fluid blur-up lazyloaded" />
-          </ModalHeader>
-        </Modal>
+        {data?.category?.name === "Apparel" && (
+          <Modal className="size-modal" isOpen={open} toggle={onCloseModal}>
+            <ModalHeader toggle={onCloseModal}>
+              <img
+                src={`${ImagePath}/size-chart.jpg`}
+                alt="Size Chart"
+                className="img-fluid blur-up lazyloaded"
+              />
+            </ModalHeader>
+          </Modal>
+        )}
+
         <div className="size-box">
-          <ul>
-            {sizes.map((item, i) => (
-              <li key={i} onClick={() => setActive(i)} className={`${active == i ? "active" : ""}`}>
-                <a>{item}</a>
+          <ul className="list-inline">
+            {data?.sizes?.map((item: string, i: number) => (
+              <li
+                key={i}
+                className={`list-inline-item px-2 py-1 border rounded text-center ${active === i ? "bg-danger text-white" : "border-secondary"
+                  }`}
+                onClick={() => setActive(i)}
+                style={{ cursor: "pointer", minWidth: "80px" }}
+              >
+                {item}
               </li>
             ))}
           </ul>
         </div>
-        <ProductQuantity />
+
+        <ProductQuantity
+          data={data?.stockQuantity || 1}
+          onQuantityChange={(newQuantity) => setQuantity(newQuantity)}
+        />
         <hr />
         <ProductTimer />
+
         <div className="m-t-15">
-          <Button color="primary" className="m-r-10">
+          <Button color="primary" className="m-r-10" onClick={handleAddToCart}>
             Add To Cart
           </Button>
           <Button color="secondary">Buy Now</Button>

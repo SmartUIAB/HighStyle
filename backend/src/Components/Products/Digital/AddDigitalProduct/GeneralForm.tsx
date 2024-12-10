@@ -1,3 +1,4 @@
+//@ts-nocheck
 import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import { Card, CardBody, FormGroup, Input, Label } from "reactstrap";
 import { useQuery } from "@apollo/client";

@@ -1,15 +1,25 @@
+//@ts-nocheck
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
-import { Fragment, useState } from "react";
-import { Button, Col, Container, Row } from "reactstrap";
+import { Fragment, useEffect, useState } from "react";
+import { Button, Col, Container, Row, Spinner } from "reactstrap";
 import GeneralForm from "./GeneralForm";
 import MetaDataForm from "./MetaDataForm";
 import DescriptionForm from "./DescriptionForm";
 import MyUploader from "@/CommonComponents/CommonDropzone";
-import { useMutation } from "@apollo/client";
-import { CREATE_DIGITAL_PRODUCT } from '../../../../GraphQL/Mutations/productMutation'
+import { useMutation, useQuery } from "@apollo/client";
+import { CREATE_DIGITAL_PRODUCT, UPDATE_DIGITAL_PRODUCT } from "../../../../GraphQL/Mutations/productMutation";
 import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
+import { DIGITAL_PRODUCT_BY_ID } from "@/GraphQL/Queries/productQueries";
 
 const AddDigitalProduct = () => {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
+  const { data: digitalProductByID, loading, error, refetch } = useQuery(DIGITAL_PRODUCT_BY_ID, {
+    variables: { digitalProductId: id },
+    skip: !id,
+  });
 
   const [formData, setFormData] = useState({
     title: "",
@@ -28,69 +38,163 @@ const AddDigitalProduct = () => {
     subcategory: "",
     tags: "",
     version: "",
-    images: ""
-  })
+    images: [],
+    deleteImages: []
+  });
+
+  useEffect(() => {
+    if (digitalProductByID?.digitalProduct) {
+      const product = digitalProductByID.digitalProduct;
+
+      setFormData({
+        title: product.title || "",
+        SKU: product.SKU || "",
+        category: product.category.id || "",
+        compatibility: product.compatibility.join(", ") || "",
+        description: product.description || "",
+        price: product.price.toString() || "",
+        discount: product.discount.toString() || "",
+        status: product.status || "",
+        metaTitle: product.metaTitle || "",
+        metaDescription: product.metaDescription || "",
+        fileFormat: product.fileFormat || "",
+        fileSize: product.fileSize || "",
+        licenseType: product.licenseType || "",
+        subcategory: product.subcategory.id || "",
+        tags: product.tags.join(", ") || "",
+        version: product.version || "",
+        images: product.images || [],
+        deleteImages: []
+      });
+    } else if (!id) {
+      setFormData({
+        title: "",
+        SKU: "",
+        category: "",
+        compatibility: "",
+        description: "",
+        price: "",
+        discount: "",
+        status: "",
+        metaTitle: "",
+        metaDescription: "",
+        fileFormat: "",
+        fileSize: "",
+        licenseType: "",
+        subcategory: "",
+        tags: "",
+        version: "",
+        images: [],
+        deleteImages: []
+      });
+    }
+  }, [digitalProductByID, id]);
 
   const [createDigitalProduct] = useMutation(CREATE_DIGITAL_PRODUCT);
+  const [updateDigitalProduct] = useMutation(UPDATE_DIGITAL_PRODUCT);
 
   const handleValidSubmit = async () => {
     try {
-      const { data } = await createDigitalProduct({
-        variables: {
-          input: {
-            SKU: formData.SKU,
-            category: formData.category,
-            compatibility: formData.compatibility.split(','),
-            description: formData.description,
-            discount: parseFloat(formData.discount),
-            fileFormat: formData.fileFormat,
-            fileSize: formData.fileSize,
-            licenseType: formData.licenseType,
-            metaDescription: formData.metaDescription,
-            metaTitle: formData.metaTitle,
-            price: parseFloat(formData.price),
-            status: formData.status,
-            subcategory: formData.subcategory,
-            tags: formData.tags.split(','),
-            title: formData.title,
-            version: formData.version
+      if (id) {
+        const { data } = await updateDigitalProduct({
+          variables: {
+            updateDigitalProductId: id,
+            input: {
+              SKU: formData.SKU,
+              category: formData.category,
+              compatibility: formData.compatibility.split(","),
+              description: formData.description,
+              discount: parseFloat(formData.discount),
+              fileFormat: formData.fileFormat,
+              fileSize: formData.fileSize,
+              licenseType: formData.licenseType,
+              metaDescription: formData.metaDescription,
+              metaTitle: formData.metaTitle,
+              price: parseFloat(formData.price),
+              status: formData.status,
+              subcategory: formData.subcategory,
+              tags: formData.tags.split(","),
+              title: formData.title,
+              version: formData.version,
+            },
+            images: formData.images.filter(image => image instanceof File),
+            deleteImages: formData.deleteImages,
           },
-          images: formData.images
-        }
-      });
-
-      if (data) {
-        toast.success("Digital Product Created Successfully");
-        setFormData({
-          title: "",
-          SKU: "",
-          category: "",
-          compatibility: "",
-          description: "",
-          discount: "",
-          fileFormat: "",
-          fileSize: "",
-          licenseType: "",
-          metaDescription: "",
-          metaTitle: "",
-          price: "",
-          status: "",
-          subcategory: "",
-          tags: "",
-          version: "",
-          images: ""
         });
+
+        if (data) {
+          console.log(data);
+          toast.success("Digital Product Updated Successfully");
+          refetch()
+        }
+      } else {
+        const { data } = await createDigitalProduct({
+          variables: {
+            input: {
+              SKU: formData.SKU,
+              category: formData.category,
+              compatibility: formData.compatibility.split(","),
+              description: formData.description,
+              discount: parseFloat(formData.discount),
+              fileFormat: formData.fileFormat,
+              fileSize: formData.fileSize,
+              licenseType: formData.licenseType,
+              metaDescription: formData.metaDescription,
+              metaTitle: formData.metaTitle,
+              price: parseFloat(formData.price),
+              status: formData.status,
+              subcategory: formData.subcategory,
+              tags: formData.tags.split(","),
+              title: formData.title,
+              version: formData.version,
+            },
+            images: formData.images,
+          },
+        });
+
+        if (data) {
+          toast.success("Digital Product Created Successfully");
+          setFormData({
+            title: "",
+            SKU: "",
+            category: "",
+            compatibility: "",
+            description: "",
+            price: "",
+            discount: "",
+            status: "",
+            metaTitle: "",
+            metaDescription: "",
+            fileFormat: "",
+            fileSize: "",
+            licenseType: "",
+            subcategory: "",
+            tags: "",
+            version: "",
+            images: [],
+            deleteImages: []
+          });
+          refetch();
+        }
       }
     } catch (error) {
-      console.error("Error creating digital product:", error);
-      toast.error("Failed to create digital product. Please try again.");
+      console.error("Error processing digital product:", error);
+      toast.error("Failed to process digital product. Please try again.");
     }
   };
 
+  if (loading)
+    return (
+      <div className="d-flex justify-content-center py-5">
+        <Spinner style={{ color: "#ff8084" }} />
+      </div>
+    );
+
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <Fragment>
-      <CommonBreadcrumb title="Add Products" parent="Digital" />
+      <CommonBreadcrumb title={id ? "Edit Product" : "Add Products"} parent="Digital" />
       <Container fluid>
         <Row className="product-adding">
           <Col xl="6">
@@ -101,12 +205,8 @@ const AddDigitalProduct = () => {
             <DescriptionForm formData={formData} setFormData={setFormData} />
             <MetaDataForm formData={formData} setFormData={setFormData} />
             <div className="offset-xl-3 offset-sm-4 mt-3 d-flex gap-2">
-              <Button
-                type="submit"
-                onClick={handleValidSubmit}
-                color="primary"
-              >
-                Add
+              <Button type="submit" onClick={handleValidSubmit} color="primary">
+                {id ? "Update" : "Add"}
               </Button>
               <Button color="light">Discard</Button>
             </div>
@@ -115,6 +215,6 @@ const AddDigitalProduct = () => {
       </Container>
     </Fragment>
   );
-}
+};
 
 export default AddDigitalProduct;

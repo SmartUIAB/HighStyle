@@ -80,6 +80,8 @@ const productTypeDef = gql`
     SKU: String
     price: Float
     discount: Float
+    category: ID!
+    subcategory: ID!
     stockQuantity: Int
     metaTitle: String
     metaDescription: String
@@ -150,6 +152,8 @@ const productTypeDef = gql`
     price: Float
     discount: Float
     licenseType: LicenseType
+    category: ID!
+    subcategory: ID!
     fileFormat: String
     fileSize: String
     version: String

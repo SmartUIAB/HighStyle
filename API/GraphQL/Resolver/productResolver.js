@@ -103,12 +103,11 @@ const productResolvers = {
         if (!product) throw new CustomError("Product not found", 404);
 
         const existingImages = product.images;
-
         const remainingImages = existingImages.filter(
-          (image) => !deleteImages.includes(image)
+          (image) => !deleteImages?.includes(image)
         );
 
-        const totalImagesCount = remainingImages.length + images.length;
+        const totalImagesCount = remainingImages?.length + images?.length;
         if (totalImagesCount > 5) {
           throw new CustomError(
             "You can only have up to 5 images per product.",
@@ -116,7 +115,7 @@ const productResolvers = {
           );
         }
 
-        if (deleteImages.length > 0) {
+        if (deleteImages?.length > 0) {
           await Promise.all(
             deleteImages.map((imageUrl) => deleteImageFromStorage(imageUrl))
           );
@@ -216,10 +215,10 @@ const productResolvers = {
         const existingImages = product.images;
 
         const remainingImages = existingImages.filter(
-          (image) => !deleteImages.includes(image)
+          (image) => !deleteImages?.includes(image)
         );
 
-        const totalImagesCount = remainingImages.length + images.length;
+        const totalImagesCount = remainingImages?.length + images?.length;
         if (totalImagesCount > 5) {
           throw new CustomError(
             "You can only have up to 5 images per product.",
@@ -227,14 +226,14 @@ const productResolvers = {
           );
         }
 
-        if (deleteImages.length > 0) {
+        if (deleteImages?.length > 0) {
           await Promise.all(
             deleteImages.map((imageUrl) => deleteImageFromStorage(imageUrl))
           );
         }
 
         let uploadedImages = [];
-        if (images && images.length > 0) {
+        if (images && images?.length > 0) {
           uploadedImages = await Promise.all(
             images.map((image) =>
               upload(

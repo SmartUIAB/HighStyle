@@ -1,16 +1,21 @@
+//@ts-nocheck
 import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import MDEditor from "@uiw/react-md-editor";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { Card, CardBody, FormGroup } from "reactstrap";
 
 const DescriptionForm = ({ formData, setFormData }) => {
   const [value, setValue] = useState<string | undefined>("");
 
+  useEffect(() => {
+    setValue(formData.description);
+  }, [formData.description]);
+
   const onChange = (e: SetStateAction<string | undefined>) => {
     setValue(e);
     setFormData({
       ...formData,
-      description: e || "", // Update description in formData
+      description: e || "",
     });
   };
 

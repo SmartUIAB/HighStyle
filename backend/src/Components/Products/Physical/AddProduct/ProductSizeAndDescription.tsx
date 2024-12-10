@@ -1,5 +1,5 @@
 import MDEditor from "@uiw/react-md-editor";
-import { SetStateAction, useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 
 interface FormData {
@@ -18,11 +18,16 @@ const ProductSizeAndDescription: React.FC<ProductSizeAndDescriptionProps> = ({
 }) => {
   const [value, setValue] = useState<string | undefined>("");
 
-  const handleDescriptionChange = (e: SetStateAction<string | undefined>) => {
-    setValue(e);
-    setFormData((prevState: any) => ({
+  // Update the local editor value when formData.product_description changes
+  useEffect(() => {
+    setValue(formData.product_description);
+  }, [formData.product_description]);
+
+  const handleDescriptionChange = (value: string | undefined) => {
+    setValue(value);
+    setFormData((prevState) => ({
       ...prevState,
-      product_description: e || "",
+      product_description: value || "",
     }));
   };
 
@@ -47,8 +52,7 @@ const ProductSizeAndDescription: React.FC<ProductSizeAndDescriptionProps> = ({
               id="exampleFormControlSelect1"
               onChange={handleSizeChange}
               value={formData.product_size}
-            >
-            </Input>
+            />
           </Col>
         </Row>
       </FormGroup>
