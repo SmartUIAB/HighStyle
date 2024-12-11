@@ -1,18 +1,22 @@
 import { useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { Col, FormGroup, Input, Label, Row } from "reactstrap";
 
-const GeneFormTop = () => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+interface FormData {
+  name: string;
+  code: string;
+  startDate: string;
+  endDate: string;
+}
 
-  const handleStartDate = (date: Date) => {
-    setStartDate(date);
-  };
+interface GeneFormTopProps {
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+}
 
-  const handleEndDate = (date: Date) => {
-    setEndDate(date);
+const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
   };
 
   return (
@@ -23,7 +27,13 @@ const GeneFormTop = () => {
             <Label>* Name</Label>
           </Col>
           <Col md="7">
-            <Input id="validationCustom0" type="text" required />
+            <Input
+              id="name"
+              type="text"
+              required
+              value={formData.name}
+              onChange={handleInputChange}
+            />
           </Col>
         </Row>
       </FormGroup>
@@ -33,9 +43,17 @@ const GeneFormTop = () => {
             <Label>* Code</Label>
           </Col>
           <Col md="7">
-            <Input id="validationCustom1" type="text" required />
+            <Input
+              id="code"
+              type="text"
+              required
+              value={formData.code}
+              onChange={handleInputChange}
+            />
+            <div className="valid-feedback">
+              Please Provide a Valid Coupon Code.
+            </div>
           </Col>
-          <div className="valid-feedback">Please Provide a Valid Coupon Code.</div>
         </Row>
       </FormGroup>
       <FormGroup>
@@ -44,7 +62,14 @@ const GeneFormTop = () => {
             <Label>Start Date</Label>
           </Col>
           <Col md="7">
-            <DatePicker selected={startDate} onChange={handleStartDate} />
+            <Input
+              id="startDate"
+              type="date"
+              name="startDate"
+              value={formData.startDate}
+              onChange={handleInputChange}
+              required
+            />
           </Col>
         </Row>
       </FormGroup>
@@ -54,7 +79,14 @@ const GeneFormTop = () => {
             <Label>End Date</Label>
           </Col>
           <Col md="7">
-            <DatePicker selected={endDate} onChange={handleEndDate} />
+            <Input
+              id="endDate"
+              type="date"
+              name="endDate"
+              value={formData.endDate}
+              onChange={handleInputChange}
+              required
+            />
           </Col>
         </Row>
       </FormGroup>

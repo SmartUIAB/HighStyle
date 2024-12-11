@@ -111,6 +111,7 @@ const userResolver = {
           firstname: user.firstname,
           lastname: user.lastname,
           company: user.company,
+          password:user.password,
           image: user.image,
           role: user.role,
           permissions: user.permissions.map((permission) =>

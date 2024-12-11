@@ -1,8 +1,41 @@
-import { Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import React, { useState } from "react";
+import { Form, FormGroup, Input, Label, Row, Col, Button } from "reactstrap";
 
-const AccountDetails = () => {
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+interface Errors {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+}
+
+interface AccountDetailsProps {
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  handleSubmit: any
+  errors: any
+}
+
+const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, handleSubmit, errors }) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+  };
+
+
   return (
-    <Form className="needs-validation user-add" noValidate>
+    <Form className="needs-validation user-add" onSubmit={handleSubmit}>
       <h4>Account Details</h4>
       <FormGroup>
         <Row>
@@ -10,7 +43,15 @@ const AccountDetails = () => {
             <Label>* First Name</Label>
           </Col>
           <Col xl="8" md="7">
-            <Input id="validationCustom0" type="text" required />
+            <Input
+              id="firstName"
+              type="text"
+              required
+              value={formData.firstName || ""}
+              onChange={handleInputChange}
+              invalid={!!errors.firstName}
+            />
+            {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -20,7 +61,15 @@ const AccountDetails = () => {
             <Label>* Last Name</Label>
           </Col>
           <Col xl="8" md="7">
-            <Input id="validationCustom1" type="text" required />
+            <Input
+              id="lastName"
+              type="text"
+              required
+              value={formData.lastName || ""}
+              onChange={handleInputChange}
+              invalid={!!errors.lastName}
+            />
+            {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -30,7 +79,15 @@ const AccountDetails = () => {
             <Label>* Email</Label>
           </Col>
           <Col xl="8" md="7">
-            <Input id="validationCustom2" type="text" required />
+            <Input
+              id="email"
+              type="email"
+              required
+              value={formData.email || ""}
+              onChange={handleInputChange}
+              invalid={!!errors.email}
+            />
+            {errors.email && <div className="invalid-feedback">{errors.email}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -40,7 +97,15 @@ const AccountDetails = () => {
             <Label>* Password</Label>
           </Col>
           <Col xl="8" md="7">
-            <Input id="validationCustom3" type="password" required />
+            <Input
+              id="password"
+              type="password"
+              required
+              value={formData.password || ""}
+              onChange={handleInputChange}
+              invalid={!!errors.password}
+            />
+            {errors.password && <div className="invalid-feedback">{errors.password}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -50,7 +115,15 @@ const AccountDetails = () => {
             <Label>* Confirm Password</Label>
           </Col>
           <Col xl="8" md="7">
-            <Input id="validationCustom4" type="password" required />
+            <Input
+              id="confirmPassword"
+              type="password"
+              required
+              value={formData.confirmPassword || ""}
+              onChange={handleInputChange}
+              invalid={!!errors.confirmPassword}
+            />
+            {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
           </Col>
         </Row>
       </FormGroup>

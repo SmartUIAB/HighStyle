@@ -1,6 +1,16 @@
+//@ts-nocheck
+import React from "react";
 import { Col, FormGroup, Input, Label, Row } from "reactstrap";
 
-const GeneralFormBottom = () => {
+const GeneralFormBottom = ({ formData, setFormData }) => {
+  const handleInputChange = (e: any) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData: any) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
   return (
     <>
       <FormGroup>
@@ -10,7 +20,14 @@ const GeneralFormBottom = () => {
           </Col>
           <Col md="7">
             <Label className="d-block">
-              <Input className="checkbox_animated" id="chk-ani2" type="checkbox" />
+              <Input
+                className="checkbox_animated"
+                id="chk-ani2"
+                type="checkbox"
+                name="allowFreeShipping"
+                checked={formData.allowFreeShipping}
+                onChange={handleInputChange}
+              />
               Allow Free Shipping
             </Label>
           </Col>
@@ -22,7 +39,13 @@ const GeneralFormBottom = () => {
             <Label>Quantity</Label>
           </Col>
           <Col md="7">
-            <Input type="number" required />
+            <Input
+              type="number"
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleInputChange}
+              required
+            />
           </Col>
         </Row>
       </FormGroup>
@@ -32,11 +55,33 @@ const GeneralFormBottom = () => {
             <Label>Discount Type</Label>
           </Col>
           <Col md="7">
-            <select className="form-select" required>
+            <select
+              className="form-select"
+              name="discountType"
+              value={formData.discountType}
+              onChange={handleInputChange}
+              required
+            >
               <option value="">--Select--</option>
-              <option value="1">Percent</option>
-              <option value="2">Fixed</option>
+              <option value="Percent">Percent</option>
+              <option value="Fixed">Fixed</option>
             </select>
+          </Col>
+        </Row>
+      </FormGroup>
+      <FormGroup>
+        <Row>
+          <Col xl="3" md="4">
+            <Label>Discount Value</Label>
+          </Col>
+          <Col md="7">
+            <Input
+              type="number"
+              name="discountValue"
+              value={formData.discountValue}
+              onChange={handleInputChange}
+              required
+            />
           </Col>
         </Row>
       </FormGroup>
@@ -47,7 +92,14 @@ const GeneralFormBottom = () => {
           </Col>
           <Col md="7">
             <Label className="d-block">
-              <Input className="checkbox_animated" id="chk-ani2" type="checkbox" />
+              <Input
+                className="checkbox_animated"
+                id="chk-ani2"
+                type="checkbox"
+                name="statusActive"
+                checked={formData.statusActive}
+                onChange={handleInputChange}
+              />
               Enable the Coupon
             </Label>
           </Col>
