@@ -56,6 +56,7 @@ const couponTypeDef = gql`
 
   type Query {
     getAllCoupons(pagination: PaginationInput): CouponPagination
+    getCouponByID(id: ID!): Coupon
   }
 
   type Mutation {

@@ -50,11 +50,6 @@ export const MENUITEMS: any = [
             title: "Product List",
             type: "link",
           },
-          // {
-          //   path: "/products/physical/product-detail",
-          //   title: "Product Detail",
-          //   type: "link",
-          // },
           {
             path: "/products/physical/add-product",
             title: "Add Product",

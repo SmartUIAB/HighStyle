@@ -18,8 +18,17 @@ export const LOGIN_USER = gql`
       user {
         id
         email
+        firstname
+        lastname
+        company
+        image
+        permissions {
+          id
+          module
+          name
+          description
+        }
       }
-      token
     }
   }
 `;

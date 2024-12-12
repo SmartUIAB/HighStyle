@@ -1,14 +1,15 @@
-//@ts-nocheck
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import { Button } from "reactstrap";
+import { Button, Spinner } from "reactstrap";
 import GeneralCouponForm from "./GeneralCouponForm";
 import RestrictionForm from "./RestrictionCouponForm";
 import UsageForm from "./UsageCouponForm";
-import { useMutation } from "@apollo/client";
-import { CREATE_COUPON } from '../../../../GraphQL/Mutations/couponMutations';
+import { useMutation, useQuery } from "@apollo/client";
+import { CREATE_COUPON, UPDATE_COUPON } from '../../../../GraphQL/Mutations/couponMutations';
 import { toast } from "react-toastify";
+import { useSearchParams } from "next/navigation";
+import { GET_COUPON_BY_ID } from "@/GraphQL/Queries/couponQueries";
 
 interface FormData {
   name: string;
@@ -46,7 +47,59 @@ const CouponTabs: React.FC = () => {
   });
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
   const [createCoupon] = useMutation(CREATE_COUPON);
+  const [updateCoupon] = useMutation(UPDATE_COUPON);
+
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
+  const { data: couponByID, refetch, loading: fetching } = useQuery(GET_COUPON_BY_ID, {
+    variables: { getCouponByIdId: id },
+    skip: !id,
+  });
+
+  useEffect(() => {
+    if (couponByID) {
+      setFormData({
+        name: couponByID?.getCouponByID?.name,
+        code: couponByID?.getCouponByID?.code,
+        startDate: couponByID?.getCouponByID?.startDate
+          ? new Date(parseInt(couponByID.getCouponByID.startDate)).toISOString().slice(0, 10)
+          : "",
+        endDate: couponByID?.getCouponByID?.endDate
+          ? new Date(parseInt(couponByID.getCouponByID.endDate)).toISOString().slice(0, 10)
+          : "",
+        allowFreeShipping: couponByID?.getCouponByID?.allowFreeShipping,
+        quantity: couponByID?.getCouponByID?.quantity,
+        discountType: couponByID?.getCouponByID?.discountType,
+        discountValue: couponByID?.getCouponByID?.discountValue,
+        statusActive: couponByID?.getCouponByID?.statusActive,
+        restrictionProducts: couponByID?.getCouponByID?.restrictionProducts,
+        maxSpend: couponByID?.getCouponByID?.minSpend,
+        minSpend: couponByID?.getCouponByID?.maxSpend,
+        perCustomerLimit: couponByID?.getCouponByID?.perCustomerLimit,
+        usageLimit: couponByID?.getCouponByID?.usageLimit,
+      });
+    } else {
+      setFormData({
+        name: "",
+        code: "",
+        startDate: "",
+        endDate: "",
+        allowFreeShipping: false,
+        quantity: 0,
+        discountType: "",
+        discountValue: 0.0,
+        statusActive: false,
+        restrictionProducts: [],
+        maxSpend: "",
+        minSpend: "",
+        perCustomerLimit: "",
+        usageLimit: "",
+      });
+    }
+  }, [couponByID]);
 
   const handleNext = () => {
     if (selectedIndex < 2) {
@@ -55,55 +108,90 @@ const CouponTabs: React.FC = () => {
   };
 
   const handleSave = async () => {
+    setLoading(true);
     try {
-      console.log("Saving form data...", formData);
-      const { data } = await createCoupon({
-        variables: {
-          input: {
-            name: formData.name,
-            code: formData.code,
-            startDate: formData.startDate,
-            endDate: formData.endDate,
-            allowFreeShipping: formData.allowFreeShipping,
-            quantity: parseInt(formData.quantity.toString(), 10),
-            discountType: formData.discountType === "Percent" ? "percentage" : formData.discountType,
-            discountValue: parseFloat(formData.discountValue.toString()),
-            statusActive: formData.statusActive,
-            restrictionProducts: formData.restrictionProducts,
-            maxSpend: parseFloat(formData.maxSpend.toString()),
-            minSpend: parseFloat(formData.minSpend.toString()),
-            perCustomerLimit: formData.perCustomerLimit,
-            usageLimit: formData.usageLimit
-          }
-        }
-      });
-
-
-      if (data) {
-        toast.success('Coupon Created Successfully');
-        setFormData({
-          name: "",
-          code: "",
-          startDate: "",
-          endDate: "",
-          allowFreeShipping: false,
-          quantity: 0,
-          discountType: "",
-          discountValue: 0.0,
-          statusActive: false,
-          restrictionProducts: [],
-          maxSpend: "",
-          minSpend: "",
-          perCustomerLimit: "",
-          usageLimit: "",
+      if (id) {
+        const { data } = await updateCoupon({
+          variables: {
+            updateCouponId: id,
+            input: {
+              name: formData.name,
+              code: formData.code,
+              startDate: formData.startDate,
+              endDate: formData.endDate,
+              allowFreeShipping: formData.allowFreeShipping,
+              quantity: parseInt(formData.quantity.toString(), 10),
+              discountType: formData.discountType,
+              discountValue: parseFloat(formData.discountValue.toString()),
+              statusActive: formData.statusActive,
+              restrictionProducts: formData.restrictionProducts,
+              maxSpend: parseFloat(formData.maxSpend.toString()),
+              minSpend: parseFloat(formData.minSpend.toString()),
+              perCustomerLimit: formData.perCustomerLimit,
+              usageLimit: formData.usageLimit,
+            },
+          },
         });
-      }
 
+        if (data) {
+          toast.success('Coupon Updated Successfully');
+          refetch();
+        }
+      } else {
+        const { data } = await createCoupon({
+          variables: {
+            input: {
+              name: formData.name,
+              code: formData.code,
+              startDate: formData.startDate,
+              endDate: formData.endDate,
+              allowFreeShipping: formData.allowFreeShipping,
+              quantity: parseInt(formData.quantity.toString(), 10),
+              discountType: formData.discountType,
+              discountValue: parseFloat(formData.discountValue.toString()),
+              statusActive: formData.statusActive,
+              restrictionProducts: formData.restrictionProducts,
+              maxSpend: parseFloat(formData.maxSpend.toString()),
+              minSpend: parseFloat(formData.minSpend.toString()),
+              perCustomerLimit: formData.perCustomerLimit,
+              usageLimit: formData.usageLimit,
+            },
+          },
+        });
+
+        if (data) {
+          toast.success('Coupon Created Successfully');
+          setFormData({
+            name: "",
+            code: "",
+            startDate: "",
+            endDate: "",
+            allowFreeShipping: false,
+            quantity: 0,
+            discountType: "",
+            discountValue: 0.0,
+            statusActive: false,
+            restrictionProducts: [],
+            maxSpend: "",
+            minSpend: "",
+            perCustomerLimit: "",
+            usageLimit: "",
+          });
+        }
+      }
     } catch (error) {
       console.error("Error saving coupon:", error);
-      toast.error('Failed to create coupon. Please try again later.');
+      toast.error('Failed to save coupon. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (fetching) {
+    return <div className="d-flex justify-content-center py-5">
+      <Spinner style={{ color: '#ff8084' }} />
+    </div>;
+  }
 
   return (
     <Fragment>
@@ -127,9 +215,11 @@ const CouponTabs: React.FC = () => {
       </Tabs>
       <div className="pull-right">
         {selectedIndex < 2 ? (
-          <Button onClick={handleNext}>Next</Button>
+          <Button onClick={handleNext} disabled={loading}>Next</Button>
         ) : (
-          <Button onClick={handleSave}>Save</Button>
+          <Button onClick={handleSave} disabled={loading}>
+            {loading ? <Spinner size="sm" color="light" /> : "Save"}
+          </Button>
         )}
       </div>
     </Fragment>

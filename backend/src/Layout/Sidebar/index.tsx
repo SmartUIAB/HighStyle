@@ -29,6 +29,9 @@ const Sidebar = () => {
   const [isChange, setIsChange] = useState(false);
   const router = useRouter();
   const [logoutMutation] = useMutation(LOGOUT_USER);
+  const userDetail = localStorage.getItem('userDetail');
+
+  const { permissions } = JSON.parse(userDetail);
 
   const handleLogOut = async () => {
     try {
@@ -45,7 +48,11 @@ const Sidebar = () => {
 
   useEffect(() => {
     const currentUrl = window.location.pathname;
-    mainmenu.map((items: MenuItem) => {
+    const permissionModules = Object.keys(permissions);
+    const data = mainmenu.filter((items: MenuItem) => {
+      return permissionModules.includes(items.title);
+    })
+    data.map((items: MenuItem) => {
       mainMenu.filter((Items: MenuItem) => {
         if (Items.path === currentUrl) setNavActive(Items);
         if (!Items.children) return false;
@@ -67,7 +74,7 @@ const Sidebar = () => {
       return items;
     });
     return () => {
-      setMainMenu(MENUITEMS);
+      setMainMenu(data);
     };
   }, [isChange]);
 
@@ -127,9 +134,8 @@ const Sidebar = () => {
         menuItem.path === "/auth/login" ? (
           <button
             key={i}
-            className={`sidebar-header logout-btn ${
-              menuItem.active ? "active" : ""
-            }`}
+            className={`sidebar-header logout-btn ${menuItem.active ? "active" : ""
+              }`}
             onClick={handleLogOut}
           >
             <menuItem.icon />
@@ -204,9 +210,8 @@ const Sidebar = () => {
               )}
               {childrenItem.children ? (
                 <ul
-                  className={`sidebar-submenu ${
-                    childrenItem.active ? "menu-open" : "active"
-                  }`}
+                  className={`sidebar-submenu ${childrenItem.active ? "menu-open" : "active"
+                    }`}
                 >
                   {childrenItem.children.map((childrenSubItem, key) => (
                     <li
@@ -239,6 +244,7 @@ const Sidebar = () => {
       )}
     </li>
   ));
+
   return (
     <Fragment>
       <div className={`page-sidebar ${sidebar && "open"}`}>

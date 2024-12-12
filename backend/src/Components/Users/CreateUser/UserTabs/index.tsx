@@ -95,7 +95,7 @@ const UserTabs: React.FC = () => {
 
   const handleSave = async () => {
     try {
-      if (id !== '') {
+      if (id !== null) {
         const { data } = await updateUser({
           variables: {
             userId: id,
@@ -127,6 +127,15 @@ const UserTabs: React.FC = () => {
 
         if (data) {
           toast.success("User created successfully");
+          setFormData({
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            allowedPermissions: []
+          })
+          refetch();
         }
       }
     } catch (error) {

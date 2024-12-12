@@ -106,7 +106,9 @@ const MyUploader = ({ formData, setFormData }) => {
       <Dropzone
         getUploadParams={() => ({ url: "https://httpbin.org/post" })}
         onChangeStatus={handleUploadStatusChange}
-        styles={{ dropzone: { minHeight: 300, maxHeight: 300 } }}
+        styles={{
+          previewImage: { display: "none" },
+        }}
       />
       <div className="image-preview-container">
         {formData.images.length > 0 && handlePreviewImages()}

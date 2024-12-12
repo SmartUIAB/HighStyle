@@ -63,8 +63,8 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
               required
             >
               <option value="">--Select--</option>
-              <option value="Percent">Percent</option>
-              <option value="Fixed">Fixed</option>
+              <option value="percentage">Percentage</option>
+              <option value="fixed">Fixed</option>
             </select>
           </Col>
         </Row>

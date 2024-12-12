@@ -19,6 +19,13 @@ const couponResolver = {
         throw new CustomError(error.message, 500);
       }
     },
+    getCouponByID: async (_, { id }) => {
+      try {
+        return await Coupon.findById(id);
+      } catch (error) {
+        throw new CustomError("Coupon not found", 404);
+      }
+    },
   },
 
   Mutation: {

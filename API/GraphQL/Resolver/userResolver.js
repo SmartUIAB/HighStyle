@@ -111,7 +111,7 @@ const userResolver = {
           firstname: user.firstname,
           lastname: user.lastname,
           company: user.company,
-          password:user.password,
+          password: user.password,
           image: user.image,
           role: user.role,
           permissions: user.permissions.map((permission) =>
@@ -133,10 +133,9 @@ const userResolver = {
       const { email, password, firstname, lastname, company } = input;
 
       try {
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ email }).populate("permissions").exec();
         let imagePath = null;
 
-        // Upload image if provided
         if (image) {
           imagePath = await upload(
             image,
@@ -144,13 +143,16 @@ const userResolver = {
           );
         }
 
-        // If the user already exists, throw an error
         if (user) {
           throw new CustomError("User already exists", 400);
         }
 
-        // Permission definitions
         const permissionsToCheck = [
+          {
+            module: "Dashboard",
+            name: "View Dashboard",
+            description: "Allows the user to view the dashboard overview.",
+          },
           {
             module: "Products",
             name: "View Products",
@@ -175,39 +177,92 @@ const userResolver = {
               "Allows the user to delete products from the platform.",
           },
           {
-            module: "Orders",
-            name: "View Orders",
-            description:
-              "Allows the user to view customer orders on the platform.",
+            module: "Sales",
+            name: "View Sales",
+            description: "Allows the user to view sales data and reports.",
           },
           {
-            module: "Orders",
-            name: "Process Orders",
+            module: "Sales",
+            name: "Manage Sales",
             description:
-              "Allows the user to process and manage customer orders.",
+              "Allows the user to manage sales transactions and orders.",
           },
           {
-            module: "Customers",
-            name: "View Customers",
+            module: "Coupons",
+            name: "View Coupons",
             description:
-              "Allows the user to view customer details and information.",
+              "Allows the user to view available coupons on the platform.",
           },
           {
-            module: "Customers",
-            name: "Add Customers",
-            description:
-              "Allows the user to add new customers to the platform.",
+            module: "Coupons",
+            name: "Create Coupons",
+            description: "Allows the user to create new coupons for customers.",
           },
           {
-            module: "Customers",
-            name: "Edit Customers",
-            description: "Allows the user to edit customer information.",
+            module: "Pages",
+            name: "View Pages",
+            description: "Allows the user to view pages on the platform.",
           },
           {
-            module: "Customers",
-            name: "Delete Customers",
+            module: "Pages",
+            name: "Create Pages",
+            description: "Allows the user to create new pages on the platform.",
+          },
+          {
+            module: "Media",
+            name: "Manage Media",
             description:
-              "Allows the user to delete customer information from the platform.",
+              "Allows the user to manage media files (images, videos, etc.).",
+          },
+          {
+            module: "Menus",
+            name: "View Menus",
+            description: "Allows the user to view menus on the platform.",
+          },
+          {
+            module: "Menus",
+            name: "Create Menus",
+            description: "Allows the user to create new menus.",
+          },
+          {
+            module: "Users",
+            name: "View Users",
+            description:
+              "Allows the user to view the list of users on the platform.",
+          },
+          {
+            module: "Users",
+            name: "Create Users",
+            description: "Allows the user to create new users on the platform.",
+          },
+          {
+            module: "Vendors",
+            name: "View Vendors",
+            description:
+              "Allows the user to view the list of vendors on the platform.",
+          },
+          {
+            module: "Vendors",
+            name: "Create Vendors",
+            description: "Allows the user to add new vendors to the platform.",
+          },
+          {
+            module: "Localization",
+            name: "View Translations",
+            description:
+              "Allows the user to view translation settings for the platform.",
+          },
+          {
+            module: "Localization",
+            name: "Manage Currency Rates",
+            description:
+              "Allows the user to manage currency rates on the platform.",
+          },
+          {
+            module: "Localization",
+            name: "Manage Taxes",
+            description:
+              "Allows the user to manage tax settings for the platform.",
           },
           {
             module: "Reports",
@@ -227,37 +282,34 @@ const userResolver = {
               "Allows the user to export reports to external formats.",
           },
           {
-            module: "Payments",
-            name: "Manage Payments",
-            description: "Allows the user to process payments and refunds.",
+            module: "Settings",
+            name: "Manage Settings",
+            description: "Allows the user to manage platform settings.",
           },
           {
-            module: "Shipping",
-            name: "View Shipping",
+            module: "Settings",
+            name: "View Profile",
             description:
-              "Allows the user to view shipping details and tracking.",
+              "Allows the user to view and update their profile settings.",
           },
           {
-            module: "Shipping",
-            name: "Manage Shipping",
+            module: "Invoice",
+            name: "View Invoices",
             description:
-              "Allows the user to manage shipping options and dispatch products.",
+              "Allows the user to view invoices generated on the platform.",
           },
           {
-            module: "Inventory",
-            name: "Manage Inventory",
-            description:
-              "Allows the user to manage inventory levels and stock.",
+            module: "Invoice",
+            name: "Manage Invoices",
+            description: "Allows the user to manage and process invoices.",
           },
           {
-            module: "Inventory",
-            name: "View Inventory",
-            description:
-              "Allows the user to view the inventory status and product availability.",
+            module: "Log Out",
+            name: "Log Out",
+            description: "Allows the user to log out of the platform.",
           },
         ];
 
-        // Fetch existing permissions
         const existingPermissions = await Permission.find();
         const existingPermissionNames = existingPermissions.map(
           (perm) => perm.name
@@ -269,13 +321,6 @@ const userResolver = {
             perm.description &&
             !existingPermissionNames.includes(perm.name)
         );
-
-        const invalidPermissions = permissionsToCheck.filter(
-          (perm) => !perm.name || !perm.description
-        );
-        if (invalidPermissions.length > 0) {
-          console.warn("Invalid permissions detected:", invalidPermissions);
-        }
 
         if (missingPermissions.length > 0) {
           await Permission.insertMany(missingPermissions);
@@ -302,15 +347,12 @@ const userResolver = {
           permissions: allPermissions.map((perm) => perm._id),
         });
 
-        // Save the user to the database
         await user.save();
 
-        // Generate a token for the user
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
           expiresIn: "2h",
         });
 
-        // Set the token as a cookie in the response
         context.res.cookie("token", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
@@ -318,8 +360,14 @@ const userResolver = {
           path: "/",
         });
 
-        // Return the user and token
-        return { user, token };
+        const populatedUser = await User.findById(user._id)
+          .populate("permissions", "id module name description")
+          .exec();
+
+        return {
+          user: populatedUser,
+          token,
+        };
       } catch (error) {
         console.error("Error during registration:", error);
         throw new CustomError(error.message, 500);
@@ -328,7 +376,10 @@ const userResolver = {
     /* -------------------------------- For login ------------------------------- */
     login: async (root, { email, password, rememberMe }, context) => {
       try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email })
+          .populate("permissions")
+          .exec();
+
         if (!user) {
           throw new CustomError("User not found with this email", 404);
         }
@@ -346,6 +397,13 @@ const userResolver = {
         });
 
         context.res.cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
+          path: "/",
+        });
+
+        context.res.cookie("UserDetails", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,

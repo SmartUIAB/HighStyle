@@ -3,6 +3,13 @@ const { gql } = require("apollo-server-express");
 const userTypeDefs = gql`
   scalar Upload
 
+  type userPermission {
+    id: ID
+    module: String
+    name: String
+    description: String
+  }
+
   type User {
     id: ID!
     email: String!
@@ -10,7 +17,7 @@ const userTypeDefs = gql`
     lastname: String
     company: String
     image: String
-    permissions: [ID!]
+    permissions: [userPermission!]
   }
 
   type AuthPayload {
