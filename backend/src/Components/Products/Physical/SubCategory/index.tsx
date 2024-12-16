@@ -211,7 +211,7 @@ const SubCategory = () => {
                       onChangePage: handlePageChange,
                       onChangeRowsPerPage: handleLimitChange,
                       pageSize: limit,
-                      totalItem: subcategoriesData?.length
+                      totalItem: data?.subcategories.total
                     }}
                     class="-striped -highlight"
                   />

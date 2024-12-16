@@ -9,8 +9,6 @@ const ProductDetailSlider = ({ data }) => {
     nav2: null,
   });
 
-  const apiUrl = 'http://localhost:2024';
-
   useEffect(() => {
     setNav({
       nav1: Slider.slider1,
@@ -45,7 +43,7 @@ const ProductDetailSlider = ({ data }) => {
       <Slider {...settings} asNavFor={nav.nav2} ref={(slider) => (Slider.slider1 = slider)} className="product-slider no-arrow">
         {data?.map((imageUrl, index) => (
           <div key={index} className="item">
-            <img className="img-fluid" src={`${apiUrl}${imageUrl}`} alt={`product-image-${index}`} />
+            <img className="img-fluid" src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`} alt={`product-image-${index}`} />
           </div>
         ))}
       </Slider>
@@ -60,7 +58,7 @@ const ProductDetailSlider = ({ data }) => {
       >
         {data?.map((imageUrl, index) => (
           <div key={index} className="item">
-            <img className="img-fluid" src={`${apiUrl}${imageUrl}`} alt={`thumbnail-image-${index}`} />
+            <img className="img-fluid" src={`${process.env.NEXT_PUBLIC_API_URL}${imageUrl}`} alt={`thumbnail-image-${index}`} />
           </div>
         ))}
       </Slider>

@@ -12,6 +12,9 @@ const RegisterForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [company, setCompany] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [register] = useMutation(REGISTER_USER);
   const [loading, setLoading] = useState(false);
@@ -38,8 +41,11 @@ const RegisterForm = () => {
       const { data } = await register({
         variables: {
           input: {
-            email,
-            password,
+            email: email,
+            password: password,
+            firstname: firstName,
+            lastname: lastName,
+            company: company,
           },
         },
       });
@@ -48,7 +54,10 @@ const RegisterForm = () => {
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-      router.push(`/${i18LangStatus}/dashboard`);
+      setFirstName("");
+      setLastName("");
+      setCompany("");
+      router.push('/auth/login')
     } catch (err) {
       toast.error(err.message);
       setLoading(false);
@@ -59,6 +68,39 @@ const RegisterForm = () => {
 
   return (
     <Form className="form-horizontal auth-form" onSubmit={handleSubmit}>
+      <FormGroup>
+        <Input
+          required
+          name="firstName"
+          type="text"
+          className="form-control"
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Input
+          required
+          name="lastName"
+          type="text"
+          className="form-control"
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Input
+          required
+          name="company"
+          type="text"
+          className="form-control"
+          placeholder="Company"
+          value={company}
+          onChange={(e) => setCompany(e.target.value)}
+        />
+      </FormGroup>
       <FormGroup>
         <Input
           required

@@ -5,7 +5,7 @@ import DeleteAccount from "./DeleteAccount";
 import Notifications from "./Notifications";
 import TabTable from "./TabTable";
 
-const TabProfile = () => {
+const TabProfile = ({ getUser }) => {
   return (
     <div>
       <Tabs>
@@ -20,7 +20,7 @@ const TabProfile = () => {
           </Tab>
         </TabList>
         <TabPanel>
-          <TabTable />
+          <TabTable userData={getUser} />
         </TabPanel>
         <TabPanel>
           <Notifications />

@@ -16,7 +16,6 @@ interface MediaUploaderProps {
 }
 
 const MediaUploader: React.FC<MediaUploaderProps> = ({ formData, setFormData }) => {
-    const apiUrl = "http://localhost:2024";
     const maxImages = 5;
 
     const handlePreviewImages = () => {
@@ -24,7 +23,7 @@ const MediaUploader: React.FC<MediaUploaderProps> = ({ formData, setFormData }) 
             const imageUrl =
                 image instanceof File
                     ? URL.createObjectURL(image)
-                    : `${apiUrl}${image}`;
+                    : `${process.env.NEXT_PUBLIC_API_URL}${image}`;
             return (
                 <div
                     key={index}

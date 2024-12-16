@@ -7,6 +7,7 @@ const userResolver = require("./userResolver");
 const vendorResolver = require("./vendorResolver");
 const salesResolver = require("./salesResolver");
 const mediaResolver = require("./mediaResolver");
+const customerResolver = require("./customerResolver");
 
 const resolver = {
   Query: {
@@ -27,6 +28,7 @@ const resolver = {
     ...vendorResolver.Mutation,
     ...salesResolver.Mutation,
     ...mediaResolver.Mutation,
+    ...customerResolver.Mutation,
   },
   Category: {
     ...fieldResolver.Category,

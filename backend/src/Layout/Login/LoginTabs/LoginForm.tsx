@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/Redux/Hooks";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Eye, EyeOff } from "react-feather";
 import { toast } from "react-toastify";
 import {
@@ -34,6 +34,7 @@ const LoginForm = () => {
 
   const formSubmitHandle = async (event: FormEvent) => {
     event.preventDefault();
+
     if (email !== "" && password !== "") {
       try {
         const { data } = await login({
@@ -43,22 +44,29 @@ const LoginForm = () => {
             rememberMe,
           },
         });
-        const moduleWisePermissions = data.login.user.permissions.reduce((acc, permission) => {
-          const { module } = permission;
-          if (!acc[module]) {
-            acc[module] = [];
-          }
-          acc[module].push(permission);
-          return acc;
-        }, {});
+
+        const moduleWisePermissions = data.login.user.permissions.reduce(
+          (acc:any, permission:any) => {
+            const { module } = permission;
+            if (!acc[module]) {
+              acc[module] = [];
+            }
+            acc[module].push(permission);
+            return acc;
+          },
+          {}
+        );
 
         const userData = {
           ...data.login.user,
           permissions: moduleWisePermissions,
         };
 
-        localStorage.setItem("userDetail", JSON.stringify(userData));
-        toast.success("Login successful");
+        await Promise.all([
+          localStorage.setItem("userDetail", JSON.stringify(userData)),
+          toast.success("Login successful"),
+        ]);
+
         console.log(`/${i18LangStatus}/dashboard`);
         router.replace(`/${i18LangStatus}/dashboard`);
       } catch (error) {
@@ -68,6 +76,8 @@ const LoginForm = () => {
       toast.error("Please enter valid email and password");
     }
   };
+
+
   return (
     <Form
       className="form-horizontal auth-form"

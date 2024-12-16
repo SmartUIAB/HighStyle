@@ -3,7 +3,7 @@ import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import Datatable from "@/CommonComponents/DataTable";
 import { Fragment, useState } from "react";
 import "react-toastify/dist/ReactToastify.css";
-import { Button, Card, CardBody, Col, Container, Form, FormGroup, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
+import { Button, Card, CardBody, Col, Container, Form, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
 import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_CATEGORY } from "../../../../GraphQL/Mutations/categoryMutations";
 import { GET_CATEGORY } from "../../../../GraphQL/Queries/categoryQueries";
@@ -43,6 +43,7 @@ const Category = () => {
   });
 
   const categoriesData = data?.categories?.categories.filter((item: any) => item.type == 'Physical') || [];
+
   const handleSave = async () => {
     try {
       if (!name || !type) {
@@ -174,7 +175,7 @@ const Category = () => {
                       onChangePage: handlePageChange,
                       onChangeRowsPerPage: handleLimitChange,
                       pageSize: limit,
-                      totalItem: categoriesData?.length
+                      totalItem: data?.categories?.total
                     }}
                     class="-striped -highlight"
                   />

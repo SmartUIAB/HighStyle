@@ -1,6 +1,6 @@
 import { Table } from "reactstrap";
 
-const TabTable = () => {
+const TabTable = ({ userData }) => {
   return (
     <div className="tab-pane fade show active">
       <h5 className="f-w-600 f-16">Profile</h5>
@@ -9,31 +9,19 @@ const TabTable = () => {
           <tbody>
             <tr>
               <td>First Name:</td>
-              <td>John</td>
+              <td>{userData?.me.firstname}</td>
             </tr>
             <tr>
               <td>Last Name:</td>
-              <td>Deo</td>
+              <td>{userData?.me.lastname}</td>
             </tr>
             <tr>
               <td>Email:</td>
-              <td>johndeo@gmail.com</td>
+              <td>{userData?.me.email}</td>
             </tr>
             <tr>
-              <td>Gender:</td>
-              <td>Male</td>
-            </tr>
-            <tr>
-              <td>Mobile Number:</td>
-              <td>2124821463</td>
-            </tr>
-            <tr>
-              <td>DOB:</td>
-              <td>Dec, 15 1993</td>
-            </tr>
-            <tr>
-              <td>Location:</td>
-              <td>USA</td>
+              <td>Company:</td>
+              <td>{userData?.me?.company?.name}</td>
             </tr>
           </tbody>
         </Table>

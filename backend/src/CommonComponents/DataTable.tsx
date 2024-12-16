@@ -30,8 +30,6 @@ const Datatable = ({ myData, myClass, multiSelectOption, pagination }: any) => {
   const [updateCategory] = useMutation(UPDATE_CATEGORY);
   const [updateSubCategory] = useMutation(UPDATE_SUB_CATEGORY);
   const { data: allCategoriesData } = useQuery(GET_ALL_CATEGORY);
-
-  const apiBaseUrl = "http://localhost:2024";
   const route = usePathname();
 
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
@@ -144,7 +142,7 @@ const Datatable = ({ myData, myClass, multiSelectOption, pagination }: any) => {
       selector: (row: any) => row.image,
       cell: (row: any) => (
         <img
-          src={apiBaseUrl + row.image}
+          src={process.env.NEXT_PUBLIC_API_URL + row.image}
           alt={row.name}
           style={{ width: 50, height: 50, objectFit: "cover" }}
         />

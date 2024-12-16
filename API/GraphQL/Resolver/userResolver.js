@@ -13,19 +13,28 @@ const {
 const userResolver = {
   Query: {
     me: async (root, args, context) => {
-      if (!context.userId) {
-        throw new CustomError("Not authenticated", 401);
-      }
-      try {
-        const user = await User.findById(context.userId);
-        if (!user) {
-          throw new CustomError("User not found", 404);
-        }
-        return user;
-      } catch (error) {
-        console.error("Error fetching user:", error);
-        throw new CustomError(error.message, 500);
-      }
+      const user = await User.findById(context.userId)
+        .populate("permissions")
+        .populate("company");
+
+      const sanitizedUser = {
+        ...user.toObject(),
+        id: user._id.toString(),
+        permissions: user.permissions.map((perm) => ({
+          id: perm._id?.toString() || null,
+          module: perm.module || null,
+          name: perm.name || null,
+          description: perm.description || null,
+        })),
+        company: user.company
+          ? {
+              id: user.company._id.toString(),
+              name: user.company.name,
+            }
+          : null,
+      };
+
+      return sanitizedUser;
     },
     /* ------------------------------- For all user list ------------------------------- */
     userlist: async (root, args, context) => {
@@ -356,7 +365,7 @@ const userResolver = {
         context.res.cookie("token", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
-          maxAge: 2 * 60 * 60 * 1000, // 2 hours
+          maxAge: 2 * 60 * 60 * 1000,
           path: "/",
         });
 
@@ -378,6 +387,7 @@ const userResolver = {
       try {
         const user = await User.findOne({ email })
           .populate("permissions")
+          .populate("company")
           .exec();
 
         if (!user) {
@@ -390,7 +400,6 @@ const userResolver = {
         }
 
         const tokenExpiration = rememberMe ? "2d" : "2h";
-        console.log(rememberMe, " $rememberMe");
 
         const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
           expiresIn: tokenExpiration,
@@ -610,6 +619,34 @@ const userResolver = {
           500
         );
       }
+    },
+    updateMe: async (root, { input }, { userId }) => {
+      if (!userId) {
+        throw new Error("Not authenticated");
+      }
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const { email, firstname, lastname, company } = input;
+      if (email) user.email = email;
+      if (firstname) user.firstname = firstname;
+      if (lastname) user.lastname = lastname;
+      if (company) user.company = company;
+
+      const updatedUser = await User.findById(userId).populate("permissions");
+
+      return {
+        ...updatedUser.toObject(),
+        id: updatedUser._id.toString(),
+        permissions: updatedUser.permissions.map((permission) => ({
+          ...permission.toObject(),
+          id: permission._id.toString(),
+        })),
+      };
     },
   },
 };

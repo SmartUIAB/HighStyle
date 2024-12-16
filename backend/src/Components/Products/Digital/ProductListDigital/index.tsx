@@ -13,8 +13,6 @@ const ProductListDigital = () => {
   const [isDeleteId, setIsDeleteId] = useState<number | undefined>(undefined);
   const [modalOpen, setModalOpen] = useState(false);
 
-  const apiBaseUrl = "http://localhost:2024";
-
   const { data: allProductData, refetch, loading } = useQuery(GET_DIGITAL_PRODUCT);
   const [deleteDigitalProduct] = useMutation(DELETE_DIGITAL_PRODUCT);
 
@@ -102,7 +100,7 @@ const ProductListDigital = () => {
                   <tr key={item.id}>
                     <td className="d-flex gap-2">
                       <img
-                        src={item.images && item.images.length > 0 ? apiBaseUrl + item.images[0] : '/assets/images/download.png'}
+                        src={item.images && item.images.length > 0 ? process.env.NEXT_PUBLIC_API_URL + item.images[0] : '/assets/images/download.png'}
                         alt="no image"
                         style={{ width: "50px", height: "50px" }}
                       />

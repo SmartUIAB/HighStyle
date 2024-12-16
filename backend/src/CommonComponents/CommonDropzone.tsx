@@ -4,12 +4,11 @@ import Dropzone from "react-dropzone-uploader";
 import { toast } from "react-toastify";
 
 const MyUploader = ({ formData, setFormData }) => {
-  const apiUrl = 'http://localhost:2024';
   const maxImages = 5;
 
   const handlePreviewImages = () => {
     return formData.images.map((image, index) => {
-      const imageUrl = image instanceof File ? URL.createObjectURL(image) : `${apiUrl}${image}`;
+      const imageUrl = image instanceof File ? URL.createObjectURL(image) : `${process.env.NEXT_PUBLIC_API_URL}${image}`;
       return (
         <div key={index} style={{ position: "relative", display: "inline-block", marginRight: 10 }}>
           <img

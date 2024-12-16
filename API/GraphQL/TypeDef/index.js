@@ -7,6 +7,7 @@ const permissionsTypeDef = require("./permissionsTypeDef");
 const vendorTypeDefs = require("./vendorTypeDef");
 const salesTypeDef = require("./salesTypeDef");
 const mediaTypeDef = require("./mediaTypeDef");
+const customerTypeDef = require("./customerTypeDef");
 
 const typeDefs = gql`
   ${userTypeDefs}
@@ -17,6 +18,7 @@ const typeDefs = gql`
   ${vendorTypeDefs}
   ${salesTypeDef}
   ${mediaTypeDef}
+  ${customerTypeDef}
 `;
 
 module.exports = typeDefs;

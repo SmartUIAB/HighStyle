@@ -44,7 +44,6 @@ const Media: React.FC = () => {
     deleteImages: [],
   });
 
-  const apiBaseUrl = "http://localhost:2024";
   const { data: allMediaData, refetch, loading } = useQuery<GetAllImagesResponse>(GET_MEDIA_LIST, {
     variables: {
       page: 1,
@@ -127,6 +126,7 @@ const Media: React.FC = () => {
                     <th className="text-uppercase">File Name</th>
                     <th className="text-uppercase">Action</th>
                   </tr>
+                  {process.env.NEXT_PUBLIC_API_URL}
                 </thead>
                 <tbody>
                   {allMediaData?.getAllImages?.images?.length === 0 ? (
@@ -142,7 +142,7 @@ const Media: React.FC = () => {
                           <img
                             src={
                               media.filePath !== ""
-                                ? apiBaseUrl + media.filePath
+                                ? process.env.NEXT_PUBLIC_API_URL + media.filePath
                                 : "/assets/images/download.png"
                             }
                             alt="no image"

@@ -10,13 +10,19 @@ const userTypeDefs = gql`
     description: String
   }
 
+  type Company {
+    id: ID!
+    name: String
+  }
+
   type User {
     id: ID!
     email: String!
     firstname: String
     lastname: String
-    company: String
+    company: Company
     image: String
+    role: String
     permissions: [userPermission!]
   }
 
@@ -65,6 +71,14 @@ const userTypeDefs = gql`
     permissions: [ID!]
   }
 
+  input UpdateMeInput {
+    email: String
+    firstname: String
+    lastname: String
+    company: String
+    image: String
+  }
+
   input RegisterInput {
     email: String!
     password: String!
@@ -79,6 +93,7 @@ const userTypeDefs = gql`
     logout: Boolean!
     createUser(input: UserInput!, image: Upload): OutputUser!
     updateUser(userId: ID!, input: UpdateUserInput, image: String): OutputUser!
+    updateMe(input: UpdateMeInput!, image: Upload): User!
     deleteUser(userId: ID!): DeleteUserResponse!
   }
 

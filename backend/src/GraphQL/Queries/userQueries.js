@@ -41,3 +41,26 @@ export const USER_BY_ID = gql`
     }
   }
 `;
+
+export const GET_USER = gql`
+  query Me {
+    me {
+      id
+      email
+      firstname
+      lastname
+      company {
+        id
+        name
+      }
+      image
+      role
+      permissions {
+        id
+        module
+        name
+        description
+      }
+    }
+  }
+`;
