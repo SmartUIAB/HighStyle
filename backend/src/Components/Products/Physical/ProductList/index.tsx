@@ -1,3 +1,4 @@
+'use client'
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
 import { useMutation, useQuery } from "@apollo/client";
 import { Edit, Eye, Trash2 } from "react-feather";
@@ -49,6 +50,8 @@ const ProductList = () => {
   }
 
   const toggleModal = () => setModalOpen(!modalOpen);
+
+
 
   return (
     <div className="py-5">

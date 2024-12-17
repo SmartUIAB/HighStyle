@@ -126,7 +126,6 @@ const Media: React.FC = () => {
                     <th className="text-uppercase">File Name</th>
                     <th className="text-uppercase">Action</th>
                   </tr>
-                  {process.env.NEXT_PUBLIC_API_URL}
                 </thead>
                 <tbody>
                   {allMediaData?.getAllImages?.images?.length === 0 ? (
