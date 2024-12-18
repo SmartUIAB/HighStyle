@@ -4,7 +4,6 @@ import { setOpenCloseSidebar, setRightSidebar } from "@/Redux/LayoutReducer";
 import { setLanguage } from "@/Redux/LanguageReducer";
 import { useTranslation } from "@/app/i18n/client";
 import { usePathname, useRouter } from "next/navigation";
-import Image from "next/image";
 import { Fragment, useEffect, useState } from "react";
 import { AlignLeft, Bell, Maximize2, MessageSquare, MoreHorizontal } from "react-feather";
 import { Badge, Col, Row } from "reactstrap";
