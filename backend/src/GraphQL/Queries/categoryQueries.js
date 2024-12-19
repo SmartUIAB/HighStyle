@@ -55,8 +55,8 @@ export const GET_SUB_CATEGORY = gql`
         id
         name
         image
-        description
         type
+        description
       }
       currentPage
       totalPages

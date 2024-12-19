@@ -89,7 +89,6 @@ const CartProvider = (props) => {
           total: (item.price - (item.price * item.discount) / 100) * quantity,
         };
         setCartItems([...cartItems, product]);
-        toast.success("Produkt tillagd Uppdaterad!");
       }
     } else {
       toast.error("Ange giltigt antal!");

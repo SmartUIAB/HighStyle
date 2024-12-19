@@ -18,7 +18,7 @@ const categorySubcategoryTypeDef = gql`
   }
 
   type Subcategory {
-    id: ID!
+    id: ID
     name: String!
     image: String
     type: ItemType!

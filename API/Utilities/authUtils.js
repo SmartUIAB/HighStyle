@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = process.env;
 const User = require("../Model/userModel");
+const Customer = require("../Model/customerModel");
 
 const authenticateUser = async (token) => {
   let userId = null;
@@ -9,8 +10,13 @@ const authenticateUser = async (token) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
-      userId = decoded.userId;
-      user = await User.findById(userId);
+      if (decoded.userId) {
+        userId = decoded.userId;
+        user = await User.findById(userId);
+      } else if (decoded.customerId) {
+        userId = decoded.customerId;
+        user = await Customer.findById(userId);
+      }
     } catch (err) {
       console.error("Authentication error:", err);
     }

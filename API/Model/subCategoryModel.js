@@ -22,6 +22,11 @@ const subCategorySchema = new Schema(
       ref: "Category",
       required: true,
     },
+    company: {
+      type: Schema.Types.ObjectId,
+      ref: "Company",
+      required: true,
+    },
     image: {
       type: String,
     },

@@ -17,7 +17,7 @@ const SubCategoryDigital = () => {
   const [image, setImage] = useState<File | null>(null);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(100);
 
   const handleSelect = (selectedType: string) => {
     setType(selectedType);
@@ -43,7 +43,10 @@ const SubCategoryDigital = () => {
 
   const { data: allCategoriesData } = useQuery(GET_ALL_CATEGORY);
 
-  const subcategoriesData = data?.subcategories.subcategories.filter((item: any) => item.type === 'Digital') || [];
+  const subcategoriesData = data?.subcategories?.subcategories.filter((item: any) => item.type === 'Digital') || [];
+
+  console.log(subcategoriesData, data, '-=-=-=-=-=');
+
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -211,7 +214,7 @@ const SubCategoryDigital = () => {
                       onChangePage: handlePageChange,
                       onChangeRowsPerPage: handleLimitChange,
                       pageSize: limit,
-                      totalItem: subcategoriesData?.length
+                      totalItem: data?.subcategories.total
                     }}
                     class="-striped -highlight"
                   />

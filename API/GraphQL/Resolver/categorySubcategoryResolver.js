@@ -90,6 +90,8 @@ const categorySubcategoryResolver = {
   /* -------------------------------- Mutation -------------------------------- */
   Mutation: {
     createCategory: async (_, { name, type, description, image }, context) => {
+      console.log(context, "-=-=-=-=-=-");
+
       try {
         let company = await Company.findById(context.user.company);
 
@@ -192,6 +194,7 @@ const categorySubcategoryResolver = {
         }
 
         const company = await Company.findById(context.user.company);
+        console.log(company);
         if (!company) {
           throw new CustomError("Company not found", 404);
         }
