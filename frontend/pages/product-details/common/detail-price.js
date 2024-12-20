@@ -1,20 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Link from "next/link";
 import sizeChart from "../../../public/assets/images/size-chart.jpg";
 import { Modal, ModalBody, ModalHeader, Media, Input } from "reactstrap";
 import CountdownComponent from "../../../components/common/widgets/countdownComponent";
 import MasterSocial from "./master_social";
+import CartContext from "../../../helpers/cart";
 
-const DetailsWithPrice = ({ item, stickyClass, changeColorVar }) => {
+const DetailsWithPrice = ({ item, stickyClass }) => {
   const [modal, setModal] = useState(false);
   const [activeSize, setActiveSize] = useState(null);
   const [activeColor, setActiveColor] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
   const toggle = () => setModal(!modal);
+  const context = useContext(CartContext);
 
   const product = item;
-  const uniqueSizes = [];
   const stockQuantity = item?.stockQuantity;
 
   const IncrementItem = () => {
@@ -42,24 +43,6 @@ const DetailsWithPrice = ({ item, stickyClass, changeColorVar }) => {
     } else {
       setQuantity(stockQuantity);
     }
-  };
-
-  useEffect(() => {
-    product.variants?.forEach((variant) => {
-      if (!uniqueSizes.includes(variant.size)) {
-        uniqueSizes.push(variant.size);
-      }
-    });
-  }, [product.variants]);
-
-  const addToCart = ({ product, quantity, size, color }) => {
-    const cartItem = {
-      ...product,
-      quantity,
-      selectedSize: size,
-      selectedColor: color,
-    };
-    console.log("Added to cart:", cartItem);
   };
 
   return (
@@ -167,12 +150,14 @@ const DetailsWithPrice = ({ item, stickyClass, changeColorVar }) => {
         <div className="product-buttons">
           <button
             onClick={() =>
-              addToCart({
-                product,
-                quantity,
-                size: product?.sizes?.[activeSize],
-                color: product?.colors?.[activeColor],
-              })
+              context.addToCart(
+                {
+                  ...product,
+                  selectedSize: product?.sizes?.[activeSize],
+                  selectedColor: product?.colors?.[activeColor],
+                },
+                quantity
+              )
             }
             className="btn btn-solid"
           >

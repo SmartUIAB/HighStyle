@@ -22,29 +22,40 @@ const CartProvider = (props) => {
   const [stock, setStock] = useState("I lager");
 
   useEffect(() => {
-    const Total = cartItems.reduce((a, b) => a + b.total, 0);
-    setCartTotal(Total);
+    const total = cartItems.reduce((a, b) => a + b.total, 0);
+    setCartTotal(total);
 
     localStorage.setItem("varukorgslista", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  // Add Product To Cart
   const addToCart = (item, quantity) => {
     toast.success("Produkten har lagts till framgångsrikt!");
-    const index = cartItems.findIndex((itm) => itm.id === item.id);
+
+    const index = cartItems.findIndex(
+      (itm) =>
+        itm.id === item.id &&
+        itm.selectedSize === item.selectedSize &&
+        itm.selectedColor === item.selectedColor
+    );
 
     if (index !== -1) {
-      cartItems[index] = {
-        ...item,
-        qty: quantity,
-        total: (item.price - (item.price * item.discount) / 100) * quantity,
-      };
-      setCartItems([...cartItems]);
+      const updatedCart = cartItems.map((itm, idx) =>
+        idx === index
+          ? {
+              ...itm,
+              qty: itm.qty + quantity,
+              total:
+                itm.total +
+                (item.price - (item.price * item.discount) / 100) * quantity,
+            }
+          : itm
+      );
+      setCartItems(updatedCart);
     } else {
       const product = {
         ...item,
         qty: quantity,
-        total: item.price - (item.price * item.discount) / 100,
+        total: (item.price - (item.price * item.discount) / 100) * quantity,
       };
       setCartItems([...cartItems, product]);
     }
@@ -70,25 +81,21 @@ const CartProvider = (props) => {
     }
   };
 
-  // Update Product Quantity
   const updateQty = (item, quantity) => {
     if (quantity >= 1) {
       const index = cartItems.findIndex((itm) => itm.id === item.id);
       if (index !== -1) {
-        cartItems[index] = {
-          ...item,
-          qty: quantity,
-          total: item.price * quantity,
-        };
-        setCartItems([...cartItems]);
+        const updatedCart = cartItems.map((itm, idx) =>
+          idx === index
+            ? {
+                ...itm,
+                qty: quantity,
+                total: item.price * quantity,
+              }
+            : itm
+        );
+        setCartItems(updatedCart);
         toast.info("Produktkvantitet uppdaterad!");
-      } else {
-        const product = {
-          ...item,
-          qty: quantity,
-          total: (item.price - (item.price * item.discount) / 100) * quantity,
-        };
-        setCartItems([...cartItems, product]);
       }
     } else {
       toast.error("Ange giltigt antal!");

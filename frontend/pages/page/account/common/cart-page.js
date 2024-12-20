@@ -8,6 +8,7 @@ import cart from "../../../../public/assets/images/icon-empty-cart.png";
 const CartPage = () => {
   const context = useContext(CartContext);
   const cartItems = context.state;
+  console.log(cartItems, "909090909");
   const curContext = useContext(CurrencyContext);
   const symbol = curContext.state.symbol;
   const total = context.cartTotal;
@@ -71,8 +72,10 @@ const CartPage = () => {
                               <Media
                                 src={
                                   item.images
-                                    ? item.images[0].src
-                                    : item.images[0].src
+                                    ? process.env.NEXT_PUBLIC_API_KEY +
+                                      item.images[0]
+                                    : process.env.NEXT_PUBLIC_API_KEY +
+                                      item.images[0]
                                 }
                                 alt=""
                               />
@@ -114,7 +117,8 @@ const CartPage = () => {
                                   <a href="#" className="icon">
                                     <i
                                       className="fa fa-times"
-                                      onClick={() => removeFromCart(item)}></i>
+                                      onClick={() => removeFromCart(item)}
+                                    ></i>
                                   </a>
                                 </h2>
                               </div>
@@ -122,8 +126,8 @@ const CartPage = () => {
                           </td>
                           <td>
                             <h2>
-                              {symbol}
-                              {item.price - (item.price * item.discount) / 100}
+                              {item.price -
+                                (item.price * (item.discount / 10)) / 100}
                             </h2>
                           </td>
                           <td>
@@ -148,12 +152,13 @@ const CartPage = () => {
                           <td>
                             <i
                               className="fa fa-times"
-                              onClick={() => removeFromCart(item)}></i>
+                              onClick={() => removeFromCart(item)}
+                            ></i>
                           </td>
                           <td>
                             <h2 className="td-color">
-                              {symbol}
-                              {item.total}
+                              {item.price -
+                                (item.price * (item.discount / 10)) / 100}
                             </h2>
                           </td>
                         </tr>

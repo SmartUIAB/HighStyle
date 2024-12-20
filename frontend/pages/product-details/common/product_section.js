@@ -1,45 +1,16 @@
 import React, { useContext, useState } from "react";
 import { Container, Row, Col, Media, Modal, ModalBody } from "reactstrap";
 import { useQuery } from "@apollo/client";
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 import { CurrencyContext } from "../../../helpers/Currency/CurrencyContext";
 import CartContext from "../../../helpers/cart";
 import { WishlistContext } from "../../../helpers/wishlist/WishlistContext";
 import { CompareContext } from "../../../helpers/Compare/CompareContext";
 import { useRouter } from "next/router";
-
-const GET_PRODUCTS = gql`
-  query products($type: _CategoryType!, $indexFrom: Int!, $limit: Int!) {
-    products(type: $type, indexFrom: $indexFrom, limit: $limit) {
-      items {
-        id
-        title
-        description
-        type
-        brand
-        category
-        price
-        new
-        stock
-        sale
-        discount
-        variants {
-          id
-          sku
-          size
-          color
-          image_id
-        }
-        images {
-          image_id
-          id
-          alt
-          src
-        }
-      }
-    }
-  }
-`;
+import {
+  GET_DIGITAL_PRODUCT,
+  GET_PHYSICAL_PRODUCT,
+} from "../../../GraphQL/Queries/productQueries";
 
 const ProductSection = () => {
   const router = useRouter();
@@ -58,6 +29,7 @@ const ProductSection = () => {
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
   const uniqueTags = [];
+  const { id } = router.query;
 
   const changeQty = (e) => {
     setQuantity(parseInt(e.target.value));
@@ -65,7 +37,11 @@ const ProductSection = () => {
 
   const clickProductDetail = (product) => {
     const titleProps = product.title.split(" ").join("");
-    router.push(`/product-details/${product.id}` + "-" + `${titleProps}`, undefined, { shallow: true });
+    router.push(
+      `/product-details/${product.id}` + "-" + `${titleProps}`,
+      undefined,
+      { shallow: true }
+    );
   };
 
   const getSelectedProduct = (item) => {
@@ -73,13 +49,25 @@ const ProductSection = () => {
     toggle();
   };
 
-  var { loading, data } = useQuery(GET_PRODUCTS, {
-    variables: {
-      type: "fashion",
-      indexFrom: 0,
-      limit: 8,
-    },
-  });
+  const {
+    data: allPhysicalProductData,
+    loading: loadingPhysical,
+    error: errorPhysical,
+  } = useQuery(GET_PHYSICAL_PRODUCT);
+  const {
+    data: allDigitalProductData,
+    loading: loadingDigital,
+    error: errorDigital,
+  } = useQuery(GET_DIGITAL_PRODUCT);
+
+  const mergedProducts = [
+    ...(allPhysicalProductData?.physicalProducts?.products || []),
+    ...(allDigitalProductData?.digitalProducts?.products || []),
+  ];
+
+  const loading = loadingPhysical || loadingDigital;
+
+  const relatedProduct = mergedProducts.filter((item) => item.id !== id);
 
   return (
     <section className="section-b-space ratio_asos">
@@ -90,95 +78,97 @@ const ProductSection = () => {
           </Col>
         </Row>
         <Row className="search-product">
-          {!data ||
-            !data.products ||
-            data.products.items.length === 0 ||
-            loading ? (
+          {!relatedProduct || loading ? (
             "loading"
           ) : (
             <>
-              {data &&
-                data.products.items.slice(0, 6).map((product, index) => (
-                  <Col xl="2" md="4" sm="6" key={index}>
-                    <div className="product-box">
-                      <div className="img-wrapper">
-                        <div className="front">
-                          <a href={null}>
-                            <Media
-                              onClick={() => clickProductDetail(product)}
-                              src={product.images[0].src}
-                              className="img-fluid blur-up lazyload bg-img"
-                              alt=""
-                            />
-                          </a>
-                        </div>
-                        <div className="back">
-                          <a href={null}>
-                            <Media
-                              src={product.images[1].src}
-                              className="img-fluid blur-up lazyload bg-img"
-                              alt=""
-                            />
-                          </a>
-                        </div>
-                        <div className="cart-info cart-wrap">
-                          <button
-                            data-toggle="modal"
-                            data-target="#addtocart"
-                            title="Add to cart"
-                            onClick={() => addToCart(product, quantity)}
-                          >
-                            <i className="fa fa-shopping-cart"></i>
-                          </button>
-                          <a
-                            href="#"
-                            onClick={() => wishlistContext.addToWish(product)}
-                            title="Add to Wishlist"
-                          >
-                            <i className="fa fa-heart" aria-hidden="true"></i>
-                          </a>
-                          <a
-                            href="#"
-                            onClick={() => getSelectedProduct(product)}
-                            data-toggle="modal"
-                            data-target="#quick-view"
-                            title="Quick View"
-                          >
-                            <i className="fa fa-search" aria-hidden="true"></i>
-                          </a>
-                          <a
-                            href="#"
-                            onClick={() => compareContext.addToCompare(product)}
-                            title="Compare"
-                          >
-                            <i className="fa fa-refresh" aria-hidden="true"></i>
-                          </a>
-                        </div>
-                      </div>
-                      <div className="product-detail">
-                        <div className="rating">
-                          <i className="fa fa-star"></i>{" "}
-                          <i className="fa fa-star"></i>{" "}
-                          <i className="fa fa-star"></i>{" "}
-                          <i className="fa fa-star"></i>{" "}
-                          <i className="fa fa-star"></i>
-                        </div>
+              {relatedProduct.slice(0, 6).map((product, index) => (
+                <Col xl="2" md="4" sm="6" key={index}>
+                  <div className="product-box">
+                    <div className="img-wrapper">
+                      <div className="front">
                         <a href={null}>
-                          <h6>{product.title}</h6>
+                          <Media
+                            onClick={() => clickProductDetail(product)}
+                            src={
+                              process.env.NEXT_PUBLIC_API_KEY +
+                              product.images[0]
+                            }
+                            className="img-fluid blur-up lazyload bg-img"
+                            alt=""
+                          />
                         </a>
-                        <h4>
-                          {symbol}
-                          {product.price}
-                        </h4>
-                        <ul className="color-variant">
-                          <li className="bg-light0"></li>
-                          <li className="bg-light1"></li>
-                          <li className="bg-light2"></li>
-                        </ul>
+                      </div>
+                      <div className="back">
+                        <a href={null}>
+                          <Media
+                            src={
+                              process.env.NEXT_PUBLIC_API_KEY +
+                              product.images[0]
+                            }
+                            className="img-fluid blur-up lazyload bg-img"
+                            alt=""
+                          />
+                        </a>
+                      </div>
+                      <div className="cart-info cart-wrap">
+                        <button
+                          data-toggle="modal"
+                          data-target="#addtocart"
+                          title="Add to cart"
+                          onClick={() => addToCart(product, quantity)}
+                        >
+                          <i className="fa fa-shopping-cart"></i>
+                        </button>
+                        <a
+                          href="#"
+                          onClick={() => wishlistContext.addToWish(product)}
+                          title="Add to Wishlist"
+                        >
+                          <i className="fa fa-heart" aria-hidden="true"></i>
+                        </a>
+                        <a
+                          href="#"
+                          onClick={() => getSelectedProduct(product)}
+                          data-toggle="modal"
+                          data-target="#quick-view"
+                          title="Quick View"
+                        >
+                          <i className="fa fa-search" aria-hidden="true"></i>
+                        </a>
+                        <a
+                          href="#"
+                          onClick={() => compareContext.addToCompare(product)}
+                          title="Compare"
+                        >
+                          <i className="fa fa-refresh" aria-hidden="true"></i>
+                        </a>
                       </div>
                     </div>
-                  </Col>
-                ))}
+                    <div className="product-detail">
+                      <div className="rating">
+                        <i className="fa fa-star"></i>{" "}
+                        <i className="fa fa-star"></i>{" "}
+                        <i className="fa fa-star"></i>{" "}
+                        <i className="fa fa-star"></i>{" "}
+                        <i className="fa fa-star"></i>
+                      </div>
+                      <a href={null}>
+                        <h6>{product.title}</h6>
+                      </a>
+                      <h4>
+                        {symbol}
+                        {product.price}
+                      </h4>
+                      <ul className="color-variant">
+                        <li className="bg-light0"></li>
+                        <li className="bg-light1"></li>
+                        <li className="bg-light2"></li>
+                      </ul>
+                    </div>
+                  </div>
+                </Col>
+              ))}
             </>
           )}
         </Row>
@@ -204,7 +194,6 @@ const ProductSection = () => {
                   <div className="product-right">
                     <h2> {selectedProduct.title} </h2>
                     <h3>
-                      {currency.symbol}
                       {(selectedProduct.price * currency.value).toFixed(2)}
                     </h3>
                     {selectedProduct.variants ? (
@@ -212,12 +201,12 @@ const ProductSection = () => {
                         {uniqueTags ? (
                           <ul className="color-variant">
                             {selectedProduct.type === "jewellery" ||
-                              selectedProduct.type === "nursery" ||
-                              selectedProduct.type === "beauty" ||
-                              selectedProduct.type === "electronics" ||
-                              selectedProduct.type === "goggles" ||
-                              selectedProduct.type === "watch" ||
-                              selectedProduct.type === "pets" ? (
+                            selectedProduct.type === "nursery" ||
+                            selectedProduct.type === "beauty" ||
+                            selectedProduct.type === "electronics" ||
+                            selectedProduct.type === "goggles" ||
+                            selectedProduct.type === "watch" ||
+                            selectedProduct.type === "pets" ? (
                               ""
                             ) : (
                               <>

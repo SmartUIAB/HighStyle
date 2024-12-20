@@ -61,10 +61,7 @@ const NewProduct = () => {
                       <a href={null}>
                         <h6>{product.title}</h6>
                       </a>
-                      <h4>
-                        {symbol}
-                        {product.price}
-                      </h4>
+                      <h4>{product.price}</h4>
                     </div>
                   </div>
                 ))}
