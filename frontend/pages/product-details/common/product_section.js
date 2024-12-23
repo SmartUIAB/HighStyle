@@ -172,6 +172,7 @@ const ProductSection = () => {
             </>
           )}
         </Row>
+        {console.log(selectedProduct, "-=-=-=-=")}
         {selectedProduct ? (
           <Modal
             isOpen={modal}
@@ -184,7 +185,10 @@ const ProductSection = () => {
                 <Col lg="6" xs="12">
                   <div className="quick-view-img">
                     <Media
-                      src={`${selectedProduct.images[0].src}`}
+                      src={
+                        process.env.NEXT_PUBLIC_API_KEY +
+                        selectedProduct.images[0]
+                      }
                       alt=""
                       className="img-fluid"
                     />

@@ -9,7 +9,10 @@ import DetailsWithPrice from "../common/detail-price";
 import Filter from "../common/filter";
 import { Container, Row, Col, Media } from "reactstrap";
 import { useRouter } from "next/router";
-import { PHYSICAL_PRODUCT_BY_ID } from "../../../GraphQL/Queries/productQueries";
+import {
+  DIGITAL_PRODUCT_BY_ID,
+  PHYSICAL_PRODUCT_BY_ID,
+} from "../../../GraphQL/Queries/productQueries";
 
 const LeftSidebarPage = () => {
   const router = useRouter();
@@ -21,13 +24,18 @@ const LeftSidebarPage = () => {
     },
   });
 
+  const { data: digitalProduct } = useQuery(DIGITAL_PRODUCT_BY_ID, {
+    variables: {
+      digitalProductId: id?.toString() || "",
+    },
+  });
+
   const [nav1, setNav1] = useState(null);
   const [nav2, setNav2] = useState(null);
 
   const [slider1, setSlider1] = useState(null);
   const [slider2, setSlider2] = useState(null);
 
-  // Ensure nav1 and nav2 are set properly when slider1 and slider2 are initialized
   useEffect(() => {
     if (slider1 && slider2) {
       setNav1(slider1);
@@ -45,18 +53,17 @@ const LeftSidebarPage = () => {
     }
   };
 
-  // Slider settings
   const productSliderSettings = {
     slidesToShow: 1,
     slidesToScroll: 1,
     dots: false,
     arrows: true,
     fade: true,
-    asNavFor: nav2, // Sync with the navigation slider
+    asNavFor: nav2,
   };
 
   const sliderNavSettings = {
-    slidesToShow: data?.physicalProduct?.images?.length || 3, // Default to 3 if images are not loaded yet
+    slidesToShow: data?.physicalProduct?.images?.length || 3,
     slidesToScroll: 1,
     arrows: false,
     dots: false,
@@ -72,7 +79,6 @@ const LeftSidebarPage = () => {
             <Col sm="3" className="collection-filter" id="filter">
               <Filter />
               <Service />
-              {/* Side-bar single product slider */}
               <NewProduct />
             </Col>
             <Col lg="9" sm="12" xs="12">
@@ -88,7 +94,7 @@ const LeftSidebarPage = () => {
                   </Col>
                 </Row>
 
-                {!data?.physicalProduct || loading ? (
+                {loading ? (
                   "Loading..."
                 ) : (
                   <Row>
@@ -104,10 +110,20 @@ const LeftSidebarPage = () => {
                               image={process.env.NEXT_PUBLIC_API_KEY + image}
                             />
                           </div>
-                        ))}
+                        )) ||
+                          digitalProduct?.digitalProduct?.images?.map(
+                            (image, index) => (
+                              <div key={index}>
+                                <ImageZoom
+                                  image={
+                                    process.env.NEXT_PUBLIC_API_KEY + image
+                                  }
+                                />
+                              </div>
+                            )
+                          )}
                       </Slider>
 
-                      {/* Navigation slider for thumbnails */}
                       <Slider
                         {...sliderNavSettings}
                         ref={(slider) => setSlider2(slider)}
@@ -122,13 +138,27 @@ const LeftSidebarPage = () => {
                               className="img-fluid"
                             />
                           </div>
-                        ))}
+                        )) ||
+                          digitalProduct?.digitalProduct?.images?.map(
+                            (image, index) => (
+                              <div key={index}>
+                                <Media
+                                  src={process.env.NEXT_PUBLIC_API_KEY + image}
+                                  alt={`Thumbnail ${index}`}
+                                  className="img-fluid"
+                                />
+                              </div>
+                            )
+                          )}
                       </Slider>
                     </Col>
 
                     <Col lg="6" className="rtl-text product-ps">
                       <DetailsWithPrice
-                        item={data?.physicalProduct}
+                        item={
+                          data?.physicalProduct ||
+                          digitalProduct?.digitalProduct
+                        }
                         changeColorVar={changeColorVar}
                       />
                     </Col>

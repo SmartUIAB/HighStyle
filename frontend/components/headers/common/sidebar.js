@@ -52,7 +52,7 @@ const SideBar = () => {
                     {category?.subcategories.map((subcategory) => (
                       <li key={subcategory?.id}>
                         <a
-                          href="#"
+                          href="/productList"
                           onClick={(e) => toggleSubmenu(e, "opensub2")}
                         >
                           {subcategory?.name}

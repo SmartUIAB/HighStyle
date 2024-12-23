@@ -1,5 +1,13 @@
 import React from "react";
-import { Container, Row, Col, Card, Spinner, Alert } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Spinner,
+  Alert,
+  Carousel,
+} from "react-bootstrap";
 import {
   GET_DIGITAL_PRODUCT,
   GET_PHYSICAL_PRODUCT,
@@ -56,16 +64,31 @@ const ProductList = () => {
             <Col md={4} sm={6} xs={12} key={product.id} className="mb-4">
               <Link href={`/product-details/${product.id}`} passHref>
                 <Card className="h-100 shadow-sm">
-                  <Card.Img
-                    variant="top"
-                    src={
-                      process.env.NEXT_PUBLIC_API_KEY +
-                      (product.images?.[0] || "")
-                    }
-                    alt={product.title}
-                    className="p-3"
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
+                  {product.images && product.images.length > 1 ? (
+                    <Carousel interval={null} className="p-3">
+                      {product.images.map((image, index) => (
+                        <Carousel.Item key={index}>
+                          <img
+                            src={process.env.NEXT_PUBLIC_API_KEY + image}
+                            alt={product.title}
+                            className="d-block w-100"
+                            style={{ height: "200px", objectFit: "cover" }}
+                          />
+                        </Carousel.Item>
+                      ))}
+                    </Carousel>
+                  ) : (
+                    <Card.Img
+                      variant="top"
+                      src={
+                        process.env.NEXT_PUBLIC_API_KEY +
+                        (product.images?.[0] || "/default-image.jpg")
+                      }
+                      alt={product.title}
+                      className="p-3"
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                  )}
                   <Card.Body className="d-flex flex-column">
                     <Card.Title className="text-truncate" title={product.title}>
                       {product.title}
@@ -82,31 +105,53 @@ const ProductList = () => {
                         $
                         {(
                           product.price -
-                          (product.price * product.discount) / 100
+                          (product.price * (product.discount || 0)) / 100
                         ).toFixed(2)}
                       </span>{" "}
-                      <s className="text-muted">${product.price}</s>
+                      {product.discount && (
+                        <s className="text-muted">${product.price}</s>
+                      )}
                       <br />
-                      {Array.isArray(product.colors) &&
-                        product.colors.length > 0 && (
+                      {product.colors && product.colors.length > 0 && (
+                        <>
+                          <strong>Colors: </strong>
+                          {product.colors.join(", ")}
+                          <br />
+                        </>
+                      )}
+                      {product.sizes && product.sizes.length > 0 && (
+                        <>
+                          <strong>Sizes: </strong>
+                          {product.sizes.join(", ")}
+                          <br />
+                        </>
+                      )}
+                      {product.fileFormat && (
+                        <>
+                          <strong>File Format: </strong>
+                          {product.fileFormat}
+                          <br />
+                        </>
+                      )}
+                      {product.fileSize && (
+                        <>
+                          <strong>File Size: </strong>
+                          {product.fileSize}
+                          <br />
+                        </>
+                      )}
+                      {product.compatibility &&
+                        product.compatibility.length > 0 && (
                           <>
-                            <strong>Colors: </strong>
-                            {product.colors.join(", ")}
-                            <br />
-                          </>
-                        )}
-                      {Array.isArray(product.sizes) &&
-                        product.sizes.length > 0 && (
-                          <>
-                            <strong>Sizes: </strong>
-                            {product.sizes.join(", ")}
+                            <strong>Compatibility: </strong>
+                            {product.compatibility.join(", ")}
                             <br />
                           </>
                         )}
                       <strong>Status: </strong>
                       <span
                         className={
-                          product.stockQuantity > 0
+                          product.status === "Available"
                             ? "text-primary"
                             : "text-danger"
                         }
