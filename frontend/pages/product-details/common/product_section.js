@@ -172,7 +172,6 @@ const ProductSection = () => {
             </>
           )}
         </Row>
-        {console.log(selectedProduct, "-=-=-=-=")}
         {selectedProduct ? (
           <Modal
             isOpen={modal}
