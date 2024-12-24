@@ -8,7 +8,6 @@ import cart from "../../../../public/assets/images/icon-empty-cart.png";
 const CartPage = () => {
   const context = useContext(CartContext);
   const cartItems = context.state;
-  console.log(cartItems, "909090909");
   const curContext = useContext(CurrencyContext);
   const symbol = curContext.state.symbol;
   const total = context.cartTotal;
@@ -107,7 +106,6 @@ const CartPage = () => {
                               </div>
                               <div className="col-xs-3">
                                 <h2 className="td-color">
-                                  {symbol}
                                   {item.price -
                                     (item.price * item.discount) / 100}
                                 </h2>
@@ -126,8 +124,7 @@ const CartPage = () => {
                           </td>
                           <td>
                             <h2>
-                              {item.price -
-                                (item.price * (item.discount / 10)) / 100}
+                              {item.price - (item.price * item.discount) / 100}
                             </h2>
                           </td>
                           <td>
@@ -157,8 +154,7 @@ const CartPage = () => {
                           </td>
                           <td>
                             <h2 className="td-color">
-                              {item.price -
-                                (item.price * (item.discount / 10)) / 100}
+                              {item.price - (item.price * item.discount) / 100}
                             </h2>
                           </td>
                         </tr>
@@ -171,9 +167,7 @@ const CartPage = () => {
                     <tr>
                       <td>total price :</td>
                       <td>
-                        <h2>
-                          {symbol} {total}{" "}
-                        </h2>
+                        <h2>{total} </h2>
                       </td>
                     </tr>
                   </tfoot>

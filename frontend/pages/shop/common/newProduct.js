@@ -38,7 +38,7 @@ const NewProduct = () => {
               {mergedProducts &&
                 mergedProducts.slice(0, 3).map((product, index) => (
                   <div className="media" key={index}>
-                    <a href="">
+                    <a href={`/product-details/${product.id}`}>
                       <Media
                         src={
                           process.env.NEXT_PUBLIC_API_KEY + product.images[0]

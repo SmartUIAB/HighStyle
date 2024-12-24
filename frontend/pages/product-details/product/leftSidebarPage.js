@@ -4,30 +4,31 @@ import Service from "../common/service";
 import NewProduct from "../../shop/common/newProduct";
 import Slider from "react-slick";
 import { useQuery } from "@apollo/client";
-import ImageZoom from "../common/image-zoom";
+import ReactImageMagnify from "react-image-magnify";
 import DetailsWithPrice from "../common/detail-price";
 import Filter from "../common/filter";
 import { Container, Row, Col, Media } from "reactstrap";
 import { useRouter } from "next/router";
 import {
   DIGITAL_PRODUCT_BY_ID,
-  PHYSICAL_PRODUCT_BY_ID,
+  PHYSICAL_PRODUCT_BY_ID, 
 } from "../../../GraphQL/Queries/productQueries";
 
 const LeftSidebarPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const { loading, data } = useQuery(PHYSICAL_PRODUCT_BY_ID, {
-    variables: {
-      physicalProductId: id?.toString() || "",
-    },
-  });
+  const { loading, data: physicalProductData } = useQuery(
+    PHYSICAL_PRODUCT_BY_ID,
+    {
+      variables: { physicalProductId: id?.toString() || "" },
+      skip: !id,
+    }
+  );
 
-  const { data: digitalProduct } = useQuery(DIGITAL_PRODUCT_BY_ID, {
-    variables: {
-      digitalProductId: id?.toString() || "",
-    },
+  const { data: digitalProductData } = useQuery(DIGITAL_PRODUCT_BY_ID, {
+    variables: { digitalProductId: id?.toString() || "" },
+    skip: !id,
   });
 
   const [nav1, setNav1] = useState(null);
@@ -36,6 +37,8 @@ const LeftSidebarPage = () => {
   const [slider1, setSlider1] = useState(null);
   const [slider2, setSlider2] = useState(null);
 
+  const [currentImage, setCurrentImage] = useState("");
+
   useEffect(() => {
     if (slider1 && slider2) {
       setNav1(slider1);
@@ -43,13 +46,21 @@ const LeftSidebarPage = () => {
     }
   }, [slider1, slider2]);
 
+  useEffect(() => {
+    if (images.length > 0) {
+      setCurrentImage(`${process.env.NEXT_PUBLIC_API_KEY}${images[0]}`);
+    }
+  }, [physicalProductData, digitalProductData]);
+
   const filterClick = () => {
-    document.getElementById("filter").style.left = "-15px";
+    const filterElement = document.getElementById("filter");
+    if (filterElement) filterElement.style.left = "-15px";
   };
 
   const changeColorVar = (img_id) => {
     if (slider2) {
       slider2.slickGoTo(img_id);
+      setCurrentImage(`${process.env.NEXT_PUBLIC_API_KEY}${images[img_id]}`);
     }
   };
 
@@ -60,10 +71,13 @@ const LeftSidebarPage = () => {
     arrows: true,
     fade: true,
     asNavFor: nav2,
+    afterChange: (index) => {
+      setCurrentImage(`${process.env.NEXT_PUBLIC_API_KEY}${images[index]}`);
+    },
   };
 
   const sliderNavSettings = {
-    slidesToShow: data?.physicalProduct?.images?.length || 3,
+    slidesToShow: 3,
     slidesToScroll: 1,
     arrows: false,
     dots: false,
@@ -71,8 +85,13 @@ const LeftSidebarPage = () => {
     focusOnSelect: true,
   };
 
+  const images =
+    physicalProductData?.physicalProduct?.images ||
+    digitalProductData?.digitalProduct?.images ||
+    [];
+
   return (
-    <section className="">
+    <section className="left-sidebar-page">
       <div className="collection-wrapper">
         <Container>
           <Row>
@@ -82,7 +101,7 @@ const LeftSidebarPage = () => {
               <NewProduct />
             </Col>
             <Col lg="9" sm="12" xs="12">
-              <Container fluid={true}>
+              <Container fluid>
                 <Row>
                   <Col xl="12" className="filter-col">
                     <div className="filter-main-btn mb-2">
@@ -99,30 +118,21 @@ const LeftSidebarPage = () => {
                 ) : (
                   <Row>
                     <Col lg="6" className="product-thumbnail">
-                      <Slider
-                        {...productSliderSettings}
-                        ref={(slider) => setSlider1(slider)}
-                        className="product-slick"
-                      >
-                        {data?.physicalProduct?.images?.map((image, index) => (
-                          <div key={index}>
-                            <ImageZoom
-                              image={process.env.NEXT_PUBLIC_API_KEY + image}
-                            />
-                          </div>
-                        )) ||
-                          digitalProduct?.digitalProduct?.images?.map(
-                            (image, index) => (
-                              <div key={index}>
-                                <ImageZoom
-                                  image={
-                                    process.env.NEXT_PUBLIC_API_KEY + image
-                                  }
-                                />
-                              </div>
-                            )
-                          )}
-                      </Slider>
+                      <ReactImageMagnify
+                        {...{
+                          smallImage: {
+                            alt: "Product Zoom Image",
+                            isFluidWidth: true,
+                            src: currentImage,
+                          },
+                          largeImage: {
+                            src: currentImage,
+                            width: 1200,
+                            height: 1200,
+                          },
+                          enlargedImageContainerStyle: { zIndex: 9 },
+                        }}
+                      />
 
                       <Slider
                         {...sliderNavSettings}
@@ -130,34 +140,26 @@ const LeftSidebarPage = () => {
                         className="slider-nav"
                         asNavFor={nav1}
                       >
-                        {data?.physicalProduct?.images?.map((image, index) => (
-                          <div key={index}>
+                        {images.map((image, index) => (
+                          <div
+                            key={index}
+                            onClick={() => changeColorVar(index)}
+                          >
                             <Media
-                              src={process.env.NEXT_PUBLIC_API_KEY + image}
+                              src={`${process.env.NEXT_PUBLIC_API_KEY}${image}`}
                               alt={`Thumbnail ${index}`}
                               className="img-fluid"
                             />
                           </div>
-                        )) ||
-                          digitalProduct?.digitalProduct?.images?.map(
-                            (image, index) => (
-                              <div key={index}>
-                                <Media
-                                  src={process.env.NEXT_PUBLIC_API_KEY + image}
-                                  alt={`Thumbnail ${index}`}
-                                  className="img-fluid"
-                                />
-                              </div>
-                            )
-                          )}
+                        ))}
                       </Slider>
                     </Col>
 
                     <Col lg="6" className="rtl-text product-ps">
                       <DetailsWithPrice
                         item={
-                          data?.physicalProduct ||
-                          digitalProduct?.digitalProduct
+                          physicalProductData?.physicalProduct ||
+                          digitalProductData?.digitalProduct
                         }
                         changeColorVar={changeColorVar}
                       />

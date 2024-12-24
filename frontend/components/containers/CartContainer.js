@@ -31,25 +31,15 @@ const CartContainer = ({ icon }) => {
               <li>
                 <div className="total">
                   <h5>
-                  delsumma :{" "}
-                    <span>
-                      {symbol}
-                      {total}
-                    </span>
+                    delsumma : <span>{total}</span>
                   </h5>
                 </div>
               </li>
               <li>
                 <div className="buttons view-cart">
-                  <Link href={`/page/account/cart`}>
-                    {/* <a> */}
-                    visa varukorg
-                    {/* </a> */}
-                  </Link>
+                  <Link href={`/page/account/cart`}>Add to Cart</Link>
                   <Link href={`/page/account/checkout`} className="checkout">
-                    {/* <a > */}
-                    kolla upp
-                    {/* </a> */}
+                    CheckOut
                   </Link>
                 </div>
               </li>

@@ -156,10 +156,7 @@ const ProductSection = () => {
                       <a href={null}>
                         <h6>{product.title}</h6>
                       </a>
-                      <h4>
-                        {symbol}
-                        {product.price}
-                      </h4>
+                      <h4>{product.price}</h4>
                       <ul className="color-variant">
                         <li className="bg-light0"></li>
                         <li className="bg-light1"></li>

@@ -10,20 +10,20 @@ const CartHeader = ({ item, symbol }) => {
       <li>
         <div className="media">
           <Link href={"/product-details/" + item.id}>
-            {/* <a> */}
-            <Media alt="" className="me-3" src={`${item.images[0].src}`} />
-            {/* </a> */}
+            <Media
+              alt=""
+              className="me-3"
+              src={process.env.NEXT_PUBLIC_API_KEY + `${item.images[0]}`}
+            />
           </Link>
           <div className="media-body">
             <Link href={"/product-details/" + item.id}>
-              {/* <a> */}
               <h6>{item.title}</h6>
-              {/* </a> */}
             </Link>
 
             <h4>
               <span>
-                {item.qty} x {symbol}
+                {item.qty} x
                 {(item.price - (item.price * item.discount) / 100).toFixed(2)}
               </span>
             </h4>
@@ -33,7 +33,8 @@ const CartHeader = ({ item, symbol }) => {
           <i
             className="fa fa-times"
             aria-hidden="true"
-            onClick={() => context.removeFromCart(item)}></i>
+            onClick={() => context.removeFromCart(item)}
+          ></i>
         </div>
       </li>
     </Fragment>
