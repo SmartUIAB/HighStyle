@@ -150,9 +150,7 @@ const SideMenu = (props) => {
                         )}
                         {childrenItem.type === "link" ? (
                           <Link href={`${childrenItem.path}`}>
-                            {/* <a> */}
                             {childrenItem.title}
-                            {/* </a> */}
                           </Link>
                         ) : (
                           ""
@@ -169,9 +167,7 @@ const SideMenu = (props) => {
                                     <Link
                                       href={childrenSubItem.path}
                                       className="sub-menu-title">
-                                      {/* <a > */}
                                       {childrenSubItem.title}
-                                      {/* </a> */}
                                     </Link>
                                   ) : (
                                     ""

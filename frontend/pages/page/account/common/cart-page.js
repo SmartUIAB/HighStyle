@@ -67,7 +67,7 @@ const CartPage = () => {
                       <tbody key={index}>
                         <tr>
                           <td>
-                            <Link href={`/left-sidebar/product/` + item.id}>
+                            <Link href={`/product-details/` + item.id}>
                               <Media
                                 src={
                                   item.images
@@ -81,7 +81,7 @@ const CartPage = () => {
                             </Link>
                           </td>
                           <td>
-                            <Link href={`/left-sidebar/product/` + item.id}>
+                            <Link href={`/product-details/` + item.id}>
                               {item.title}
                             </Link>
                             <div className="mobile-cart-content row">

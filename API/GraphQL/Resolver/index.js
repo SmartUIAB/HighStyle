@@ -8,6 +8,8 @@ const vendorResolver = require("./vendorResolver");
 const salesResolver = require("./salesResolver");
 const mediaResolver = require("./mediaResolver");
 const customerResolver = require("./customerResolver");
+const menuResolvers = require("./menuResolver");
+const pageResolvers = require("./pageResolver");
 
 const resolver = {
   Query: {
@@ -19,6 +21,8 @@ const resolver = {
     ...vendorResolver.Query,
     ...salesResolver.Query,
     ...mediaResolver.Query,
+    ...menuResolvers.Query,
+    ...pageResolvers.Query,
   },
   Mutation: {
     ...userResolver.Mutation,
@@ -29,6 +33,8 @@ const resolver = {
     ...salesResolver.Mutation,
     ...mediaResolver.Mutation,
     ...customerResolver.Mutation,
+    ...menuResolvers.Mutation,
+    ...pageResolvers.Mutation,
   },
   Category: {
     ...fieldResolver.Category,

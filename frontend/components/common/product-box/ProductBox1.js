@@ -18,7 +18,6 @@ const ProductItem = ({
   title,
   spanClass,
 }) => {
-  // eslint-disable-next-line
   const router = useRouter();
   const cartContext = useContext(CartContext);
   const curContext = useContext(CurrencyContext);

@@ -8,6 +8,8 @@ const vendorTypeDefs = require("./vendorTypeDef");
 const salesTypeDef = require("./salesTypeDef");
 const mediaTypeDef = require("./mediaTypeDef");
 const customerTypeDef = require("./customerTypeDef");
+const menuTypeDefs = require("./menuTypeDef");
+const pageTypeDef = require("./pageTypeDef");
 
 const typeDefs = gql`
   ${userTypeDefs}
@@ -19,6 +21,8 @@ const typeDefs = gql`
   ${salesTypeDef}
   ${mediaTypeDef}
   ${customerTypeDef}
+  ${menuTypeDefs}
+  ${pageTypeDef}
 `;
 
 module.exports = typeDefs;

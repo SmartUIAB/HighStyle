@@ -23,9 +23,12 @@ const StripeCardElement = ({ cartTotal, onPaymentSuccess }) => {
       console.error(error);
     } else {
       // Handle the payment method and submit to your server
-      const paymentResult = await stripe.confirmCardPayment("client-secret-from-server", {
-        payment_method: paymentMethod.id,
-      });
+      const paymentResult = await stripe.confirmCardPayment(
+        "client-secret-from-server",
+        {
+          payment_method: paymentMethod.id,
+        }
+      );
 
       if (paymentResult.error) {
         console.error(paymentResult.error.message);
