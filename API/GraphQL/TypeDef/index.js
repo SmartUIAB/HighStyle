@@ -10,6 +10,8 @@ const mediaTypeDef = require("./mediaTypeDef");
 const customerTypeDef = require("./customerTypeDef");
 const menuTypeDefs = require("./menuTypeDef");
 const pageTypeDef = require("./pageTypeDef");
+const cartTypeDefs = require("./cartTypeDef");
+const orderTypeDefs = require("./orderTypeDef");
 
 const typeDefs = gql`
   ${userTypeDefs}
@@ -23,6 +25,8 @@ const typeDefs = gql`
   ${customerTypeDef}
   ${menuTypeDefs}
   ${pageTypeDef}
+  ${cartTypeDefs}
+  ${orderTypeDefs}
 `;
 
 module.exports = typeDefs;

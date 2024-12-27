@@ -4,18 +4,30 @@ import CartHeader from "../headers/common/cart-header";
 import CartContext from "../../helpers/cart";
 import { Media } from "reactstrap";
 import { CurrencyContext } from "../../helpers/Currency/CurrencyContext";
+import { useQuery } from "@apollo/client";
+import { GET_CART } from "../../GraphQL/Queries/cartQueries";
+import { toast } from "react-toastify";
 
 const CartContainer = ({ icon }) => {
-  const context = useContext(CartContext);
-  const currContext = useContext(CurrencyContext);
-  const symbol = currContext.state.symbol;
-  const cartList = context.state;
-  const total = context.cartTotal;
+  const userData = JSON.parse(localStorage.getItem("customerDetail"));
+  const {
+    data: cartList,
+    loading,
+    refetch,
+  } = useQuery(GET_CART, {
+    variables: { userId: userData?.id },
+  });
+
+  if (cartList) {
+    refetch();
+  }
 
   return (
     <Fragment>
       <li className="onhover-div mobile-cart">
-        <div className="cart-qty-cls">{cartList.length}</div>
+        <div className="cart-qty-cls">
+          {cartList?.getCart?.products?.length || 0}
+        </div>
         <Link href={`/page/account/cart`}>
           <div href={null}>
             <Media src={icon} className="img-fluid" alt="" />
@@ -23,15 +35,19 @@ const CartContainer = ({ icon }) => {
           </div>
         </Link>
         <ul className="show-div shopping-cart">
-          {cartList.map((item, index) => (
-            <CartHeader key={index} item={item} total={total} symbol={symbol} />
+          {cartList?.getCart?.products?.map((item, index) => (
+            <CartHeader
+              key={index}
+              item={item}
+              total={cartList?.getCart?.totalAmount}
+            />
           ))}
-          {cartList.length > 0 ? (
+          {cartList?.getCart?.products?.length > 0 ? (
             <div>
               <li>
                 <div className="total">
                   <h5>
-                    delsumma : <span>{total}</span>
+                    delsumma : <span>{cartList?.getCart?.totalAmount}</span>
                   </h5>
                 </div>
               </li>

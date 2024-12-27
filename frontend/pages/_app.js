@@ -13,6 +13,11 @@ import { CurrencyContextProvider } from "../helpers/Currency/CurrencyContext";
 import Helmet from "react-helmet";
 import { ApolloProvider } from "@apollo/client";
 import client from "../lib/apolloClient";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe(
+  "pk_test_51NzFdCSCDT42kkidLNEeVOHLfymrAXwDpKeRC0KsB44hdSBgbtSdQnTXCihumUo1L7Rf1qjB8ZxDN50dp2dXGsmn00GHwdu7zc"
+);
 
 export default function MyApp({ Component, pageProps }) {
   const [isLoading, setIsLoading] = useState(true);
@@ -66,7 +71,9 @@ export default function MyApp({ Component, pageProps }) {
                     <CartContextProvider>
                       <WishlistContextProvider>
                         <FilterProvider>
-                          <Component {...pageProps} />
+                          <Elements stripe={stripePromise}>
+                            <Component {...pageProps} />
+                          </Elements>
                         </FilterProvider>
                       </WishlistContextProvider>
                     </CartContextProvider>

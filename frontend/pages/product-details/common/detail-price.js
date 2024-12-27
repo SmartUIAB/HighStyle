@@ -5,6 +5,9 @@ import { Modal, ModalBody, ModalHeader, Media, Input } from "reactstrap";
 import CountdownComponent from "../../../components/common/widgets/countdownComponent";
 import MasterSocial from "./master_social";
 import CartContext from "../../../helpers/cart";
+import { useMutation } from "@apollo/client";
+import { toast } from "react-toastify";
+import { CREATE_ADD_TO_CART } from "../../../GraphQL/Mutations/cartMutations";
 
 const DetailsWithPrice = ({ item, stickyClass }) => {
   const [modal, setModal] = useState(false);
@@ -13,7 +16,8 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
   const [quantity, setQuantity] = useState(1);
 
   const toggle = () => setModal(!modal);
-  const context = useContext(CartContext);
+
+  const [createcart] = useMutation(CREATE_ADD_TO_CART);
 
   const product = item;
   const isDigital = product?.__typename === "DigitalProduct";
@@ -39,6 +43,33 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
       newQuantity <= stockQuantity
     ) {
       setQuantity(newQuantity);
+    }
+  };
+
+  const handleAddToCart = async () => {
+    if (product) {
+      const userData = JSON.parse(localStorage.getItem("customerDetail"));
+      const { data } = await createcart({
+        variables: {
+          input: {
+            userId: userData?.id,
+            products: {
+              ProductID: product.id,
+              price: product.price,
+              quantity: quantity,
+              color: product.colors?.[activeColor] || null,
+              size: product.sizes?.[activeSize] || null,
+              totalAmount: product.price * quantity,
+              title: product.title,
+            },
+          },
+        },
+      });
+      if (data) {
+        toast.success("Product Added to Cart");
+      } else {
+        toast.error("Product not Added to Cart");
+      }
     }
   };
 
@@ -139,16 +170,7 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
 
       <div className="product-buttons">
         <button
-          onClick={() =>
-            context.addToCart(
-              {
-                ...product,
-                selectedSize: product?.sizes?.[activeSize],
-                selectedColor: product?.colors?.[activeColor],
-              },
-              quantity
-            )
-          }
+          onClick={() => handleAddToCart(product)}
           className="btn btn-solid"
         >
           Add to Cart

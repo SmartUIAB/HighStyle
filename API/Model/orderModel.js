@@ -3,23 +3,23 @@ const { Schema } = mongoose;
 
 const orderSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    cart: { type: Schema.Types.ObjectId, ref: "Cart", required: false },
+    customer: { type: Schema.Types.ObjectId, ref: "Customer", required: false },
     products: [
       {
         productType: {
           type: String,
           enum: ["PHYSICAL", "DIGITAL"],
-          required: true,
+          required: false,
         },
         productId: {
           type: Schema.Types.ObjectId,
-          refPath: "products.productType",
-          required: true,
+          required: false,
         },
         quantity: { type: Number, default: 1 },
       },
     ],
-    finalTotal: { type: Number, required: true },
+    finalTotal: { type: Number, required: false },
     paymentStatus: {
       type: String,
       enum: ["PENDING", "PAID", "FAILED", "CASH_ON_DELIVERY"],
@@ -31,11 +31,11 @@ const orderSchema = new Schema(
       default: "PENDING",
     },
     shippingAddress: {
-      street: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      postalCode: { type: String, required: true },
-      country: { type: String, required: true },
+      street: { type: String, required: false },
+      city: { type: String, required: false },
+      state: { type: String, required: false },
+      postalCode: { type: String, required: false },
+      country: { type: String, required: false },
     },
     trackingNumber: { type: String },
     transaction: { type: Schema.Types.ObjectId, ref: "Transaction" },

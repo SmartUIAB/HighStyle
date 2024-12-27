@@ -1,19 +1,34 @@
 import React, { Fragment, useContext } from "react";
 import Link from "next/link";
-import CartContext from "../../../helpers/cart";
 import { Media } from "reactstrap";
+import { DELETE_CART_ITEM } from "../../../GraphQL/Mutations/cartMutations";
+import { useMutation } from "@apollo/client";
 
 const CartHeader = ({ item, symbol }) => {
-  const context = useContext(CartContext);
+    const [deleteCart] = useMutation(DELETE_CART_ITEM);
+
+  const removeFromCart = async (item) => {
+      const { data } = await deleteCart({
+        variables: {
+          cartId: cartItems.getCart.id,
+          productId: item._id,
+        },
+      });
+      if (data) {
+        refetch();
+      } else {
+        toast.error("Failed to remove item from cart");
+      }
+    };
   return (
     <Fragment>
       <li>
         <div className="media">
-          <Link href={"/product-details/" + item.id}>
+          <Link href={"/product-details/" + item.ProductID}>
             <Media
               alt=""
               className="me-3"
-              src={process.env.NEXT_PUBLIC_API_KEY + `${item.images[0]}`}
+              src={process.env.NEXT_PUBLIC_API_KEY + `${item.image}`}
             />
           </Link>
           <div className="media-body">
@@ -24,7 +39,7 @@ const CartHeader = ({ item, symbol }) => {
             <h4>
               <span>
                 {item.qty} x
-                {(item.price - (item.price * item.discount) / 100).toFixed(2)}
+                {(item.price).toFixed(2)}
               </span>
             </h4>
           </div>
@@ -33,7 +48,7 @@ const CartHeader = ({ item, symbol }) => {
           <i
             className="fa fa-times"
             aria-hidden="true"
-            onClick={() => context.removeFromCart(item)}
+            onClick={() => removeFromCart(item)}
           ></i>
         </div>
       </li>

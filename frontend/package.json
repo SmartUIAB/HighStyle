@@ -23,7 +23,7 @@
     "@next/env": "^15.1.0",
     "@nextui-org/react": "^2.4.2",
     "@paypal/react-paypal-js": "^8.1.0",
-    "@stripe/react-stripe-js": "^2.7.1",
+    "@stripe/react-stripe-js": "^2.9.0",
     "@stripe/stripe-js": "^3.5.0",
     "@types/react-slick": "^0.23.10",
     "@types/react-sticky-el": "^1.0.3",
