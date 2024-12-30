@@ -1,10 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import sizeChart from "../../../public/assets/images/size-chart.jpg";
 import { Modal, ModalBody, ModalHeader, Media, Input } from "reactstrap";
 import CountdownComponent from "../../../components/common/widgets/countdownComponent";
 import MasterSocial from "./master_social";
-import CartContext from "../../../helpers/cart";
 import { useMutation } from "@apollo/client";
 import { toast } from "react-toastify";
 import { CREATE_ADD_TO_CART } from "../../../GraphQL/Mutations/cartMutations";

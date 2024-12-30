@@ -16,7 +16,7 @@ import client from "../lib/apolloClient";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe(
-  "pk_test_51NzFdCSCDT42kkidLNEeVOHLfymrAXwDpKeRC0KsB44hdSBgbtSdQnTXCihumUo1L7Rf1qjB8ZxDN50dp2dXGsmn00GHwdu7zc"
+  "pk_test_51PKusfSF45ceFcmopwfwQGLXa25pG4dTLugYmf6ts69EQvkF8JibIJZZcBPqmyiFYbOtGgbQ3wVy7kHX4DiZX5Md00AX9Ma4SD"
 );
 
 export default function MyApp({ Component, pageProps }) {

@@ -8,7 +8,7 @@ const transactionSchema = new Schema({
     unique: true,
     required: true,
   },
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  user: { type: Schema.Types.ObjectId, ref: "Customer", required: true },
   transactionAmount: { type: Number, required: true },
   transactionStatus: {
     type: String,

@@ -9,7 +9,7 @@ const CustomError = require("../../Utilities/CustomError");
 
 const orderResolvers = {
   Mutation: {
-    AddOrder: async (_, { customerId, cartId }) => {
+    AddOrder: async (_, { customerId, cartId, shippingAddress }) => {
       try {
         const customer = await Customer.findById(customerId);
         if (!customer) {
@@ -26,10 +26,6 @@ const orderResolvers = {
           productId: item?.ProductID,
           quantity: item?.quantity,
         }));
-        const totalQuantity = cart?.products?.reduce(
-          (sum, item) => sum + item?.quantity,
-          0
-        );
 
         const orderData = {
           cart: cart?.id,
@@ -38,13 +34,7 @@ const orderResolvers = {
           finalTotal: cart.totalAmount,
           paymentStatus: "PENDING",
           orderStatus: "PENDING",
-          shippingAddress: {
-            street: "surat",
-            city: "surat",
-            state: "surat",
-            postalCode: "surat",
-            country: "surat",
-          },
+          shippingAddress: shippingAddress,
           trackingNumber: "11",
           couponApplied: false,
           appliedCouponCode: "23",
@@ -52,19 +42,10 @@ const orderResolvers = {
 
         const newOrder = new Order(orderData);
         const savedOrder = await newOrder.save();
-        console.log("savedOrder", savedOrder);
 
         const stripeCustomer = await stripe.customers.create({
           email: customer.email,
         });
-
-        const adress = {
-          street: "default street",
-          city: "default city",
-          state: "default state",
-          postalCode: "000000",
-          country: "India",
-        };
 
         const paymentLink = await stripe.checkout.sessions.create({
           payment_method_types: ["card"],
@@ -75,7 +56,7 @@ const orderResolvers = {
                 product_data: {
                   name: "Order",
                 },
-                unit_amount: Math.round(cart.totalAmount * 100),
+                unit_amount: Math.round(cart.totalAmount * 100), // Stripe uses cents
               },
               quantity: 1,
             },
@@ -84,24 +65,21 @@ const orderResolvers = {
           success_url: `http://localhost:3000/page/account/cart`,
           cancel_url: `http://localhost:3000/page/account`,
           customer: stripeCustomer.id,
-          payment_intent_data: {
-            metadata: {
-              orderId: savedOrder._id.toString(),
-              cartId: cart?.id,
-              customerId: customer?.id,
-
-              userEmail: customer.email,
-              bookingAmount: cart.totalAmount,
-              bookingCurrency: "usd",
-              billingAddress: JSON.stringify(adress),
-              shippingAddress: JSON.stringify(adress),
-            },
+          metadata: {
+            orderId: savedOrder._id.toString(),
+            cartId: cart?.id,
+            customerId: customer?.id,
+            userEmail: customer.email,
+            bookingAmount: cart.totalAmount,
+            bookingCurrency: "usd",
+            billingAddress: JSON.stringify(shippingAddress),
+            shippingAddress: JSON.stringify(shippingAddress),
           },
         });
 
         return {
-          order: "savedOrder",
-          paymentIntentClientSecret: paymentLink?.url || "hello",
+          order: "savedOrder", // Return the order object, not the string
+          paymentIntentClientSecret: paymentLink.url, // Correct field for client secret
         };
       } catch (error) {
         console.error("Error creating order:", error);

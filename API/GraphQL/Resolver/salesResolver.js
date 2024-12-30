@@ -55,7 +55,7 @@ const salesResolver = {
         const totalPages = Math.ceil(totalCount / limit);
 
         const orders = await Order.find()
-          .populate("user")
+          .populate("customer")
           .populate("transaction")
           .skip((page - 1) * limit)
           .limit(limit)
@@ -66,11 +66,8 @@ const salesResolver = {
             id: order._id.toString(),
             ...order,
             user: {
-              ...order.user,
-              id: order.user._id.toString(),
-              permissions: order.user.permissions.map((permission) =>
-                permission.toString()
-              ),
+              ...order.customer,
+              id: order.customer._id.toString(),
             },
           };
         });
@@ -112,48 +109,63 @@ const salesResolver = {
     },
 
     getAllTransactions: async (_, { page = 1, limit = 10 }) => {
-      const totalCount = await Transaction.countDocuments();
-      const totalPages = Math.ceil(totalCount / limit);
-      const transactions = await Transaction.find()
-        .populate({
-          path: "order",
-          populate: {
-            path: "user",
-            model: "User",
-          },
-        })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .lean();
+      try {
+        const totalCount = await Transaction.countDocuments();
+        const totalPages = Math.ceil(totalCount / limit);
 
-      const sanitizedTransactions = transactions.map((transaction) => ({
-        id: transaction._id.toString(),
-        order: transaction.order
-          ? {
-              ...transaction.order,
-              id: transaction.order._id.toString(),
-              user: {
-                ...transaction.order.user,
-                id: transaction.order.user._id.toString(),
-                permissions: transaction.order.user.permissions.map(
-                  (permission) => permission.toString()
-                ),
-              },
-            }
-          : null,
-        transactionAmount: transaction.transactionAmount,
-        transactionStatus: transaction.transactionStatus,
-        paymentGateway: transaction.paymentGateway,
-        transactionId: transaction.transactionId,
-        createdAt: transaction.createdAt,
-      }));
+        const transactions = await Transaction.find()
+          .populate({
+            path: "order",
+            populate: {
+              path: "customer",
+              model: "Customer",
+            },
+          })
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .lean();
 
-      return {
-        totalCount,
-        totalPages,
-        currentPage: page,
-        transactions: sanitizedTransactions,
-      };
+        const sanitizedTransactions = transactions.map((transaction) => {
+          console.log(transaction);
+
+          const sanitizedOrder = transaction.order
+            ? {
+                ...transaction.order,
+                id: transaction.order._id.toString(),
+                user: transaction.order.customer
+                  ? {
+                      ...transaction.order.customer,
+                      id: transaction.order.customer._id.toString(),
+                      // permissions:
+                      //   transaction.order.customer.permissions?.map(
+                      //     (permission) => permission.toString()
+                      //   ) || [],
+                    }
+                  : null,
+              }
+            : null;
+
+          return {
+            id: transaction._id.toString(),
+            order: sanitizedOrder,
+            transactionAmount: transaction.transactionAmount,
+            transactionStatus: transaction.transactionStatus,
+            paymentGateway: transaction.paymentGateway,
+            transactionId: transaction.transactionId,
+            createdAt: transaction.createdAt,
+          };
+        });
+
+        return {
+          totalCount,
+          totalPages,
+          currentPage: page,
+          transactions: sanitizedTransactions,
+        };
+      } catch (err) {
+        console.error("Error fetching transactions:", err.message);
+        throw new Error("Failed to fetch transactions");
+      }
     },
   },
 

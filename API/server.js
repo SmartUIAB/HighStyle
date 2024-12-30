@@ -43,7 +43,6 @@ app.use(
 
 app.use("/", paymentRoute);
 app.use(bodyParser.json());
-app.use("/create-payment-intent", paymentRoute);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 

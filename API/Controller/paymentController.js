@@ -1,16 +1,18 @@
+const Cart = require("../Model/cartModel");
 const Order = require("../Model/orderModel");
 const Transaction = require("../Model/transactionModel");
 const Stripe = require("stripe");
 const stripe = Stripe(
-  "sk_test_51PKusfSF45ceFcmoNjxILNypOpmyM12iZCIMU9nsvWA9LD3qmATfJCoIfygNecX95pp1slJMjOIWFifaiuQNZpOa00D5A3D3f6"
+  "sk_test_51NzFdCSCDT42kkid2TDRj7EniJjJYo4RwYHKecRzS7G7v2oSckRk5u0eFULCk8MlDguedWSiYZ10tVK9kyDbMbA700FfjhSWZZ"
 );
 
 const handleWebhook = async (req, res, next) => {
   let data, eventType;
+
   /* ---------------- Verify the webhook signature from Stripe ---------------- */
   if (process.env.STRIPE_WEBHOOK_SECRET) {
     const signature = req.headers["stripe-signature"];
-    let event;
+    let event = req.body;
     try {
       event = stripe.webhooks.constructEvent(
         req.body,
@@ -18,7 +20,7 @@ const handleWebhook = async (req, res, next) => {
         process.env.STRIPE_WEBHOOK_SECRET
       );
     } catch (err) {
-      console.log("Webhook signature verification failed:", err.message);
+      console.log("Webhook signature verification failed:", err);
       return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
@@ -30,13 +32,65 @@ const handleWebhook = async (req, res, next) => {
   }
 
   const paymentIntent = data;
-  const orderId = paymentIntent.metadata.orderId;
+  const orderId = paymentIntent.metadata?.orderId;
 
   try {
     let updatedOrder, newTransaction;
 
-    /* ---------- Dynamically determine the status based on event type ---------- */
+    /* ---------- Handle different Stripe event types ---------- */
     switch (eventType) {
+      // Checkout session completed
+      case "checkout.session.completed":
+        // Extract order ID from metadata
+        const session = data;
+        const sessionOrderId = session.metadata?.orderId;
+
+        if (session.payment_status === "paid") {
+          updatedOrder = await Order.findByIdAndUpdate(
+            sessionOrderId,
+            {
+              paymentStatus: "PAID",
+              orderStatus: "SHIPPED",
+            },
+            { new: true }
+          );
+
+          newTransaction = new Transaction({
+            order: updatedOrder?._id,
+            user: updatedOrder?.customer,
+            transactionAmount: session.amount_total / 100,
+            paymentGateway: "Stripe",
+            transactionStatus: "SUCCESSFUL",
+            transactionId: session.payment_intent,
+          });
+          await newTransaction.save();
+          await Cart.findByIdAndDelete(updatedOrder.cart);
+
+          console.log("✅ Checkout session completed, order updated!");
+        } else {
+          updatedOrder = await Order.findByIdAndUpdate(
+            sessionOrderId,
+            {
+              paymentStatus: "FAILED",
+              orderStatus: "CANCELLED",
+            },
+            { new: true }
+          );
+
+          newTransaction = new Transaction({
+            order: updatedOrder._id,
+            transactionAmount: session.amount_total / 100,
+            paymentGateway: "Stripe",
+            transactionStatus: "FAILED",
+            transactionId: session.payment_intent,
+          });
+          await newTransaction.save();
+
+          console.log("❌ Checkout session failed, order updated!");
+        }
+        break;
+
+      // Payment intent succeeded
       case "payment_intent.succeeded":
         updatedOrder = await Order.findByIdAndUpdate(
           orderId,
@@ -57,9 +111,10 @@ const handleWebhook = async (req, res, next) => {
         });
         await newTransaction.save();
 
-        console.log("✅ Payment received and order updated!");
+        console.log("✅ Payment succeeded and order updated!");
         break;
 
+      // Payment intent failed
       case "payment_intent.payment_failed":
         updatedOrder = await Order.findByIdAndUpdate(
           orderId,
@@ -82,6 +137,7 @@ const handleWebhook = async (req, res, next) => {
         console.log("❌ Payment failed and order updated!");
         break;
 
+      // Payment intent canceled
       case "payment_intent.canceled":
         updatedOrder = await Order.findByIdAndUpdate(
           orderId,
@@ -104,7 +160,7 @@ const handleWebhook = async (req, res, next) => {
         console.log("⚠️ Payment intent was canceled and order updated!");
         break;
 
-      // Handle other event types, such as refunds
+      // Refund event (charge refunded)
       case "charge.refunded":
         updatedOrder = await Order.findByIdAndUpdate(
           orderId,
@@ -139,51 +195,4 @@ const handleWebhook = async (req, res, next) => {
   }
 };
 
-const createPaymentIntent = async (req, res, next) => {
-  try {
-    const { amount, currency, orderId, userId, shippingAddress } = req.body;
-
-    // Create a payment intent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100,
-      currency: currency,
-      payment_method_types: ["card"],
-      metadata: {
-        orderId: orderId,
-        userId: userId,
-      },
-    });
-    const addressString = `${shippingAddress.name}, ${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state}, ${shippingAddress.postalCode}, ${shippingAddress.country}, Phone: ${shippingAddress.phone}`;
-    // Create a checkout session (for link-based payment)
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: currency,
-            product_data: {
-              name: "Payment for Order",
-            },
-            unit_amount: amount * 100,
-          },
-          quantity: 1,
-        },
-      ],
-      mode: "payment",
-      success_url: "http://localhost:3000/en/dashboard",
-      cancel_url: "http://localhost:3000/en/dashboard",
-      metadata: {
-        orderId: orderId,
-        userId: userId,
-        shipping_address: addressString,
-      },
-    });
-
-    res.json({ paymentLink: session.url });
-  } catch (error) {
-    console.error("Error creating:------:", error.message);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
-
-module.exports = { handleWebhook, createPaymentIntent };
+module.exports = { handleWebhook };
