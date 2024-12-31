@@ -1,7 +1,5 @@
 const Stripe = require("stripe");
-const stripe = new Stripe(
-  "sk_test_51NzFdCSCDT42kkid2TDRj7EniJjJYo4RwYHKecRzS7G7v2oSckRk5u0eFULCk8MlDguedWSiYZ10tVK9kyDbMbA700FfjhSWZZ"
-);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const Cart = require("../../Model/cartModel");
 const Customer = require("../../Model/customerModel");
 const Order = require("../../Model/orderModel");
@@ -56,7 +54,7 @@ const orderResolvers = {
                 product_data: {
                   name: "Order",
                 },
-                unit_amount: Math.round(cart.totalAmount * 100), // Stripe uses cents
+                unit_amount: Math.round(cart.totalAmount * 100),
               },
               quantity: 1,
             },
@@ -78,8 +76,8 @@ const orderResolvers = {
         });
 
         return {
-          order: "savedOrder", // Return the order object, not the string
-          paymentIntentClientSecret: paymentLink.url, // Correct field for client secret
+          order: "savedOrder",
+          paymentIntentClientSecret: paymentLink.url,
         };
       } catch (error) {
         console.error("Error creating order:", error);

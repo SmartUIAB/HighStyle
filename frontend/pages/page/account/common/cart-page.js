@@ -28,10 +28,7 @@ import { toast } from "react-toastify";
 import { CREATE_ORDER } from "../../../../GraphQL/Mutations/orderMutations";
 import { loadStripe } from "@stripe/stripe-js";
 
-// Load Stripe using your public key
-const stripePromise = loadStripe(
-  "sk_test_51NzFdCSCDT42kkid2TDRj7EniJjJYo4RwYHKecRzS7G7v2oSckRk5u0eFULCk8MlDguedWSiYZ10tVK9kyDbMbA700FfjhSWZZ"
-);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_SECRET_KEY);
 
 const CartPage = () => {
   const userData = JSON.parse(localStorage.getItem("customerDetail"));
@@ -96,7 +93,6 @@ const CartPage = () => {
   };
 
   const handleCheckout = async () => {
-    // Check if shipping address is filled
     if (
       !shippingAddress.street ||
       !shippingAddress.city ||
@@ -104,9 +100,10 @@ const CartPage = () => {
       !shippingAddress.postalCode ||
       !shippingAddress.country
     ) {
-      // Show an alert if any address field is empty
-      alert("Please add your shipping address before proceeding to checkout.");
-      return; // Prevent checkout from proceeding
+      toast.warning(
+        "Please add your shipping address before proceeding to checkout."
+      );
+      return;
     }
 
     try {
@@ -140,18 +137,19 @@ const CartPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     toast.success("Shipping address submitted!");
-    setIsModalOpen(false); // Close the modal after submission
-    console.log(shippingAddress); // You can replace this with an API call to save the shipping address
+    setIsModalOpen(false);
+    console.log(shippingAddress);
   };
 
   if (loading) return <div>Loading...</div>;
 
   return (
     <div>
-      {/* Ensure Elements wraps the payment section */}
-      <button onClick={() => setIsModalOpen(true)} style={{ float: "right" }}>
-        Add Address
-      </button>
+      {cartItems?.getCart?.products?.length > 0 && (
+        <button onClick={() => setIsModalOpen(true)} style={{ float: "right" }}>
+          Add Address
+        </button>
+      )}
       {cartItems?.getCart?.products?.length > 0 ? (
         <section className="cart-section section-b-space">
           <Container>

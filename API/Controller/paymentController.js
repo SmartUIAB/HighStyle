@@ -1,10 +1,35 @@
 const Cart = require("../Model/cartModel");
 const Order = require("../Model/orderModel");
 const Transaction = require("../Model/transactionModel");
+const nodemailer = require("nodemailer");
 const Stripe = require("stripe");
-const stripe = Stripe(
-  "sk_test_51NzFdCSCDT42kkid2TDRj7EniJjJYo4RwYHKecRzS7G7v2oSckRk5u0eFULCk8MlDguedWSiYZ10tVK9kyDbMbA700FfjhSWZZ"
-);
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
+const sendOrderEmail = async (userEmail) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.USER_EMAIL,
+        pass: process.env.USER_EMAIL_PASSWORD,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.USER_EMAIL,
+      to: userEmail,
+      subject: "Order Confirmation",
+      html: `
+        <h1>Order Confirmation</h1>
+        <p>Thank you for your order! Your payment was successful, and your order is being processed.</p>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.error("Failed to send email:", error.message);
+  }
+};
 
 const handleWebhook = async (req, res, next) => {
   let data, eventType;
@@ -39,11 +64,10 @@ const handleWebhook = async (req, res, next) => {
 
     /* ---------- Handle different Stripe event types ---------- */
     switch (eventType) {
-      // Checkout session completed
       case "checkout.session.completed":
-        // Extract order ID from metadata
         const session = data;
         const sessionOrderId = session.metadata?.orderId;
+        const userEmail = session.metadata?.userEmail;
 
         if (session.payment_status === "paid") {
           updatedOrder = await Order.findByIdAndUpdate(
@@ -65,7 +89,9 @@ const handleWebhook = async (req, res, next) => {
           });
           await newTransaction.save();
           await Cart.findByIdAndDelete(updatedOrder.cart);
-
+          if (updatedOrder.customer) {
+            await sendOrderEmail(userEmail);
+          }
           console.log("✅ Checkout session completed, order updated!");
         } else {
           updatedOrder = await Order.findByIdAndUpdate(

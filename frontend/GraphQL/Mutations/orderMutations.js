@@ -16,3 +16,9 @@ export const CREATE_ORDER = gql`
     }
   }
 `;
+
+export const ORDER_SEND_EMAIL = gql`
+  mutation SendOrderEmail($userEmail: String!) {
+    sendOrderEmail(userEmail: $userEmail)
+  }
+`;
