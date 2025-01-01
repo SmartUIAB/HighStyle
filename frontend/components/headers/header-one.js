@@ -10,6 +10,7 @@ import Currency from "./common/currency";
 import settings from "../../public/assets/images/icon/setting.png";
 import SearchOverlay from "./common/search-overlay";
 import search from "../../public/assets/images/icon/search.png";
+import Language from "./Language";
 
 const HeaderFour = ({ logoName, topClass, fluid, hfluid }) => {
   //   const isLoading = false;
@@ -89,7 +90,8 @@ const HeaderFour = ({ logoName, topClass, fluid, hfluid }) => {
                           </form>
                         </div>
 
-                        <Currency icon={settings.src} />
+                        {/* <Currency icon={settings.src} /> */}
+                        <Language></Language>
                         {/*Header Cart Component */}
                         <CartContainer icon={cart.src} />
                       </ul>

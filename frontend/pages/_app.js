@@ -14,6 +14,7 @@ import Helmet from "react-helmet";
 import { ApolloProvider } from "@apollo/client";
 import client from "../lib/apolloClient";
 import { Elements } from "@stripe/react-stripe-js";
+import { LanguageProvider } from "../context/LanguageContext";
 import { loadStripe } from "@stripe/stripe-js";
 const stripePromise = loadStripe(
   "pk_test_51PKusfSF45ceFcmopwfwQGLXa25pG4dTLugYmf6ts69EQvkF8JibIJZZcBPqmyiFYbOtGgbQ3wVy7kHX4DiZX5Md00AX9Ma4SD"
@@ -65,22 +66,24 @@ export default function MyApp({ Component, pageProps }) {
               <title>Multikart - Multi-purpose E-commerce React Template</title>
             </Helmet>
             <div>
-              <SettingProvider>
-                <CompareContextProvider>
-                  <CurrencyContextProvider>
-                    <CartContextProvider>
-                      <WishlistContextProvider>
-                        <FilterProvider>
-                          <Elements stripe={stripePromise}>
-                            <Component {...pageProps} />
-                          </Elements>
-                        </FilterProvider>
-                      </WishlistContextProvider>
-                    </CartContextProvider>
-                  </CurrencyContextProvider>
-                  <ThemeSettings />
-                </CompareContextProvider>
-              </SettingProvider>
+              <LanguageProvider>
+                <SettingProvider>
+                  <CompareContextProvider>
+                    <CurrencyContextProvider>
+                      <CartContextProvider>
+                        <WishlistContextProvider>
+                          <FilterProvider>
+                            <Elements stripe={stripePromise}>
+                              <Component {...pageProps} />
+                            </Elements>
+                          </FilterProvider>
+                        </WishlistContextProvider>
+                      </CartContextProvider>
+                    </CurrencyContextProvider>
+                    <ThemeSettings />
+                  </CompareContextProvider>
+                </SettingProvider>
+              </LanguageProvider>
               <ToastContainer />
               <TapTop />
             </div>

@@ -4,7 +4,6 @@ const {
   createPaymentIntent,
 } = require("../Controller/paymentController");
 const wrapAsync = require("../Utilities/wrapAsync");
-const bodyParser = require("body-parser");
 
 const router = express.Router();
 

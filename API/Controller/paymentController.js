@@ -3,9 +3,10 @@ const Order = require("../Model/orderModel");
 const Transaction = require("../Model/transactionModel");
 const nodemailer = require("nodemailer");
 const Stripe = require("stripe");
+const baseUrl = process.env.API_BASE_URL;
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-const sendOrderEmail = async (userEmail) => {
+const sendOrderEmail = async (userEmail, cartData) => {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -15,6 +16,24 @@ const sendOrderEmail = async (userEmail) => {
       },
     });
 
+    const productRows = cartData.products
+      .map((product) => {
+        return `
+        <tr>
+          <td><img src="${baseUrl + product.image}" alt="${
+          product.title
+        }" style="width:50px;height:50px;"></td>
+          <td>${product.title}</td>
+          <td>${product.color}</td>
+          <td>${product.size}</td>
+          <td>${product.quantity}</td>
+          <td>$${product.price.toFixed(2)}</td>
+          <td>$${product.totalAmount.toFixed(2)}</td>
+        </tr>
+      `;
+      })
+      .join("");
+
     const mailOptions = {
       from: process.env.USER_EMAIL,
       to: userEmail,
@@ -22,10 +41,30 @@ const sendOrderEmail = async (userEmail) => {
       html: `
         <h1>Order Confirmation</h1>
         <p>Thank you for your order! Your payment was successful, and your order is being processed.</p>
+        <table border="1" cellspacing="0" cellpadding="10" style="width:100%; text-align:left; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Product</th>
+              <th>Color</th>
+              <th>Size</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${productRows}
+          </tbody>
+        </table>
+        <p><strong>Total Amount: $${cartData.totalAmount.toFixed(
+          2
+        )}</strong></p>
       `,
     };
 
     await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully");
   } catch (error) {
     console.error("Failed to send email:", error.message);
   }
@@ -88,10 +127,11 @@ const handleWebhook = async (req, res, next) => {
             transactionId: session.payment_intent,
           });
           await newTransaction.save();
-          await Cart.findByIdAndDelete(updatedOrder.cart);
+          const cartData = await Cart.findById(updatedOrder.cart);
           if (updatedOrder.customer) {
-            await sendOrderEmail(userEmail);
+            await sendOrderEmail(userEmail, cartData);
           }
+          await Cart.findByIdAndDelete(updatedOrder.cart);
           console.log("✅ Checkout session completed, order updated!");
         } else {
           updatedOrder = await Order.findByIdAndUpdate(
