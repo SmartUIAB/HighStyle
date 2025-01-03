@@ -5,16 +5,16 @@ import { LOGIN_USER } from "../../../../GraphQL/Mutations/authMutations";
 import { useMutation } from "@apollo/client";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import LocaleLink from "../../../../components/LocaleLink";
+import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const { t } = useTranslation();
 
   const [login, { loading }] = useMutation(LOGIN_USER);
-
   const router = useRouter();
 
   const validateForm = () => {
@@ -67,7 +67,7 @@ const Login = () => {
         <Container>
           <Row>
             <Col lg="6">
-              <h3>Login</h3>
+              <h3>{t("welcome")}</h3>
               <div className="theme-card">
                 <Form className="theme-form">
                   <div className="form-group">

@@ -16,6 +16,7 @@ import client from "../lib/apolloClient";
 import { Elements } from "@stripe/react-stripe-js";
 import { LanguageProvider } from "../context/LanguageContext";
 import { loadStripe } from "@stripe/stripe-js";
+import "../i18n";
 const stripePromise = loadStripe(
   "pk_test_51PKusfSF45ceFcmopwfwQGLXa25pG4dTLugYmf6ts69EQvkF8JibIJZZcBPqmyiFYbOtGgbQ3wVy7kHX4DiZX5Md00AX9Ma4SD"
 );

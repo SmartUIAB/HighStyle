@@ -37,6 +37,7 @@
     "graphql": "^16.9.0",
     "i18next": "^24.2.0",
     "i18next-browser-languagedetector": "^7.0.1",
+    "i18next-http-backend": "^3.0.1",
     "i18next-resources-to-backend": "^1.2.1",
     "isomorphic-unfetch": "^4.0.2",
     "jimp": "^0.22.7",

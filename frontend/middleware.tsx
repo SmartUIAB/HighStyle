@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
 
 
   // Skip locale logic for paths containing "assets" or "public"
-  if (pathname.includes("/assets/") || pathname.includes("/public/")) {
+  if (pathname.includes("/assets/") || pathname.includes("/public/") || pathname.includes("/i18n/")) {
     return NextResponse.next();
   }
 

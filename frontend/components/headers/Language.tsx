@@ -1,10 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../context/LanguageContext";
 import { usePathname, useRouter } from "next/navigation";
 
 const Language = () => {
+  const { t } = useTranslation(); // Access translation function
   const { language, changeLanguage } = useLanguage();
-  const pathname = usePathname();
-  const router = useRouter();
 
   const LanguageData = [
     { lang: "en", icon: "us", title: "English" }, // Update icons to ISO country codes
@@ -15,10 +15,6 @@ const Language = () => {
 
   const handleChangeLanguage = (lng: string) => {
     changeLanguage(lng);
-    const languageCodeRegex = /^\/[a-z]{2}(\/|$)/;
-    const updatedPath = pathname.replace(languageCodeRegex, `/${lng}$1`);
-    console.log(updatedPath, '=============');
-    router.push(updatedPath);
   };
 
   return (

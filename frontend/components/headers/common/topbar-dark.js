@@ -2,8 +2,14 @@ import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import Link from "next/link";
 import LocaleLink from "../../LocaleLink";
+import { useTranslation } from "react-i18next";
+import i18n from "../../../i18n";
 
 const TopBar = ({ topClass }) => {
+  const { t } = useTranslation();
+
+  console.log(i18n.t("welcome"), "-------------");
+
   return (
     <div id="topHeader" className={`top-header ${topClass ? topClass : ""}`}>
       <Container>
