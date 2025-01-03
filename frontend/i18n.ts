@@ -14,7 +14,7 @@ i18n
     supportedLngs: ["en", "es", "fr", "pt"], // Add the supported languages here
     load: "all",
     preload: false,
-    keySeparator: false,
+    keySeparator: ".",
     backend: {
       loadPath: "/i18n/locales/{{lng}}/translation.json",
     },

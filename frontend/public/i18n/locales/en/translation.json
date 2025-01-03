@@ -1,3 +1,40 @@
 {
-  "welcome": "AAAAA"
+  "footer": {
+    "subscribe": {
+      "title": "BE THE FIRST TO KNOW!",
+      "description": "Never miss anything from High Style by subscribing to our newsletter.",
+      "placeholder": "Enter your email address",
+      "button": "Subscribe"
+    },
+    "about": {
+      "title": "about",
+      "description": "High Style is a Swedish lifestyle company that focuses on offering stylish and trendy accessories to its customers. We strive to create a unique and personal shopping experience for each individual, regardless of their style and preferences. With our carefully curated selection and commitment to quality and design, we aim to inspire and give our customers the opportunity to express their personal style in the best possible way. Visit our website to discover our latest collection."
+    },
+    "account": {
+      "title": "my account",
+      "links": {
+        "women": "Women's",
+        "clothes": "Clothing",
+        "accessories": "Accessories",
+        "presents": "Presents"
+      }
+    },
+    "whyChooseUs": {
+      "title": "why we choose",
+      "links": {
+        "shippingReturns": "Shipping & Returns",
+        "secureShopping": "Secure Shopping",
+        "gallery": "Gallery",
+        "affiliates": "Affiliates",
+        "contacts": "Contacts"
+      }
+    },
+    "storeInfo": {
+      "title": "store information",
+      "address": "High Style AB Market",
+      "phone": "Call us: 0735 50 20 62",
+      "email": "Email Us: Support@highstyle.se",
+      "whatsapp": "Whatsapp: 0735 50 20 62"
+    }
+  }
 }
