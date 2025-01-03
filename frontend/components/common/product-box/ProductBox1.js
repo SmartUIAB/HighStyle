@@ -5,6 +5,7 @@ import { Row, Col, Media, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { CurrencyContext } from "../../../helpers/Currency/CurrencyContext";
 import CartContext from "../../../helpers/cart";
 import MasterProductDetail from "./MasterProductDetail";
+import LocaleLink from "../../LocaleLink";
 
 const ProductItem = ({
   product,
@@ -127,14 +128,14 @@ const ProductItem = ({
                         <span> successfully added to your Compare list</span>
                       </h5>
                       <div className="buttons d-flex justify-content-center">
-                        <Link href="/page/compare">
+                        <LocaleLink href="/page/compare">
                           <button
                             className="btn-sm btn-solid"
                             onClick={addCompare}
                           >
                             View Compare list
                           </button>
-                        </Link>
+                        </LocaleLink>
                       </div>
                     </div>
                   </div>

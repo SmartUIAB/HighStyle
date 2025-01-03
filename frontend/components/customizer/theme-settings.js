@@ -13,6 +13,7 @@ import {
 } from "reactstrap";
 import SettingContext from "../../helpers/theme-setting/SettingContext";
 import config from "./config.json";
+import LocaleLink from "../LocaleLink";
 
 const ThemeSettings = () => {
   const [isOpen, setIsOpen] = useState();
@@ -265,11 +266,11 @@ const ThemeSettings = () => {
               className="btn-group demo-btn"
               role="group"
               aria-label="Basic example">
-              <Link href={link} className="btn new-tab-btn">
+              <LocaleLink href={link} className="btn new-tab-btn">
                 {/* <a > */}
                 {btnName}
                 {/* </a> */}
-              </Link>
+              </LocaleLink>
             </div>
           </div>
         </div>

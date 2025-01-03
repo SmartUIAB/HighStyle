@@ -7,9 +7,11 @@ import { CurrencyContext } from "../../helpers/Currency/CurrencyContext";
 import { useQuery } from "@apollo/client";
 import { GET_CART } from "../../GraphQL/Queries/cartQueries";
 import { toast } from "react-toastify";
+import LocaleLink from "../LocaleLink";
 
 const CartContainer = ({ icon }) => {
   const userData = JSON.parse(localStorage.getItem("customerDetail"));
+
   const {
     data: cartList,
     loading,
@@ -28,12 +30,12 @@ const CartContainer = ({ icon }) => {
         <div className="cart-qty-cls">
           {cartList?.getCart?.products?.length || 0}
         </div>
-        <Link href={`/page/account/cart`}>
-          <div href={null}>
+        <LocaleLink href={`/page/account/cart`}>
+          <div>
             <Media src={icon} className="img-fluid" alt="" />
             <i className="fa fa-shopping-cart"></i>
           </div>
-        </Link>
+        </LocaleLink>
         <ul className="show-div shopping-cart">
           {cartList?.getCart?.products?.map((item, index) => (
             <CartHeader
@@ -53,10 +55,15 @@ const CartContainer = ({ icon }) => {
               </li>
               <li>
                 <div className="buttons view-cart">
-                  <Link href={`/page/account/cart`}>Add to Cart</Link>
-                  <Link href={`/page/account/checkout`} className="checkout">
+                  <LocaleLink href={`/page/account/cart`}>
+                    Add to Cart
+                  </LocaleLink>
+                  <LocaleLink
+                    href={`/page/account/checkout`}
+                    className="checkout"
+                  >
                     CheckOut
-                  </Link>
+                  </LocaleLink>
                 </div>
               </li>
             </div>

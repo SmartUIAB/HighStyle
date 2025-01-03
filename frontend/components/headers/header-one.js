@@ -3,14 +3,15 @@ import NavBar from "./common/navbar";
 import SideBar from "./common/sidebar";
 import TopBar from "./common/topbar-dark";
 import cart from "../../public/assets/images/icon/cart.png";
+
 import CartContainer from "../containers/CartContainer";
 import LogoImage from "./common/logo";
+import Language from "./Language";
 import { Container, Col, Row, Media, Input } from "reactstrap";
 import Currency from "./common/currency";
 import settings from "../../public/assets/images/icon/setting.png";
 import SearchOverlay from "./common/search-overlay";
 import search from "../../public/assets/images/icon/search.png";
-import Language from "./Language";
 
 const HeaderFour = ({ logoName, topClass, fluid, hfluid }) => {
   //   const isLoading = false;
@@ -90,8 +91,8 @@ const HeaderFour = ({ logoName, topClass, fluid, hfluid }) => {
                           </form>
                         </div>
 
+                        <Language />
                         {/* <Currency icon={settings.src} /> */}
-                        <Language></Language>
                         {/*Header Cart Component */}
                         <CartContainer icon={cart.src} />
                       </ul>

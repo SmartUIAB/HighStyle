@@ -2,6 +2,7 @@ import React from "react";
 import Slider from "react-slick";
 import { Slider6 } from "../../services/script";
 import { Container, Row, Media, Col } from "reactstrap";
+import LocaleLink from "../LocaleLink";
 
 const LogoBlock = ({ designClass }) => {
   const imgData = [
@@ -24,9 +25,9 @@ const LogoBlock = ({ designClass }) => {
                 return (
                   <div key={i}>
                     <div className="logo-block">
-                      <a href={null}>
+                      <LocaleLink href={null}>
                         <Media src={imgSrc} alt="" />
-                      </a>
+                      </LocaleLink>
                     </div>
                   </div>
                 );

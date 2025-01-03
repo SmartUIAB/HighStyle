@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import Link from "next/link";
+import LocaleLink from "../../LocaleLink";
 
 const TopBar = ({ topClass }) => {
   return (
@@ -21,25 +22,29 @@ const TopBar = ({ topClass }) => {
           <Col lg="6" className="text-end">
             <ul className="header-dropdown">
               <li className="mobile-wishlist compare-mobile">
-                <Link href={`/page/compare`}>
+                <LocaleLink href={`/page/compare`}>
                   <i className="fa fa-random" aria-hidden="true"></i>
                   {"compare"}
-                </Link>
+                </LocaleLink>
               </li>
               <li className="mobile-wishlist">
-                <Link href={`/page/account/wishlist`}>
+                <LocaleLink href={`/page/account/wishlist`}>
                   <i className="fa fa-heart" aria-hidden="true"></i>
                   {"wishlist"}
-                </Link>
+                </LocaleLink>
               </li>
               <li className="onhover-dropdown mobile-account">
                 <i className="fa fa-user" aria-hidden="true"></i> {"My account"}
                 <ul className="onhover-show-div">
                   <li>
-                    <Link href={`/page/account/login`}>Logga in</Link>
+                    <LocaleLink href={`/page/account/login`}>
+                      Logga in
+                    </LocaleLink>
                   </li>
                   <li>
-                    <Link href={`/page/account/register`}>Registrera</Link>
+                    <LocaleLink href={`/page/account/register`}>
+                      Registrera
+                    </LocaleLink>
                   </li>
                 </ul>
               </li>

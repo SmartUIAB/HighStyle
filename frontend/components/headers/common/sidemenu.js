@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import Link from "next/link";
 import { MENUITEMS } from "../../constant/menu";
 import { Container, Row } from "reactstrap";
+import LocaleLink from "../../LocaleLink";
 
 const SideMenu = (props) => {
   const [navClose, setNavClose] = useState({ right: "0px" });
@@ -149,9 +150,9 @@ const SideMenu = (props) => {
                           ""
                         )}
                         {childrenItem.type === "link" ? (
-                          <Link href={`${childrenItem.path}`}>
+                          <LocaleLink href={`${childrenItem.path}`}>
                             {childrenItem.title}
-                          </Link>
+                          </LocaleLink>
                         ) : (
                           ""
                         )}
@@ -164,11 +165,11 @@ const SideMenu = (props) => {
                               (childrenSubItem, key) => (
                                 <li key={key}>
                                   {childrenSubItem.type === "link" ? (
-                                    <Link
+                                    <LocaleLink
                                       href={childrenSubItem.path}
                                       className="sub-menu-title">
                                       {childrenSubItem.title}
-                                    </Link>
+                                    </LocaleLink>
                                   ) : (
                                     ""
                                   )}
@@ -217,11 +218,11 @@ const SideMenu = (props) => {
                                           (subMegaMenuItem, i) => {
                                             return (
                                               <li key={i}>
-                                                <a href={subMegaMenuItem.path}>
+                                                <LocaleLink href={subMegaMenuItem.path}>
                                                   <i
                                                     className={`icon-${subMegaMenuItem.icon}`}></i>
                                                   {subMegaMenuItem.title}
-                                                </a>
+                                                </LocaleLink>
                                               </li>
                                             );
                                           }
@@ -230,9 +231,9 @@ const SideMenu = (props) => {
                                           (subMegaMenuItem, i) => {
                                             return (
                                               <li key={i}>
-                                                <a href={subMegaMenuItem.path}>
+                                                <LocaleLink href={subMegaMenuItem.path}>
                                                   {subMegaMenuItem.title}
-                                                </a>
+                                                </LocaleLink>
                                               </li>
                                             );
                                           }

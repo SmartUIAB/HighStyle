@@ -11,6 +11,7 @@ import cart from "../../../public/assets/images/icon/shopping-cart.png";
 import Currency from "./currency";
 import CartContainer from "../../containers/CartContainer";
 import SearchOverlay from "./search-overlay";
+import LocaleLink from "../../LocaleLink";
 const IconTopbar = () => {
   const context = useContext(CartContext);
   const openNav = () => {
@@ -52,7 +53,8 @@ const IconTopbar = () => {
                     <div className="bar-style">
                       <i
                         className="fa fa-bars sidebar-bar"
-                        aria-hidden="true"></i>
+                        aria-hidden="true"
+                      ></i>
                     </div>
                   </a>
                 </div>
@@ -71,26 +73,26 @@ const IconTopbar = () => {
               <div className="menu-right pull-right">
                 <ul className="header-dropdown">
                   <li className="mobile-wishlist">
-                    <Link href="/page/account/wishlist">
+                    <LocaleLink href="/page/account/wishlist">
                       {/* <a> */}
                       <i className="fa fa-heart" aria-hidden="true"></i>
                       <Media src={like.src} alt="" />
                       {/* </a> */}
-                    </Link>
+                    </LocaleLink>
                   </li>
                   <li className="onhover-dropdown mobile-account">
                     <Media src={user.src} alt="" />
                     <i className="fa fa-user" aria-hidden="true"></i>
                     <ul className="onhover-show-div">
                       <li>
-                        <Link href="/page/account/login" data-lng="en">
-                        Logga in
-                        </Link>
+                        <LocaleLink href="/page/account/login" data-lng="en">
+                          Logga in
+                        </LocaleLink>
                       </li>
                       <li>
-                        <Link href="/" data-lng="es">
-                        Logga ut
-                        </Link>
+                        <LocaleLink href="/" data-lng="es">
+                          Logga ut
+                        </LocaleLink>
                       </li>
                     </ul>
                   </li>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Media } from "reactstrap";
 import { DELETE_CART_ITEM } from "../../../GraphQL/Mutations/cartMutations";
 import { useMutation } from "@apollo/client";
+import LocaleLink from "../../LocaleLink";
 
 const CartHeader = ({ item, symbol }) => {
     const [deleteCart] = useMutation(DELETE_CART_ITEM);
@@ -24,17 +25,17 @@ const CartHeader = ({ item, symbol }) => {
     <Fragment>
       <li>
         <div className="media">
-          <Link href={"/product-details/" + item.ProductID}>
+          <LocaleLink href={"/product-details/" + item.ProductID}>
             <Media
               alt=""
               className="me-3"
               src={process.env.NEXT_PUBLIC_API_KEY + `${item.image}`}
             />
-          </Link>
+          </LocaleLink>
           <div className="media-body">
-            <Link href={"/product-details/" + item.id}>
+            <LocaleLink href={"/product-details/" + item.id}>
               <h6>{item.title}</h6>
-            </Link>
+            </LocaleLink>
 
             <h4>
               <span>

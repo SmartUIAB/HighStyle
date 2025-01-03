@@ -17,6 +17,7 @@ const Language = () => {
     changeLanguage(lng);
     const languageCodeRegex = /^\/[a-z]{2}(\/|$)/;
     const updatedPath = pathname.replace(languageCodeRegex, `/${lng}$1`);
+    console.log(updatedPath, '=============');
     router.push(updatedPath);
   };
 

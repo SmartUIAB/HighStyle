@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import LogoImage from "../../headers/common/logo";
 import CopyRight from "./copyright";
+import LocaleLink from "../../LocaleLink";
 
 const MasterFooter = ({
   containerFluid,
@@ -55,7 +56,8 @@ const MasterFooter = ({
                       <div>
                         <h4>VETA ALLT FÖRST!</h4>
                         <p>
-                        Missa aldrig något från High Style genom att prenumerera på vårt nyhetsbrev.
+                          Missa aldrig något från High Style genom att
+                          prenumerera på vårt nyhetsbrev.
                         </p>
                       </div>
                     </div>
@@ -90,24 +92,35 @@ const MasterFooter = ({
                 <div
                   className={`footer-title ${
                     isOpen && collapse == 1 ? "active" : ""
-                  } footer-mobile-title`}>
+                  } footer-mobile-title`}
+                >
                   <h4
                     onClick={() => {
                       setCollapse(1);
                       setIsOpen(!isOpen);
-                    }}>
+                    }}
+                  >
                     about
                     <span className="according-menu"></span>
                   </h4>
                 </div>
                 <Collapse
-                  isOpen={width ? (collapse === 1 ? isOpen : false) : true}>
+                  isOpen={width ? (collapse === 1 ? isOpen : false) : true}
+                >
                   <div className="footer-contant">
                     <div className="footer-logo">
                       <LogoImage logo={logoName} />
                     </div>
                     <p>
-                    High Style är ett svenskt livsstil företag som fokuserar på att erbjuda stilfulla och trendiga accessoarer till sina kunder. Vi strävar efter att skapa en unik och personlig shoppingupplevelse för varje individ, oavsett deras stil och preferenser. Med vårt noggrant kuraterade sortiment och engagemang för kvalitet och design, strävar vi efter att inspirera och ge våra kunder möjligheten att uttrycka sin personliga stil på bästa sätt. Besök vår webbplats för att upptäcka vårt senaste sortiment.
+                      High Style är ett svenskt livsstil företag som fokuserar
+                      på att erbjuda stilfulla och trendiga accessoarer till
+                      sina kunder. Vi strävar efter att skapa en unik och
+                      personlig shoppingupplevelse för varje individ, oavsett
+                      deras stil och preferenser. Med vårt noggrant kuraterade
+                      sortiment och engagemang för kvalitet och design, strävar
+                      vi efter att inspirera och ge våra kunder möjligheten att
+                      uttrycka sin personliga stil på bästa sätt. Besök vår
+                      webbplats för att upptäcka vårt senaste sortiment.
                     </p>
                     <div className="footer-social">
                       <ul>
@@ -115,14 +128,16 @@ const MasterFooter = ({
                           <a href="https://www.facebook.com" target="_blank">
                             <i
                               className="fa fa-facebook"
-                              aria-hidden="true"></i>
+                              aria-hidden="true"
+                            ></i>
                           </a>
                         </li>
                         <li>
                           <a href="https://plus.google.com" target="_blank">
                             <i
                               className="fa fa-google-plus"
-                              aria-hidden="true"></i>
+                              aria-hidden="true"
+                            ></i>
                           </a>
                         </li>
                         <li>
@@ -134,7 +149,8 @@ const MasterFooter = ({
                           <a href="https://www.instagram.com" target="_blank">
                             <i
                               className="fa fa-instagram"
-                              aria-hidden="true"></i>
+                              aria-hidden="true"
+                            ></i>
                           </a>
                         </li>
                         <li>
@@ -152,49 +168,52 @@ const MasterFooter = ({
                   <div
                     className={`footer-title ${
                       isOpen && collapse == 2 ? "active" : ""
-                    } `}>
+                    } `}
+                  >
                     <h4
                       onClick={() => {
                         if (width) {
                           setIsOpen(!isOpen);
                           setCollapse(2);
                         } else setIsOpen(true);
-                      }}>
+                      }}
+                    >
                       mitt konto
                       <span className="according-menu"></span>
                     </h4>
                   </div>
                   <Collapse
-                    isOpen={width ? (collapse === 2 ? isOpen : false) : true}>
+                    isOpen={width ? (collapse === 2 ? isOpen : false) : true}
+                  >
                     <div className="footer-contant">
                       <ul>
                         <li>
-                          <Link href={`/shop/left_sidebar`}>
+                          <LocaleLink href={`/shop/left_sidebar`}>
                             {/* <a> */}
                             kvinnors
                             {/* </a> */}
-                          </Link>
+                          </LocaleLink>
                         </li>
                         <li>
-                          <Link href={`/shop/left_sidebar`}>
+                          <LocaleLink href={`/shop/left_sidebar`}>
                             {/* <a>  */}
                             Kläder
                             {/* </a> */}
-                          </Link>
+                          </LocaleLink>
                         </li>
                         <li>
-                          <Link href={`/shop/left_sidebar`}>
+                          <LocaleLink href={`/shop/left_sidebar`}>
                             {/* <a> */}
                             Tillbehör
                             {/* </a> */}
-                          </Link>
+                          </LocaleLink>
                         </li>
                         <li>
-                          <Link href={`/shop/left_sidebar`}>
+                          <LocaleLink href={`/shop/left_sidebar`}>
                             {/* <a> */}
                             presenteras
                             {/* </a> */}
-                          </Link>
+                          </LocaleLink>
                         </li>
                       </ul>
                     </div>
@@ -206,20 +225,23 @@ const MasterFooter = ({
                   <div
                     className={`footer-title ${
                       isOpen && collapse == 3 ? "active" : ""
-                    } `}>
+                    } `}
+                  >
                     <h4
                       onClick={() => {
                         if (width) {
                           setIsOpen(!isOpen);
                           setCollapse(3);
                         } else setIsOpen(true);
-                      }}>
+                      }}
+                    >
                       varför vi väljer
                       <span className="according-menu"></span>
                     </h4>
                   </div>
                   <Collapse
-                    isOpen={width ? (collapse === 3 ? isOpen : false) : true}>
+                    isOpen={width ? (collapse === 3 ? isOpen : false) : true}
+                  >
                     <div className="footer-contant">
                       <ul>
                         <li>
@@ -247,24 +269,28 @@ const MasterFooter = ({
                   <div
                     className={`footer-title ${
                       isOpen && collapse == 4 ? "active" : ""
-                    } `}>
+                    } `}
+                  >
                     <h4
                       onClick={() => {
                         if (width) {
                           setIsOpen(!isOpen);
                           setCollapse(4);
                         } else setIsOpen(true);
-                      }}>
+                      }}
+                    >
                       store information
                       <span className="according-menu"></span>
                     </h4>
                   </div>
                   <Collapse
-                    isOpen={width ? (collapse === 4 ? isOpen : false) : true}>
+                    isOpen={width ? (collapse === 4 ? isOpen : false) : true}
+                  >
                     <div className="footer-contant">
                       <ul className="contact-list">
                         <li>
-                          <i className="fa fa-map-marker"></i>High Style AB Market
+                          <i className="fa fa-map-marker"></i>High Style AB
+                          Market
                         </li>
                         <li>
                           <i className="fa fa-phone"></i>Ring oss: 0735 50 20 62

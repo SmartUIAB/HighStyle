@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
 import Link from 'next/link';
+import LocaleLink from "../../LocaleLink";
 
 const Breadcrubs = ({ title, parent, subTitle }) => {
   return (
@@ -16,7 +17,7 @@ const Breadcrubs = ({ title, parent, subTitle }) => {
             <nav aria-label="breadcrumb" className="theme-breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item">
-                  <Link href="/">{parent}</Link>
+                  <LocaleLink href="/">{parent}</LocaleLink>
                 </li>
                 <li className="breadcrumb-item" aria-current="page">
                   {title}

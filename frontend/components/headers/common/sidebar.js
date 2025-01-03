@@ -3,6 +3,7 @@ import { Row, Col, Media } from "reactstrap";
 import fashion from "../../../public/assets/images/mega-menu/fashion.jpg";
 import { useQuery } from "@apollo/client";
 import { GET_CATEGORY_LIST } from "../../../GraphQL/Queries/categoriesQueries";
+import LocaleLink from "../../LocaleLink";
 
 const SideBar = () => {
   const {
@@ -51,7 +52,7 @@ const SideBar = () => {
                   <ul>
                     {category?.subcategories.map((subcategory) => (
                       <li key={subcategory?.id}>
-                        <a
+                        <LocaleLink
                           href="/productList"
                           onClick={(e) => toggleSubmenu(e, "opensub2")}
                         >
@@ -59,7 +60,7 @@ const SideBar = () => {
                           {subcategory?.type === "Physical" && (
                             <span className="sub-arrow"></span>
                           )}
-                        </a>
+                        </LocaleLink>
                       </li>
                     ))}
                   </ul>

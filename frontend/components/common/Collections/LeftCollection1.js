@@ -4,6 +4,7 @@ import { gql } from '@apollo/client';
 import Slider from 'react-slick';
 import { Media } from 'reactstrap';
 import { CurrencyContext } from '../../../helpers/Currency/CurrencyContext';
+import LocaleLink from '../../LocaleLink';
 
 const GET_PRODUCTS = gql`
     query  products($type:_CategoryType!,$indexFrom:Int! ,$limit:Int!) {
@@ -14,7 +15,7 @@ const GET_PRODUCTS = gql`
                 description
                 type
                 brand
-                category 
+                category
                 price
                 stock
                 new
@@ -40,10 +41,10 @@ const GET_PRODUCTS = gql`
 
 
 const LeftCollection = ({type ,border,product}) => {
-    
+
     const curContext =  useContext(CurrencyContext);
     const currency = curContext.state;
-    
+
 
     var { data } = useQuery(GET_PRODUCTS, {
         variables: {
@@ -59,13 +60,13 @@ const LeftCollection = ({type ,border,product}) => {
                 <div>
                     {data && data.products.items.slice(0, product).map((product, index) =>
                         <div className="media" key={index}>
-                            <a href={product.images[0].src}>
-                                <Media alt="" className="img-fluid blur-up lazyload" src={product.images[0].src} /></a>
+                            <LocaleLink href={product.images[0].src}>
+                                <Media alt="" className="img-fluid blur-up lazyload" src={product.images[0].src} /></LocaleLink>
                             <div className="media-body align-self-center">
                                 <div className="rating"><i className="fa fa-star"></i> <i className="fa fa-star"></i> <i className="fa fa-star"></i> <i className="fa fa-star"></i> <i className="fa fa-star"></i></div>
-                                <a href={product.images[0].src}>
+                                <LocaleLink href={product.images[0].src}>
                                     <h6>{product.title}</h6>
-                                </a>
+                                </LocaleLink>
                                 <h4>{currency.symbol}{(product.price * currency.value).toFixed(2)}</h4>
                             </div>
                         </div>
@@ -74,13 +75,13 @@ const LeftCollection = ({type ,border,product}) => {
                 <div>
                     {data && data.products.items.slice(3, 6).map((product, index) =>
                         <div className="media" key={index}>
-                            <a href={product.images[0].src}>
-                                <Media alt="" className="img-fluid blur-up lazyload" src={product.images[0].src} /></a>
+                            <LocaleLink href={product.images[0].src}>
+                                <Media alt="" className="img-fluid blur-up lazyload" src={product.images[0].src} /></LocaleLink>
                             <div className="media-body align-self-center">
                                 <div className="rating"><i className="fa fa-star"></i> <i className="fa fa-star"></i> <i className="fa fa-star"></i> <i className="fa fa-star"></i> <i className="fa fa-star"></i></div>
-                                <a href={product.images[0].src}>
+                                <LocaleLink href={product.images[0].src}>
                                     <h6>{product.title}</h6>
-                                </a>
+                                </LocaleLink>
                                 <h4>{currency.symbol}{(product.price * currency.value).toFixed(2)}</h4>
                             </div>
                         </div>

@@ -4,6 +4,7 @@ import { MENUITEMS } from "../../constant/menu";
 import { Container, Row } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
+import LocaleLink from "../../LocaleLink";
 
 const NavBar = () => {
   const { t } = useTranslation();
@@ -149,11 +150,11 @@ const NavBar = () => {
                   key={i}
                   className={` ${menuItem.megaMenu ? "mega-menu" : ""}`}>
                   {menuItem.type == "link" ? (
-                    <Link href={menuItem.path} className="nav-link">
+                    <LocaleLink href={menuItem.path} className="nav-link">
                       {/* <a > */}
                       {t(menuItem.title)}
                       {/* </a> */}
-                    </Link>
+                    </LocaleLink>
                   ) : (
                     <a className="nav-link" onClick={(e) => openMblNav(e)}>
                       {t(menuItem.title)}
@@ -185,7 +186,7 @@ const NavBar = () => {
                               ""
                             )}
                             {childrenItem.type === "link" ? (
-                              <Link href={`${childrenItem.path}`}>
+                              <LocaleLink href={`${childrenItem.path}`}>
                                 {/* <a> */}
                                 {childrenItem.title}
                                 {childrenItem.tag === "new" ? (
@@ -194,7 +195,7 @@ const NavBar = () => {
                                   ""
                                 )}
                                 {/* </a> */}
-                              </Link>
+                              </LocaleLink>
                             ) : (
                               ""
                             )}
@@ -207,7 +208,7 @@ const NavBar = () => {
                                   (childrenSubItem, key) => (
                                     <li key={key}>
                                       {childrenSubItem.type === "link" ? (
-                                        <Link
+                                        <LocaleLink
                                           href={childrenSubItem.path}
                                           className="sub-menu-title">
                                           {/* <a > */}
@@ -218,7 +219,7 @@ const NavBar = () => {
                                             ""
                                           )}
                                           {/* </a> */}
-                                        </Link>
+                                        </LocaleLink>
                                       ) : (
                                         ""
                                       )}
@@ -272,18 +273,20 @@ const NavBar = () => {
                                                   (subMegaMenuItem, i) => {
                                                     return (
                                                       <li key={i}>
-                                                        <Link
+                                                        <LocaleLink
                                                           href={
                                                             subMegaMenuItem.path
-                                                          }>
+                                                          }
+                                                        >
                                                           <>
                                                             <i
-                                                              className={`icon-${subMegaMenuItem.icon}`}></i>
+                                                              className={`icon-${subMegaMenuItem.icon}`}
+                                                            ></i>
                                                             {
                                                               subMegaMenuItem.title
                                                             }
                                                           </>
-                                                        </Link>
+                                                        </LocaleLink>
                                                       </li>
                                                     );
                                                   }
@@ -292,14 +295,14 @@ const NavBar = () => {
                                                   (subMegaMenuItem, i) => {
                                                     return (
                                                       <li key={i}>
-                                                        <Link
+                                                        <LocaleLink
                                                           href={
                                                             subMegaMenuItem.path
                                                           }>
                                                           {
                                                             subMegaMenuItem.title
                                                           }
-                                                        </Link>
+                                                        </LocaleLink>
                                                       </li>
                                                     );
                                                   }

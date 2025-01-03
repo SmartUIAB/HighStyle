@@ -5,6 +5,7 @@ import { gql } from '@apollo/client';
 import { useQuery } from "@apollo/client";
 import { Slider3 } from "../../../services/script";
 import { Media, Container, Row, Col } from "reactstrap";
+import LocaleLink from "../../LocaleLink";
 
 const GET_PRODUCTS = gql`
   query blog($type: String!) {
@@ -45,17 +46,17 @@ const BlogSection = ({ type, sectionClass, title, inner, hrClass }) => {
                 {data &&
                   data.blog.map((item, index) => (
                     <Col md="12" key={index}>
-                      <Link href={`/blogs/blog_detail`}>
+                      <LocaleLink href={`/blogs/blog_detail`}>
                         <div className="classic-effect">
                           <Media src={item.img} className="img-fluid" alt="" />
                           <span></span>
                         </div>
-                      </Link>
+                      </LocaleLink>
                       <div className="blog-details">
                         <h4>{item.title}</h4>
-                        <Link href={`/blogs/blog_detail`}>
+                        <LocaleLink href={`/blogs/blog_detail`}>
                           <p>{item.desc} </p>
-                        </Link>
+                        </LocaleLink>
                         <hr className="style1" />
                         <h6>by: {item.date}</h6>
                       </div>

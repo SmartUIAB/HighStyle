@@ -61,13 +61,13 @@ const TabContent = ({ data, loading, startIndex, endIndex,clickProductDetail}) =
               <div className="tab-box" key={i}>
                 <div className="product-box2">
                   <div className="media">
-                    <a onClick={() => clickProductDetail(item)}>
+                    <div onClick={() => clickProductDetail(item)}>
                       <Media
                         className="img-fluid blur-up lazyload"
                         src={item.images[0].src}
                         alt=""
                       />
-                    </a>
+                    </div>
                     <div className="media-body align-self-center">
                       <div className="rating">
                         <i className="fa fa-star"></i>{" "}
@@ -76,9 +76,9 @@ const TabContent = ({ data, loading, startIndex, endIndex,clickProductDetail}) =
                         <i className="fa fa-star"></i>{" "}
                         <i className="fa fa-star"></i>
                       </div>
-                      <a onClick={() => clickProductDetail(item)}>
+                      <div onClick={() => clickProductDetail(item)}>
                         <h6>{item.title}</h6>
-                      </a>
+                      </div>
                       <h4>
                         {currency.symbol}
                         {(item.price * currency.value).toFixed(2)}

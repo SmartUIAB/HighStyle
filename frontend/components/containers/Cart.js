@@ -3,6 +3,7 @@ import Link from "next/link";
 import CartContext from "../../helpers/cart";
 import { Media } from "reactstrap";
 import { CurrencyContext } from "../../helpers/Currency/CurrencyContext";
+import LocaleLink from "../LocaleLink";
 
 const CartComponent = ({ icon, layout }) => {
   const context = useContext(CartContext);
@@ -91,22 +92,22 @@ const CartComponent = ({ icon, layout }) => {
               </li>
               <li>
                 <div className="buttons">
-                  <Link
+                  <LocaleLink
                     href="/page/account/cart"
                     className="btn btn-solid btn-xs view-cart"
                   >
                     {/* <a > */}
                     visa varukorg
                     {/* </a> */}
-                  </Link>
-                  <Link
+                  </LocaleLink>
+                  <LocaleLink
                     href="/page/account/checkout"
                     className="btn btn-solid btn-xs checkout"
                   >
                     {/* <a > */}
                     kolla upp
                     {/* </a> */}
-                  </Link>
+                  </LocaleLink>
                 </div>
               </li>
             </ul>
