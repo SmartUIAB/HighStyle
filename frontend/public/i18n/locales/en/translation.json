@@ -36,5 +36,106 @@
       "email": "Email Us: Support@highstyle.se",
       "whatsapp": "Whatsapp: 0735 50 20 62"
     }
+  },
+  "header": {
+    "search": {
+      "title": "Find the best for your desire"
+    }
+  },
+  "top_header": {
+    "welcome": "Welcome to our High Style store",
+    "call_us": "Call us: 073 - 550 - 2062",
+    "compare": "Compare",
+    "wishlist": "Wishlist",
+    "my_account": "My account",
+    "login": "Login",
+    "register": "Register"
+  },
+  "cart_details": {
+    "image": "Image",
+    "product_name": "Product Name",
+    "price": "Price",
+    "quantity": "Quantity",
+    "action": "Action",
+    "total": "Total",
+    "total_price": "Total Price",
+    "subTotal": "Sub Total",
+    "continue_shopping": "Continue Shopping",
+    "check_out": "Check Out",
+    "cart_empty": "Your Cart is Empty",
+    "explore_more": "Explore more and shortlist some items.",
+    "cart_empty_message": "Your shopping cart is currently empty."
+  },
+  "shipping_address": {
+    "modal_title": "Enter Shipping Address",
+    "street": "Street",
+    "city": "City",
+    "state": "State",
+    "postal_code": "Postal Code",
+    "country": "Country",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "btn_title": "Add Address"
+  },
+  "route_name": {
+    "product_list": "Product List",
+    "product": "Product",
+    "home": "Home"
+  },
+  "services": {
+    "freeShipping": "Free Shipping",
+    "freeShippingWorldwide": "Free Shipping World Wide",
+    "service247": "24 X 7 Service",
+    "onlineService247": "Online Service For 24 X 7",
+    "festivalOffer": "Festival Offer",
+    "newOnlineSpecialFestivalOffer": "New Online Special Festival Offer",
+    "onlinePayment": "Online Payment"
+  },
+  "product_details": {
+    "brand": "Brand",
+    "homeAndFurniture": "Home & Furniture",
+    "selectSize": "Select Size",
+    "sizeChart": "Size Chart",
+    "quantity": "Quantity",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "productDetails": "Product Details",
+    "shareIt": "Share It",
+    "timeReminder": "Time Reminder",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "newProduct": "New Product",
+    "description": "Description",
+    "details": "Details",
+    "video": "Video",
+    "writeReview": "Write Review",
+    "format": "Format",
+    "size": "Size",
+    "version": "Version",
+    "compatibility": "Compatibility",
+    "off": "Off",
+    "relatedProduct": "Related Product"
+  },
+  "landing_page": {
+    "welcome": "Welcome to Fashion",
+    "men_fashion": "Men Fashion",
+    "women_fashion": "Women Fashion",
+    "shop_now": "Shop Now",
+    "men": "Men",
+    "women": "Women",
+    "special_offer": "Special Offer",
+    "top_collection": "Top Collection",
+    "discover_offer": "Discover our special offer on our Top Collection! Limited time, exclusive discounts on selected products. Don't miss the chance to renew your style with our premium items. Shop now and save big!",
+    "fashion_trends": "Fashion Trends",
+    "special_offer_section": "Special Offer",
+    "trending_products": "Trending Products",
+    "winter": "Winter",
+    "greens": "Greens",
+    "various": "Various",
+    "our_collection": "Our Collection",
+    "special_products": "Special Products",
+    "instagram": "Instagram"
   }
 }

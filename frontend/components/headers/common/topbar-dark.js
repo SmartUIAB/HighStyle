@@ -1,14 +1,10 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-import Link from "next/link";
 import LocaleLink from "../../LocaleLink";
 import { useTranslation } from "react-i18next";
-import i18n from "../../../i18n";
 
 const TopBar = ({ topClass }) => {
   const { t } = useTranslation();
-
-  console.log(i18n.t("welcome"), "-------------");
 
   return (
     <div id="topHeader" className={`top-header ${topClass ? topClass : ""}`}>
@@ -17,10 +13,10 @@ const TopBar = ({ topClass }) => {
           <Col lg="6">
             <div className="header-contact">
               <ul>
-                <li>Välkommen till vår butik High Style</li>
+                <li>{t("top_header.welcome")}</li>
                 <li>
                   <i className="fa fa-phone" aria-hidden="true"></i>
-                  {"Ring Oss"}: 073 - 550 - 2062
+                  {t("top_header.call_us")}
                 </li>
               </ul>
             </div>
@@ -30,26 +26,27 @@ const TopBar = ({ topClass }) => {
               <li className="mobile-wishlist compare-mobile">
                 <LocaleLink href={`/page/compare`}>
                   <i className="fa fa-random" aria-hidden="true"></i>
-                  {"compare"}
+                  {t("top_header.compare")}
                 </LocaleLink>
               </li>
               <li className="mobile-wishlist">
                 <LocaleLink href={`/page/account/wishlist`}>
                   <i className="fa fa-heart" aria-hidden="true"></i>
-                  {"wishlist"}
+                  {t("top_header.wishlist")}
                 </LocaleLink>
               </li>
               <li className="onhover-dropdown mobile-account">
-                <i className="fa fa-user" aria-hidden="true"></i> {"My account"}
+                <i className="fa fa-user" aria-hidden="true"></i>{" "}
+                {t("top_header.my_account")}
                 <ul className="onhover-show-div">
                   <li>
                     <LocaleLink href={`/page/account/login`}>
-                      Logga in
+                      {t("top_header.login")}
                     </LocaleLink>
                   </li>
                   <li>
                     <LocaleLink href={`/page/account/register`}>
-                      Registrera
+                      {t("top_header.register")}
                     </LocaleLink>
                   </li>
                 </ul>

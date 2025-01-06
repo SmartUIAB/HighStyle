@@ -3,23 +3,26 @@ import Slider from "react-slick";
 import Link from "next/link";
 import { Container, Row, Col } from "reactstrap";
 import MasterBanner from "./MasterBanner";
+import { useTranslation } from "react-i18next";
 
 const Data = [
   {
     img: "home1",
-    title: "welcome to fashion",
-    desc: "men fashion",
+    title: "landing_page.welcome",
+    desc: "landing_page.men_fashion",
     link: "/left-sidebar/collection ",
   },
   {
     img: "home2",
-    title: "welcome to fashion",
-    desc: "women fashion",
+    title: "landing_page.welcome",
+    desc: "landing_page.women_fashion",
     link: "/left-sidebar/collection ",
   },
 ];
 
 const Banner = () => {
+  const { t } = useTranslation();
+
   return (
     <Fragment>
       <section className="p-0">
@@ -29,8 +32,8 @@ const Banner = () => {
               <MasterBanner
                 key={i}
                 img={data.img}
-                desc={data.desc}
-                title={data.title}
+                desc={t(data.desc)}
+                title={t(data.title)}
                 link={data.link}
               />
             );

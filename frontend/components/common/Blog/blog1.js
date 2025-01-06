@@ -1,11 +1,12 @@
 import React, { Fragment } from "react";
 import Slider from "react-slick";
 import Link from "next/link";
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { Slider3 } from "../../../services/script";
 import { Media, Container, Row, Col } from "reactstrap";
 import LocaleLink from "../../LocaleLink";
+import { useTranslation } from "react-i18next";
 
 const GET_PRODUCTS = gql`
   query blog($type: String!) {
@@ -25,6 +26,9 @@ const BlogSection = ({ type, sectionClass, title, inner, hrClass }) => {
       type: type,
     },
   });
+
+  const { t } = useTranslation();
+
   return (
     <Fragment>
       <section className={sectionClass}>
@@ -32,8 +36,8 @@ const BlogSection = ({ type, sectionClass, title, inner, hrClass }) => {
           <Row>
             <Col md="12">
               <div className={title}>
-                <h4>our collection</h4>
-                <h2 className={inner}>special products</h2>
+                <h4>{t("landing_page.our_collection")}</h4>
+                <h2 className={inner}>{t("landing_page.special_products")}</h2>
                 {hrClass ? (
                   <hr role="tournament6"></hr>
                 ) : (
@@ -42,7 +46,10 @@ const BlogSection = ({ type, sectionClass, title, inner, hrClass }) => {
                   </div>
                 )}
               </div>
-              <Slider {...Slider3} className="slide-3 no-arrow slick-default-margin">
+              <Slider
+                {...Slider3}
+                className="slide-3 no-arrow slick-default-margin"
+              >
                 {data &&
                   data.blog.map((item, index) => (
                     <Col md="12" key={index}>

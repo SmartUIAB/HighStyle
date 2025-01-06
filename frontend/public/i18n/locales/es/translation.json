@@ -36,5 +36,106 @@
       "email": "Envíanos un correo: Support@highstyle.se",
       "whatsapp": "Whatsapp: 0735 50 20 62"
     }
+  },
+  "header": {
+    "search": {
+      "title": "Encuentra lo mejor para tu deseo"
+    }
+  },
+  "top_header": {
+    "welcome": "Bienvenido a nuestra tienda High Style",
+    "call_us": "Llámanos: 073 - 550 - 2062",
+    "compare": "Comparar",
+    "wishlist": "Lista de deseos",
+    "my_account": "Mi cuenta",
+    "login": "Iniciar sesión",
+    "register": "Registrarse"
+  },
+  "cart_details": {
+    "image": "Imagen",
+    "product_name": "Nombre del producto",
+    "price": "Precio",
+    "quantity": "Cantidad",
+    "action": "Acción",
+    "total": "Total",
+    "total_price": "Precio total",
+    "subTotal": "subtotales",
+    "continue_shopping": "Seguir comprando",
+    "check_out": "Pagar",
+    "cart_empty": "Tu carrito está vacío",
+    "explore_more": "Explora más y selecciona algunos artículos.",
+    "cart_empty_message": "Tu carrito de compras está actualmente vacío."
+  },
+  "shipping_address": {
+    "modal_title": "Ingrese la dirección de envío",
+    "street": "Calle",
+    "city": "Ciudad",
+    "state": "Estado",
+    "postal_code": "Código Postal",
+    "country": "País",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "btn_title": "Añadir dirección"
+  },
+  "route_name": {
+    "product_list": "Lista de productos",
+    "product": "Producto",
+    "home": "Inicio"
+  },
+  "services": {
+    "freeShipping": "Envío Gratis",
+    "freeShippingWorldwide": "Envío Gratis a Todo el Mundo",
+    "service247": "Servicio 24 X 7",
+    "onlineService247": "Servicio en Línea 24 X 7",
+    "festivalOffer": "Oferta de Festival",
+    "newOnlineSpecialFestivalOffer": "Nueva Oferta Especial de Festival en Línea",
+    "onlinePayment": "Pago en Línea"
+  },
+  "product_details": {
+    "brand": "Marca",
+    "homeAndFurniture": "Hogar y Muebles",
+    "selectSize": "Seleccionar Talla",
+    "sizeChart": "Tabla de Tallas",
+    "quantity": "Cantidad",
+    "addToCart": "Añadir al Carrito",
+    "buyNow": "Comprar Ahora",
+    "productDetails": "Detalles del Producto",
+    "shareIt": "Compártelo",
+    "timeReminder": "Recordatorio de Tiempo",
+    "days": "días",
+    "hours": "horas",
+    "minutes": "minutos",
+    "seconds": "segundos",
+    "newProduct": "Nuevo Producto",
+    "description": "Descripción",
+    "details": "Detalles",
+    "video": "Video",
+    "writeReview": "Escribir Reseña",
+    "format": "Formato",
+    "size": "Tamaño",
+    "version": "Versión",
+    "compatibility": "Compatibilidad",
+    "off": "Descuento",
+    "relatedProduct": "Producto Relacionado"
+  },
+  "landing_page": {
+    "welcome": "Bienvenido a la Moda",
+    "men_fashion": "Moda para Hombres",
+    "women_fashion": "Moda para Mujeres",
+    "shop_now": "Compra Ahora",
+    "men": "Hombres",
+    "women": "Mujeres",
+    "special_offer": "Oferta Especial",
+    "top_collection": "Colección Destacada",
+    "discover_offer": "¡Descubre nuestra oferta especial en nuestra Colección Destacada! Descuentos exclusivos por tiempo limitado en productos seleccionados. No pierdas la oportunidad de renovar tu estilo con nuestros productos premium. ¡Compra ahora y ahorra mucho!",
+    "fashion_trends": "Tendencias de Moda",
+    "special_offer_section": "Oferta Especial",
+    "trending_products": "Productos de Tendencia",
+    "winter": "Invierno",
+    "greens": "Verde",
+    "various": "Varios",
+    "our_collection": "Nuestra Colección",
+    "special_products": "Productos Especiales",
+    "instagram": "Instagram"
   }
 }

@@ -6,6 +6,7 @@ import { gql } from '@apollo/client';
 import PostLoader from "../PostLoader";
 import { CurrencyContext } from "../../../helpers/Currency/CurrencyContext";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 const GET_PRODUCTS = gql`
   query products($type: _CategoryType!, $indexFrom: Int!, $limit: Int!) {
     products(type: $type, indexFrom: $indexFrom, limit: $limit) {
@@ -95,6 +96,7 @@ const TabContent = ({ data, loading, startIndex, endIndex,clickProductDetail}) =
 };
 
 const TabCollection = ({ type, bgClass }) => {
+  const {t} = useTranslation()
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(type);
   const curContext = useContext(CurrencyContext);
@@ -119,7 +121,9 @@ const TabCollection = ({ type, bgClass }) => {
           <Row>
             <Col>
               <div className="title4">
-                <h2 className="title-inner4">trending products</h2>
+                <h2 className="title-inner4">
+                  {t("landing_page.trending_products")}
+                </h2>
                 <div className="line">
                   <span></span>
                 </div>
@@ -130,19 +134,19 @@ const TabCollection = ({ type, bgClass }) => {
                     className={activeTab == type ? "active" : ""}
                     onClick={() => setActiveTab(type)}
                   >
-                    winter
+                    {t("landing_page.winter")}
                   </Tab>
                   <Tab
                     className={activeTab == "greens" ? "active" : ""}
                     onClick={() => setActiveTab(type)}
                   >
-                    greens
+                    {t("landing_page.greens")}
                   </Tab>
                   <Tab
                     className={activeTab == "various" ? "active" : ""}
                     onClick={() => setActiveTab(type)}
                   >
-                    various
+                    {t("landing_page.various")}
                   </Tab>
                 </TabList>
                 <div className="tab-content-cls">

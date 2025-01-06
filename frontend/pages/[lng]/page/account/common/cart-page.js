@@ -28,6 +28,7 @@ import { toast } from "react-toastify";
 import { CREATE_ORDER } from "../../../../../GraphQL/Mutations/orderMutations";
 import { loadStripe } from "@stripe/stripe-js";
 import LocaleLink from "../../../../../components/LocaleLink";
+import { useTranslation } from "react-i18next";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_SECRET_KEY);
 
@@ -45,6 +46,8 @@ const CartPage = () => {
     country: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { t } = useTranslation();
 
   if (!stripePromise) {
     return <div>Loading...</div>;
@@ -148,7 +151,7 @@ const CartPage = () => {
     <div>
       {cartItems?.getCart?.products?.length > 0 && (
         <button onClick={() => setIsModalOpen(true)} style={{ float: "right" }}>
-          Add Address
+          {t("shipping_address.btn_title")}
         </button>
       )}
       {cartItems?.getCart?.products?.length > 0 ? (
@@ -159,12 +162,12 @@ const CartPage = () => {
                 <table className="table cart-table table-responsive-xs">
                   <thead>
                     <tr className="table-head">
-                      <th scope="col">image</th>
-                      <th scope="col">product name</th>
-                      <th scope="col">price</th>
-                      <th scope="col">quantity</th>
-                      <th scope="col">action</th>
-                      <th scope="col">total</th>
+                      <th scope="col">{t("cart_details.image")}</th>
+                      <th scope="col">{t("cart_details.product_name")}</th>
+                      <th scope="col">{t("cart_details.price")}</th>
+                      <th scope="col">{t("cart_details.quantity")}</th>
+                      <th scope="col">{t("cart_details.action")}</th>
+                      <th scope="col">{t("cart_details.total")}</th>
                     </tr>
                   </thead>
                   {cartItems?.getCart.products?.map((item, index) => (
@@ -225,7 +228,7 @@ const CartPage = () => {
                 <table className="table cart-table table-responsive-md">
                   <tfoot>
                     <tr>
-                      <td>total price :</td>
+                      <td>{t("cart_details.total_price")} :</td>
                       <td>
                         <h2>{cartItems?.getCart?.totalAmount}</h2>
                       </td>
@@ -240,12 +243,12 @@ const CartPage = () => {
                   href={`/shop/left_sidebar`}
                   className="btn btn-solid"
                 >
-                  continue shopping
+                  {t("cart_details.continue_shopping")}
                 </LocaleLink>
               </Col>
               <Col xs="6">
                 <button onClick={handleCheckout} className="btn btn-solid">
-                  check out
+                  {t("cart_details.check_out")}
                 </button>
               </Col>
             </Row>
@@ -264,9 +267,9 @@ const CartPage = () => {
                       alt=""
                     />
                     <h3>
-                      <strong>Your Cart is Empty</strong>
+                      <strong>{t("cart_details.cart_empty")}</strong>
                     </h3>
-                    <h4>Explore more and shortlist some items.</h4>
+                    <h4>{t("cart_details.explore_more")}</h4>
                   </div>
                 </div>
               </Col>
@@ -277,12 +280,12 @@ const CartPage = () => {
       {isModalOpen && (
         <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)}>
           <ModalHeader toggle={() => setIsModalOpen(false)}>
-            Enter Shipping Address
+            {t("shipping_address.modal_title")}
           </ModalHeader>
           <ModalBody>
             <Form onSubmit={handleSubmit}>
               <FormGroup>
-                <Label for="street">Street</Label>
+                <Label for="street">{t("shipping_address.street")}</Label>
                 <Input
                   type="text"
                   name="street"
@@ -293,7 +296,7 @@ const CartPage = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="city">City</Label>
+                <Label for="city">{t("shipping_address.city")}</Label>
                 <Input
                   type="text"
                   name="city"
@@ -304,7 +307,7 @@ const CartPage = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="state">State</Label>
+                <Label for="state">{t("shipping_address.state")}</Label>
                 <Input
                   type="text"
                   name="state"
@@ -315,7 +318,9 @@ const CartPage = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="postalCode">Postal Code</Label>
+                <Label for="postalCode">
+                  {t("shipping_address.postal_code")}
+                </Label>
                 <Input
                   type="text"
                   name="postalCode"
@@ -326,7 +331,7 @@ const CartPage = () => {
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="country">Country</Label>
+                <Label for="country">{t("shipping_address.country")}</Label>
                 <Input
                   type="text"
                   name="country"
@@ -338,10 +343,10 @@ const CartPage = () => {
               </FormGroup>
               <ModalFooter>
                 <Button color="primary" type="submit">
-                  Submit
+                  {t("shipping_address.submit")}
                 </Button>{" "}
                 <Button color="secondary" onClick={() => setIsModalOpen(false)}>
-                  Cancel
+                  {t("shipping_address.cancel")}
                 </Button>
               </ModalFooter>
             </Form>

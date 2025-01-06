@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import { Row, Col, Media, Container } from "reactstrap";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
+import { useTranslation } from "react-i18next";
 
 const GET_PRODUCTS = gql`
   query instagram($type: String!) {
@@ -58,6 +59,8 @@ const Instagram = ({ type }) => {
     },
   });
 
+  const { t } = useTranslation();
+
   return (
     <section className="instagram ratio_square">
       <Container
@@ -76,7 +79,9 @@ const Instagram = ({ type }) => {
       >
         <Row>
           <Col className="pt-0">
-            <h2 className="title-borderless"># instagram</h2>
+            <h2 className="title-borderless">
+              # {t("landing_page.instagram")}
+            </h2>
             <div className="slide-7 no-arrow slick-instagram">
               <Slider {...settings}>
                 {data &&

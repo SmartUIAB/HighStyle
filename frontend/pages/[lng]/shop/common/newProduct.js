@@ -1,13 +1,15 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
-import { Media } from "reactstrap";
+import { Media, Spinner } from "reactstrap";
 import Slider from "react-slick";
 import {
   GET_DIGITAL_PRODUCT,
   GET_PHYSICAL_PRODUCT,
 } from "../../../../GraphQL/Queries/productQueries";
+import { useTranslation } from "react-i18next";
 
 const NewProduct = () => {
+  const { t } = useTranslation();
   const {
     data: allPhysicalProductData,
     loading: loadingPhysical,
@@ -28,11 +30,11 @@ const NewProduct = () => {
 
   return (
     <div className="theme-card">
-      <h5 className="title-border">new product</h5>
+      <h5 className="title-border">{t("product_details.newProduct")}</h5>
       <Slider className="offer-slider slide-1">
         <div>
           {!mergedProducts || loading ? (
-            "loading"
+            <Spinner style={{ color: "#ff8084" }} />
           ) : (
             <>
               {mergedProducts &&

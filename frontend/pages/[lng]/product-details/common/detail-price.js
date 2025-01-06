@@ -8,13 +8,14 @@ import { useMutation } from "@apollo/client";
 import { toast } from "react-toastify";
 import { CREATE_ADD_TO_CART } from "../../../../GraphQL/Mutations/cartMutations";
 import LocaleLink from "../../../../components/LocaleLink";
+import { useTranslation } from "react-i18next";
 
 const DetailsWithPrice = ({ item, stickyClass }) => {
+  const { t } = useTranslation();
   const [modal, setModal] = useState(false);
   const [activeSize, setActiveSize] = useState(null);
   const [activeColor, setActiveColor] = useState(null);
   const [quantity, setQuantity] = useState(1);
-
 
   const toggle = () => setModal(!modal);
 
@@ -67,9 +68,9 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
         },
       });
       if (data) {
-        toast.success("Product Added to Cart");
+        toast.success(t("product_details.addToCart"));
       } else {
-        toast.error("Product not Added to Cart");
+        toast.error(t("product_details.addToCartError"));
       }
     }
   };
@@ -79,7 +80,9 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
       <h2>{product?.title}</h2>
       <h4>
         <del>{product?.price}</del>
-        <span>{product?.discount}% off</span>
+        <span>
+          {product?.discount}% {t("product_details.off")}
+        </span>
       </h4>
       <h3>{product?.price - (product?.price * product?.discount) / 100}</h3>
 
@@ -99,15 +102,17 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
       {!isDigital && product?.sizes?.length > 0 && (
         <div className="product-description border-product">
           <h6 className="product-title size-text">
-            Select size
+            {t("product_details.selectSize")}
             <span>
               <a href={null} onClick={toggle}>
-                Size chart
+                {t("product_details.sizeChart")}
               </a>
             </span>
           </h6>
           <Modal isOpen={modal} toggle={toggle} centered>
-            <ModalHeader toggle={toggle}>Size Chart</ModalHeader>
+            <ModalHeader toggle={toggle}>
+              {t("product_details.sizeChart")}
+            </ModalHeader>
             <ModalBody>
               <Media src={sizeChart.src} alt="size" className="img-fluid" />
             </ModalBody>
@@ -138,7 +143,7 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
         </div>
       )}
 
-      <h6 className="product-title">Quantity</h6>
+      <h6 className="product-title">{t("product_details.quantity")}</h6>
       <div className="qty-box">
         <div className="input-group">
           <button
@@ -174,42 +179,51 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
           onClick={() => handleAddToCart(product)}
           className="btn btn-solid"
         >
-          Add to Cart
+          {t("product_details.addToCart")}
         </button>
         <LocaleLink href="/page/account/checkout" className="btn btn-solid">
-          Buy Now
+          {t("product_details.buyNow")}
         </LocaleLink>
       </div>
 
       <div className="border-product">
-        <h6 className="product-title">Product Details</h6>
+        <h6 className="product-title">{t("product_details.productDetails")}</h6>
         <p>{product?.description}</p>
       </div>
 
       {isDigital && (
         <div className="border-product">
-          <h6 className="product-title">File Details</h6>
+          <h6 className="product-title">{t("product_details.fileDetails")}</h6>
           <ul>
-            <li>Format: {product.fileFormat}</li>
+            <li>
+              {t("product_details.format")}: {product.fileFormat}
+            </li>
             <br />
-            <li>Size: {product.fileSize}</li>
+            <li>
+              {t("product_details.size")}: {product.fileSize}
+            </li>
             <br />
-            <li>Version: {product.version}</li>
+            <li>
+              {t("product_details.version")}: {product.version}
+            </li>
             <br />
-            <li>Compatibility: {product.compatibility?.join(", ")}</li>
+            <li>
+              {t("product_details.compatibility")}:{" "}
+              {product.compatibility?.join(", ")}
+            </li>
           </ul>
         </div>
       )}
 
       <div className="border-product">
-        <h6 className="product-title">Share It</h6>
+        <h6 className="product-title">{t("product_details.shareIt")}</h6>
         <div className="product-icon">
           <MasterSocial />
         </div>
       </div>
 
       <div className="border-product">
-        <h6 className="product-title">Time Reminder</h6>
+        <h6 className="product-title">{t("product_details.timeReminder")}</h6>
         <CountdownComponent />
       </div>
     </div>

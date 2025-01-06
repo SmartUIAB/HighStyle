@@ -16,8 +16,11 @@ import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import CommonLayout from "../../../components/shop/common-layout";
 import LocaleLink from "../../../components/LocaleLink";
+import { useTranslation } from "react-i18next";
 
 const ProductList = () => {
+  const { t } = useTranslation();
+
   const {
     data: allPhysicalProductData,
     loading: loadingPhysical,
@@ -38,7 +41,7 @@ const ProductList = () => {
 
   if (errorPhysical || errorDigital) {
     return (
-      <CommonLayout parent="Product" title="Product List">
+      <CommonLayout parent="Product" title={t("route_name.product_list")}>
         <Container className="mt-4">
           <Alert variant="danger">
             <h4>Error loading products!</h4>
@@ -54,7 +57,10 @@ const ProductList = () => {
 
   return (
     <>
-      <CommonLayout parent="Product" title="Product List">
+      <CommonLayout
+        parent={t("route_name.product")}
+        title={t("route_name.product_list")}
+      >
         <Container className="mt-4">
           {loading ? (
             <div

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import { useTranslation } from "react-i18next"; // Import useTranslation
+import { useTranslation } from "react-i18next";
 import {
   Container,
   Row,

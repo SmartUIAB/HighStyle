@@ -18,11 +18,14 @@ import {
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
 import CommonLayout from "../../components/shop/common-layout";
+import { useTranslation } from "react-i18next";
 
 const ProductList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 6;
+
+  const { t } = useTranslation();
 
   const {
     data: allPhysicalProductData,
@@ -45,7 +48,7 @@ const ProductList = () => {
 
   if (errorPhysical || errorDigital) {
     return (
-      <CommonLayout parent="Product" title="Product List">
+      <CommonLayout parent="Product" title={t("route_name.product_list")}>
         <Container className="mt-4">
           <Alert variant="danger">
             <h4>Error loading products!</h4>
@@ -83,7 +86,7 @@ const ProductList = () => {
 
   return (
     <>
-      <CommonLayout parent="Product" title="Product List">
+      <CommonLayout parent="Product" title={t("route_name.product_list")}>
         <Container className="mt-4">
           <Form className="mb-4">
             <InputGroup>

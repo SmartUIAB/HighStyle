@@ -1,8 +1,10 @@
 import Link from "next/link";
 import { Col, Container, Row } from "reactstrap";
 import LocaleLink from "../../../../../components/LocaleLink";
+import { useTranslation } from "react-i18next";
 
 const MasterBanner = ({ img, title, desc, link, classes, btn, btnClass }) => {
+  const { t } = useTranslation();
   return (
     <div>
       <div className={`home ${img} ${classes ? classes : "text-center"}`}>
@@ -18,7 +20,7 @@ const MasterBanner = ({ img, title, desc, link, classes, btn, btnClass }) => {
                     className={`btn ${btnClass ? btnClass : "btn-solid"}`}
                   >
                     {/* <a > */}
-                    {btn ? btn : "Shop Now"} {/* </a> */}
+                    {btn ? btn : t("landing_page.shop_now")} {/* </a> */}
                   </LocaleLink>
                 </div>
               </div>

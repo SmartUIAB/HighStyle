@@ -24,8 +24,8 @@ const Parallax = () => {
         bg="parallax-banner1"
         parallaxClass="text-center p-left"
         title="2023"
-        subTitle1="fashion trends"
-        subTitle2="special offer"
+        subTitle1="landing_page.fashion_trends"
+        subTitle2="landing_page.special_offer_section"
       />
     </Fragment>
   );

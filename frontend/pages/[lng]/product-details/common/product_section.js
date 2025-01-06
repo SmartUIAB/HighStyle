@@ -11,8 +11,10 @@ import {
   GET_DIGITAL_PRODUCT,
   GET_PHYSICAL_PRODUCT,
 } from "../../../../GraphQL/Queries/productQueries";
+import { useTranslation } from "react-i18next";
 
 const ProductSection = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const curContext = useContext(CurrencyContext);
   const wishlistContext = useContext(WishlistContext);
@@ -74,7 +76,7 @@ const ProductSection = () => {
       <Container>
         <Row>
           <Col className="product-related">
-            <h2>related products</h2>
+            <h2>{t("product_details.relatedProduct")}</h2>
           </Col>
         </Row>
         <Row className="search-product">

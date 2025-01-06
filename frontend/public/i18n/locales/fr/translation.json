@@ -36,5 +36,106 @@
       "email": "Envoyez-nous un email : Support@highstyle.se",
       "whatsapp": "Whatsapp : 0735 50 20 62"
     }
+  },
+  "header": {
+    "search": {
+      "title": "Trouvez le meilleur pour votre désir"
+    }
+  },
+  "top_header": {
+    "welcome": "Bienvenue dans notre magasin High Style",
+    "call_us": "Appelez-nous : 073 - 550 - 2062",
+    "compare": "Comparer",
+    "wishlist": "Liste de souhaits",
+    "my_account": "Mon compte",
+    "login": "Connexion",
+    "register": "S'inscrire"
+  },
+  "cart_details": {
+    "image": "Image",
+    "product_name": "Nom du produit",
+    "price": "Prix",
+    "quantity": "Quantité",
+    "action": "Action",
+    "total": "Total",
+    "total_price": "Prix total",
+    "subTotal": "Sous-total",
+    "continue_shopping": "Continuer vos achats",
+    "check_out": "Passer à la caisse",
+    "cart_empty": "Votre panier est vide",
+    "explore_more": "Explorez plus et sélectionnez quelques articles.",
+    "cart_empty_message": "Votre panier est actuellement vide."
+  },
+  "shipping_address": {
+    "modal_title": "Entrez l'adresse de livraison",
+    "street": "Rue",
+    "city": "Ville",
+    "state": "État",
+    "postal_code": "Code Postal",
+    "country": "Pays",
+    "submit": "Soumettre",
+    "cancel": "Annuler",
+    "btn_title": "Ajouter une adresse"
+  },
+  "route_name": {
+    "product_list": "Liste des produits",
+    "product": "Produit",
+    "home": "Accueil"
+  },
+  "services": {
+    "freeShipping": "Livraison Gratuite",
+    "freeShippingWorldwide": "Livraison Gratuite dans le Monde Entier",
+    "service247": "Service 24h/24 et 7j/7",
+    "onlineService247": "Service en Ligne 24h/24 et 7j/7",
+    "festivalOffer": "Offre de Festival",
+    "newOnlineSpecialFestivalOffer": "Nouvelle Offre Spéciale de Festival en Ligne",
+    "onlinePayment": "Paiement en Ligne"
+  },
+  "product_details": {
+    "brand": "Marque",
+    "homeAndFurniture": "Maison et Ameublement",
+    "selectSize": "Sélectionner la Taille",
+    "sizeChart": "Tableau des Tailles",
+    "quantity": "Quantité",
+    "addToCart": "Ajouter au Panier",
+    "buyNow": "Acheter Maintenant",
+    "productDetails": "Détails du Produit",
+    "shareIt": "Partagez-le",
+    "timeReminder": "Rappel de Temps",
+    "days": "jours",
+    "hours": "heures",
+    "minutes": "minutes",
+    "seconds": "secondes",
+    "newProduct": "Nouveau Produit",
+    "description": "Description",
+    "details": "Détails",
+    "video": "Vidéo",
+    "writeReview": "Écrire une Critique",
+    "format": "Format",
+    "size": "Taille",
+    "version": "Version",
+    "compatibility": "Compatibilité",
+    "off": "Réduction",
+    "relatedProduct": "Produit Connexe"
+  },
+  "landing_page": {
+    "welcome": "Bienvenue dans la Mode",
+    "men_fashion": "Mode Homme",
+    "women_fashion": "Mode Femme",
+    "shop_now": "Achetez Maintenant",
+    "men": "Hommes",
+    "women": "Femmes",
+    "special_offer": "Offre Spéciale",
+    "top_collection": "Collection Vedette",
+    "discover_offer": "Découvrez notre offre spéciale sur notre Collection Vedette! Remises exclusives sur des produits sélectionnés pendant un temps limité. Ne manquez pas l'occasion de renouveler votre style avec nos articles premium. Achetez maintenant et économisez gros!",
+    "fashion_trends": "Tendances de Mode",
+    "special_offer_section": "Offre Spéciale",
+    "trending_products": "Produits Tendance",
+    "winter": "Hiver",
+    "greens": "Verts",
+    "various": "Divers",
+    "our_collection": "Notre Collection",
+    "special_products": "Produits Spéciaux",
+    "instagram": "Instagram"
   }
 }

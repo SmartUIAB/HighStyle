@@ -1,16 +1,14 @@
-import React, { useContext, Fragment } from "react";
-import Link from "next/link";
+import React, { Fragment } from "react";
 import CartHeader from "../headers/common/cart-header";
-import CartContext from "../../helpers/cart";
 import { Media } from "reactstrap";
-import { CurrencyContext } from "../../helpers/Currency/CurrencyContext";
 import { useQuery } from "@apollo/client";
 import { GET_CART } from "../../GraphQL/Queries/cartQueries";
-import { toast } from "react-toastify";
 import LocaleLink from "../LocaleLink";
+import { useTranslation } from "react-i18next";
 
 const CartContainer = ({ icon }) => {
   const userData = JSON.parse(localStorage.getItem("customerDetail"));
+  const { t } = useTranslation();
 
   const {
     data: cartList,
@@ -49,27 +47,28 @@ const CartContainer = ({ icon }) => {
               <li>
                 <div className="total">
                   <h5>
-                    delsumma : <span>{cartList?.getCart?.totalAmount}</span>
+                    {t("cart_details.subTotal")} :{" "}
+                    <span>{cartList?.getCart?.totalAmount}</span>
                   </h5>
                 </div>
               </li>
               <li>
                 <div className="buttons view-cart">
                   <LocaleLink href={`/page/account/cart`}>
-                    Add to Cart
+                    {t("product_details.addToCart")}
                   </LocaleLink>
                   <LocaleLink
                     href={`/page/account/checkout`}
                     className="checkout"
                   >
-                    CheckOut
+                    {t("cart_details.check_out")}
                   </LocaleLink>
                 </div>
               </li>
             </div>
           ) : (
             <li>
-              <h5>Din varukorg är för närvarande tom.</h5>
+              <h5>{t("cart_details.cart_empty_message")}</h5>
             </li>
           )}
         </ul>
