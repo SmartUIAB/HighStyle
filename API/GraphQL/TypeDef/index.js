@@ -12,6 +12,7 @@ const menuTypeDefs = require("./menuTypeDef");
 const pageTypeDef = require("./pageTypeDef");
 const cartTypeDefs = require("./cartTypeDef");
 const orderTypeDefs = require("./orderTypeDef");
+const notificationTypeDefs = require("./notificationTypeDef");
 
 const typeDefs = gql`
   ${userTypeDefs}
@@ -27,6 +28,7 @@ const typeDefs = gql`
   ${pageTypeDef}
   ${cartTypeDefs}
   ${orderTypeDefs}
+  ${notificationTypeDefs}
 `;
 
 module.exports = typeDefs;

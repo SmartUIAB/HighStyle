@@ -1,6 +1,5 @@
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
 import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
-import Datatable from "@/CommonComponents/DataTable";
 import { useQuery } from "@apollo/client";
 import { Fragment } from "react";
 import { Card, CardBody, Col, Container, Row, Spinner } from "reactstrap";
@@ -49,7 +48,7 @@ const SalesTransaction = () => {
                       <tbody>
                         {data?.getAllTransactions?.transactions?.length === 0 ? (
                           <tr>
-                            <td colSpan={8} className="text-center">No Data Found</td>
+                            <td colSpan={8} className="text-center">No Transaction Found</td>
                           </tr>
                         ) : (
                           data?.getAllTransactions?.transactions.map((item: any, i: any) => (

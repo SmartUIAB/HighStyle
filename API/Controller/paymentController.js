@@ -5,6 +5,8 @@ const nodemailer = require("nodemailer");
 const Stripe = require("stripe");
 const baseUrl = process.env.API_BASE_URL;
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const Notification = require("../Model/notificationModel");
+const Customer = require("../Model/customerModel");
 
 const sendOrderEmail = async (userEmail, cartData) => {
   try {
@@ -118,6 +120,8 @@ const handleWebhook = async (req, res, next) => {
             { new: true }
           );
 
+          const customer = await Customer.findById(updatedOrder?.customer);
+
           newTransaction = new Transaction({
             order: updatedOrder?._id,
             user: updatedOrder?.customer,
@@ -131,6 +135,16 @@ const handleWebhook = async (req, res, next) => {
           if (updatedOrder.customer) {
             await sendOrderEmail(userEmail, cartData);
           }
+          await Notification.updateMany(
+            { isNotified: true },
+            { $set: { isNotified: false } }
+          );
+          const newNotification = new Notification({
+            message: `${customer.firstname} ${customer.lastname} has received a new order.`,
+            isNotified: true,
+          });
+
+          await newNotification.save();
           await Cart.findByIdAndDelete(updatedOrder.cart);
           console.log("✅ Checkout session completed, order updated!");
         } else {

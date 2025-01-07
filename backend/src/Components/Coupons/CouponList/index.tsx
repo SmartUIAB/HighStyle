@@ -17,8 +17,6 @@ const ListCoupons = () => {
   const { data: allCouponData, refetch, loading } = useQuery(COUPON_LIST);
   const [deleteCoupon] = useMutation(DELETE_COUPON);
 
-  console.log(allCouponData, '-=-=-=-');
-
   const handleDeleteCoupon = async () => {
     try {
       setIsDeleting(true);
@@ -79,7 +77,7 @@ const ListCoupons = () => {
                       <tbody>
                         {allCouponData?.getAllCoupons?.coupons?.length === 0 ? (
                           <tr>
-                            <td colSpan={8} className="text-center">No Data Found</td>
+                            <td colSpan={8} className="text-center">No Coupon Found</td>
                           </tr>
                         ) : (
                           allCouponData?.getAllCoupons?.coupons?.map((item: any, i: any) => (

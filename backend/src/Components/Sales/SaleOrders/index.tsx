@@ -46,7 +46,7 @@ const SalesOrders = () => {
                     <tbody>
                       {data?.getAllOrders.orders?.length === 0 ? (
                         <tr>
-                          <td colSpan={8} className="text-center">No Data Found</td>
+                          <td colSpan={8} className="text-center">No Order Found</td>
                         </tr>
                       ) : (
                         data?.getAllOrders.orders?.map((item: any, i: any) => (

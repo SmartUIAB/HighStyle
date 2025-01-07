@@ -11,6 +11,8 @@ import Language from "./Language";
 import Notification from "./Notification";
 import SearchHeader from "./SearchHeader";
 import UserMenu from "./UserMenu";
+import { GET_ALL_NOTIFICATION } from "@/GraphQL/Queries/notificationQueries";
+import { useQuery } from "@apollo/client";
 
 const Header = () => {
   const { sidebar, rightSidebar } = useAppSelector((store) => store.LayoutReducer);
@@ -24,6 +26,8 @@ const Header = () => {
   const [toggleSidebar, setToggleSidebar] = useState(false);
   const [navMenus, setNavMenus] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState("en");
+
+  const { data: notificationData } = useQuery(GET_ALL_NOTIFICATION);
 
   useEffect(() => {
     const langFromURL = pathname.split("/")[1] || "en";
@@ -110,7 +114,7 @@ const Header = () => {
                   pill
                   className=" rounded-pill badge-primary pull-right notification-badge"
                 >
-                  3
+                  {notificationData?.getAllNotification?.length}
                 </Badge>
                 <span className="dot"></span>
                 <Notification />

@@ -12,6 +12,7 @@ const customerResolver = require("./customerResolver");
 const menuResolvers = require("./menuResolver");
 const pageResolvers = require("./pageResolver");
 const orderResolvers = require("./orderResolver");
+const notificationResolver = require("./notificationResolver");
 
 const resolver = {
   Query: {
@@ -26,6 +27,7 @@ const resolver = {
     ...mediaResolver.Query,
     ...menuResolvers.Query,
     ...pageResolvers.Query,
+    ...notificationResolver.Query
   },
   Mutation: {
     ...userResolver.Mutation,
@@ -40,6 +42,7 @@ const resolver = {
     ...menuResolvers.Mutation,
     ...pageResolvers.Mutation,
     ...orderResolvers.Mutation,
+    ...notificationResolver.Mutation
   },
   Category: {
     ...fieldResolver.Category,

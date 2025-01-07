@@ -68,36 +68,47 @@ const VendorsList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data?.vendors?.vendors?.map((vendor: any) => (
-                    <tr key={vendor.id}>
-                      <td>
-                        <img
-                          src={vendor.profileImage || '/assets/images/download.png'}
-                          alt="Profile"
-                          style={{ width: '50px', height: '50px' }}
-                        />
-                      </td>
-                      <td className="align-middle">{vendor.name}</td>
-                      <td className="align-middle">{vendor.businessType}</td>
-                      <td className="align-middle">{vendor.email}</td>
-                      <td className="align-middle">{vendor.address}</td>
-                      <td className="align-middle">{vendor.status}</td>
-                      <td className="align-middle">
-                        <Link href={`/en/vendors/create-vendors?id=${vendor.id}`}>
+                  {data?.vendors?.vendors?.length > 0 ? (
+                    data.vendors.vendors.map((vendor: any) => (
+                      <tr key={vendor.id}>
+                        <td>
+                          <img
+                            src={vendor.profileImage || '/assets/images/download.png'}
+                            alt="Profile"
+                            style={{ width: '50px', height: '50px' }}
+                          />
+                        </td>
+                        <td className="align-middle">{vendor.name}</td>
+                        <td className="align-middle">{vendor.businessType}</td>
+                        <td className="align-middle">{vendor.email}</td>
+                        <td className="align-middle">{vendor.address}</td>
+                        <td className="align-middle">{vendor.status}</td>
+                        <td className="align-middle">
+                          <Link href={`/en/vendors/create-vendors?id=${vendor.id}`}>
+                            <Button color="transparent" className="p-1">
+                              <Edit />
+                            </Button>
+                          </Link>
                           <Button color="transparent" className="p-1">
-                            <Edit />
+                            <Trash2
+                              onClick={() => {
+                                setIsDeleteId(vendor.id);
+                                toggleModal();
+                              }}
+                            />
                           </Button>
-                        </Link>
-                        <Button color="transparent" className="p-1">
-                          <Trash2 onClick={() => {
-                            setIsDeleteId(vendor.id);
-                            toggleModal();
-                          }} />
-                        </Button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={7} className="text-center">
+                        No vendors found.
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
+
               </table>
             </div>
           </CardBody>

@@ -68,34 +68,45 @@ const UserList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {data?.userlist?.map((user: any) => (
-                    <tr key={user.id}>
-                      <td>
-                        <img
-                          src={user.profileImage || '/assets/images/download.png'}
-                          alt="Profile"
-                          style={{ width: '50px', height: '50px' }}
-                        />
-                      </td>
-                      <td className="align-middle">{user.firstname}</td>
-                      <td className="align-middle">{user.lastname}</td>
-                      <td className="align-middle">{user.email}</td>
-                      <td className="align-middle">
-                        <Link href={`/en/users/create-user?id=${user.id}`}>
+                  {data?.userlist?.length > 0 ? (
+                    data.userlist.map((user: any) => (
+                      <tr key={user.id}>
+                        <td>
+                          <img
+                            src={user.profileImage || '/assets/images/download.png'}
+                            alt="Profile"
+                            style={{ width: '50px', height: '50px' }}
+                          />
+                        </td>
+                        <td className="align-middle">{user.firstname}</td>
+                        <td className="align-middle">{user.lastname}</td>
+                        <td className="align-middle">{user.email}</td>
+                        <td className="align-middle">
+                          <Link href={`/en/users/create-user?id=${user.id}`}>
+                            <Button color="transparent" className="p-1">
+                              <Edit />
+                            </Button>
+                          </Link>
                           <Button color="transparent" className="p-1">
-                            <Edit />
+                            <Trash2
+                              onClick={() => {
+                                setIsDeleteId(user.id);
+                                toggleModal();
+                              }}
+                            />
                           </Button>
-                        </Link>
-                        <Button color="transparent" className="p-1">
-                          <Trash2 onClick={() => {
-                            setIsDeleteId(user.id);
-                            toggleModal();
-                          }} />
-                        </Button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="text-center">
+                        No users found.
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
+
               </table>
             </div>
           </CardBody>
