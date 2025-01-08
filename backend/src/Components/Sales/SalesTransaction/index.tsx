@@ -4,9 +4,13 @@ import { useQuery } from "@apollo/client";
 import { Fragment } from "react";
 import { Card, CardBody, Col, Container, Row, Spinner } from "reactstrap";
 import { GET_TRANSACTION } from "../../../GraphQL/Queries/transactionQueries";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const SalesTransaction = () => {
   const { data, loading, refetch } = useQuery(GET_TRANSACTION);
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const formatedDate = (timestamp: number): string => {
     const date = new Date(timestamp);
@@ -18,12 +22,12 @@ const SalesTransaction = () => {
 
   return (
     <Fragment>
-      <CommonBreadcrumb title="Transactions" parent="Sales" />
+      <CommonBreadcrumb title={t("sales.transactions.title")} parent={t("sales.type")} />
       <Container fluid>
         <Row>
           <Col sm="12">
             <Card>
-              <CommonCardHeader title="Transaction Details" />
+              <CommonCardHeader title={t("sales.transactions.details")} />
               <CardBody>
                 <div id="batchDelete" className="transactions">
                   {/* Loader */}
@@ -36,13 +40,13 @@ const SalesTransaction = () => {
                     <table className="table mt-5 w-full" style={{ minWidth: '1200px' }}>
                       <thead>
                         <tr>
-                          <th className="text-uppercase">Customer</th>
-                          <th className="text-uppercase">Price</th>
-                          <th className="text-uppercase">Payment Status</th>
-                          <th className="text-uppercase">Order Status</th>
-                          <th className="text-uppercase">Delivery City</th>
-                          <th className="text-uppercase">Transaction ID</th>
-                          <th className="text-uppercase">Created At</th>
+                          <th className="text-uppercase">{t("sales.transactions.columns.customer")}</th>
+                          <th className="text-uppercase">{t("sales.transactions.columns.price")}</th>
+                          <th className="text-uppercase">{t("sales.transactions.columns.paymentStatus")}</th>
+                          <th className="text-uppercase">{t("sales.transactions.columns.orderStatus")}</th>
+                          <th className="text-uppercase">{t("sales.transactions.columns.deliveryCity")}</th>
+                          <th className="text-uppercase">{t("sales.transactions.columns.transactionId")}</th>
+                          <th className="text-uppercase">{t("sales.transactions.columns.createdAt")}</th>
                         </tr>
                       </thead>
                       <tbody>

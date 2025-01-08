@@ -1,11 +1,15 @@
 //@ts-nocheck
+import { useTranslation } from "@/app/i18n/client";
 import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
+import { useAppSelector } from "@/Redux/Hooks";
 import MDEditor from "@uiw/react-md-editor";
 import { SetStateAction, useEffect, useState } from "react";
 import { Card, CardBody, FormGroup } from "reactstrap";
 
 const DescriptionForm = ({ formData, setFormData }) => {
   const [value, setValue] = useState<string | undefined>("");
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+    const { t } = useTranslation(i18LangStatus);
 
   useEffect(() => {
     setValue(formData.description);
@@ -21,7 +25,7 @@ const DescriptionForm = ({ formData, setFormData }) => {
 
   return (
     <Card>
-      <CommonCardHeader title="Add Description" />
+      <CommonCardHeader title={t("digital.add_product.Add Description")} />
       <CardBody>
         <div className="digital-add needs-validation">
           <FormGroup className="mb-0">

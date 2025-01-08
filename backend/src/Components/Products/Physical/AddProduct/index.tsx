@@ -12,10 +12,14 @@ import ProductCodePrice from "./ProductCodeAndPrice";
 import ProductImages from "./ProductImages";
 import ProductSizeAndDescription from "./ProductSizeAndDescription";
 import TotalProducts from "./TotalProducts";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const AddProduct = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const { data: physicalProductByID, loading, refetch, error } = useQuery(PHYSICAL_PRODUCT_BY_ID, {
     variables: { physicalProductId: id },
@@ -142,14 +146,15 @@ const AddProduct = () => {
     return <div>Error: {error.message}</div>;
   }
 
+
   return (
     <Fragment>
-      <CommonBreadcrumb title={id ? "Edit Product" : "Add Product"} parent="Physical" />
+      <CommonBreadcrumb title={id ? t("modalTitle.editProduct") : t("modalTitle.addProduct")} parent={t("type.physical")} />
       <Container fluid>
         <Row>
           <Col sm="12">
             <Card>
-              <CommonCardHeader title={id ? "Edit Product" : "Add Product"} />
+              <CommonCardHeader title={id ? t("modalTitle.editProduct") : t("modalTitle.addProduct")} />
               <CardBody>
                 <Row className="product-adding">
                   <ProductImages formData={formData} setFormData={setFormData} />
@@ -160,10 +165,10 @@ const AddProduct = () => {
                       <ProductSizeAndDescription formData={formData} setFormData={setFormData} />
                       <div className="offset-xl-3 offset-sm-4">
                         <Button type="submit" onClick={handleValidSubmit} color="primary">
-                          {id ? "Edit" : "Add"}
+                          {id ? t("physical.addProduct.edit") : t("physical.addProduct.add")}
                         </Button>
                         <Button type="button" color="light" onClick={() => setFormData(initialFormState)}>
-                          Discard
+                          {t("physical.addProduct.discard")}
                         </Button>
                       </div>
                     </div>

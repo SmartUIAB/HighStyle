@@ -12,5 +12,176 @@
   "Localization": "Localização",
   "Reports": "Relatórios",
   "Settings": "Configurações",
-  "Invoice": "Fatura"
+  "Invoice": "Fatura",
+  "Footer": "Copyright 2022 © Multikart Todos os direitos reservados.",
+  "createdBy": "Feito à mão e com",
+  "search": "Buscar",
+  "no_data_found": "Nenhum Dado Encontrado",
+  "table": {
+    "image": "Imagem",
+    "name": "Nome",
+    "description": "Descrição",
+    "type": "Tipo",
+    "action": "Ação"
+  },
+  "category": {
+    "title": "Categoria de Produto",
+    "name": "Nome da categoria",
+    "description": "Descrição da categoria",
+    "type": "Tipo de categoria",
+    "image": "Imagem da categoria",
+    "edit": "Editar categoria",
+    "add": "Adicionar categoria",
+    "update": "Atualizar",
+    "close": "Fechar",
+    "delete": "Excluir categoria"
+  },
+  "subCategory": {
+    "title": "Subcategoria de Produto",
+    "name": "Nome da subcategoria",
+    "description": "Descrição da subcategoria",
+    "type": "Tipo de subcategoria",
+    "image": "Imagem da subcategoria",
+    "category": "Categoria",
+    "add": "Adicionar subcategoria",
+    "save": "Salvar"
+  },
+  "modalTitle": {
+    "editCategory": "Editar categoria",
+    "addCategory": "Adicionar categoria",
+    "editProduct": "Editar Produto",
+    "addProduct": "Adicionar Produto",
+    "addSubCategory": "Adicionar subcategoria"
+  },
+  "toast": {
+    "success": {
+      "category": "Categoria atualizada com sucesso",
+      "subCategory": "Subcategoria atualizada com sucesso",
+      "deleteCategory": "Categoria excluída com sucesso",
+      "deleteSubCategory": "Subcategoria excluída com sucesso"
+    },
+    "error": {
+      "category": "Falha ao atualizar a categoria. Por favor, tente novamente.",
+      "subCategory": "Falha ao atualizar a subcategoria. Por favor, tente novamente.",
+      "delete": "Falha ao excluir. Por favor, tente novamente."
+    }
+  },
+  "type": {
+    "physical": "Físico",
+    "digital": "Digital"
+  },
+  "digital": {
+    "add_product": {
+      "General": "Geral",
+      "Title": "Título",
+      "SKU": "SKU",
+      "Categories": "Categorias",
+      "Subcategory": "Subcategoria",
+      "Product Price": "Preço do Produto",
+      "Compatibility": "Compatibilidade",
+      "Discount": "Desconto",
+      "File Format": "Formato do Arquivo",
+      "File Size": "Tamanho do Arquivo",
+      "License Type": "Tipo de Licença",
+      "Tags": "Etiquetas",
+      "Version": "Versão",
+      "Status": "Status",
+      "Drag Files or Click to Browse": "Arraste arquivos ou clique para procurar",
+      "Add Description": "Adicionar Descrição",
+      "Meta Data": "Metadados",
+      "Meta Title": "Título Meta",
+      "Meta Description": "Descrição Meta",
+      "Add": "Adicionar",
+      "Discard": "Descartar",
+      "Add Products": "Adicionar produtos",
+      "Multikart Admin panel": "Painel de administração do Multikart",
+      "Update": "Atualizar",
+      "Digital": "Digital",
+      "Edit Products": "Editar produtos"
+    },
+    "product_list": {
+      "product_list": "Lista de produtos",
+      "product": "Produto",
+      "price": "Preço",
+      "status": "Status",
+      "file_format": "Formato de arquivo",
+      "compatibility": "Compatibilidade",
+      "created_at": "Criado em",
+      "action": "Ação"
+    }
+  },
+  "physical": {
+    "product_list": {
+      "title": "Lista de Produtos",
+      "statusFilter": "Status",
+      "statusAvailable": "Disponível",
+      "statusUnavailable": "Indisponível",
+      "noDataFound": "Nenhum dado encontrado",
+      "product": "Produto",
+      "price": "Preço",
+      "status": "Status",
+      "colors": "Cores",
+      "sizes": "Tamanhos",
+      "category": "Categoria",
+      "createdAt": "Criado em",
+      "action": "Ação",
+      "confirmDeletion": "Confirmar Exclusão",
+      "deleteConfirmationMessage": "Tem certeza de que deseja excluir este produto?",
+      "cancel": "Cancelar",
+      "delete": "Excluir",
+      "edit": "Editar",
+      "noImage": "Sem imagem"
+    },
+    "addProduct": {
+      "productName": "Nome do Produto",
+      "price": "Preço",
+      "sku": "SKU",
+      "color": "Cor",
+      "discount": "Desconto",
+      "metaTitle": "Título Meta",
+      "metaDescription": "Descrição Meta",
+      "productTags": "Tags do Produto",
+      "category": "Categoria",
+      "selectCategory": "Selecionar Categoria",
+      "selectSubCategory": "Selecionar Subcategoria",
+      "subCategory": "Subcategoria",
+      "selectStatus": "Selecionar Status",
+      "stockQuantity": "Quantidade em Estoque",
+      "selectSize": "Selecionar Tamanho",
+      "addDescription": "Adicionar Descrição",
+      "add": "Adicionar",
+      "edit": "Editar",
+      "discard": "Descartar"
+    }
+  },
+  "sales": {
+    "type": "Vendas",
+    "orders": {
+      "title": "Pedidos",
+      "manageOrder": "Gerenciar Pedido",
+      "columns": {
+        "customer": "Cliente",
+        "price": "Preço",
+        "paymentStatus": "Status de Pagamento",
+        "orderStatus": "Status do Pedido",
+        "deliveryCity": "Cidade de Entrega",
+        "totalProduct": "Total de Produtos",
+        "createdAt": "Criado em"
+      }
+    },
+    "transactions": {
+      "title": "Transações",
+      "subtitle": "Painel Administrativo Multikart",
+      "details": "Detalhes da Transação",
+      "columns": {
+        "customer": "Cliente",
+        "price": "Preço",
+        "paymentStatus": "Status de Pagamento",
+        "orderStatus": "Status do Pedido",
+        "deliveryCity": "Cidade de Entrega",
+        "transactionId": "ID da Transação",
+        "createdAt": "Criado em"
+      }
+    }
+  }
 }

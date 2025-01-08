@@ -4,10 +4,14 @@ import { useQuery } from "@apollo/client";
 import { Fragment } from "react";
 import { Card, CardBody, Col, Container, Row, Spinner } from "reactstrap";
 import { GET_ORDER_LIST } from "@/GraphQL/Queries/transactionQueries";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const SalesOrders = () => {
 
   const { data, loading, refetch } = useQuery(GET_ORDER_LIST);
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const formatedDate = (timestamp: number): string => {
     const date = new Date(timestamp);
@@ -19,12 +23,12 @@ const SalesOrders = () => {
 
   return (
     <Fragment>
-      <CommonBreadcrumb title="Orders" parent="Sales" />
+      <CommonBreadcrumb title={t("sales.orders.title")} parent={t("sales.type")} />
       <Container fluid>
         <Row>
           <Col sm="12">
             <Card>
-              <CommonCardHeader title="Manage Order" />
+              <CommonCardHeader title={t("sales.orders.manageOrder")} />
               <CardBody className="order-datatable">
                 {loading ? (
                   <div className="text-center my-5">
@@ -34,13 +38,13 @@ const SalesOrders = () => {
                   <table className="table mt-5 w-full" style={{ minWidth: '1200px' }}>
                     <thead>
                       <tr>
-                        <th className="text-uppercase">Customer</th>
-                        <th className="text-uppercase">Price</th>
-                        <th className="text-uppercase">Payment Status</th>
-                        <th className="text-uppercase">Order Status</th>
-                        <th className="text-uppercase">Delivery City</th>
-                        <th className="text-uppercase">Total Product</th>
-                        <th className="text-uppercase">Created At</th>
+                        <th className="text-uppercase">{t("sales.orders.columns.customer")}</th>
+                        <th className="text-uppercase">{t("sales.orders.columns.price")}</th>
+                        <th className="text-uppercase">{t("sales.orders.columns.paymentStatus")}</th>
+                        <th className="text-uppercase">{t("sales.orders.columns.orderStatus")}</th>
+                        <th className="text-uppercase">{t("sales.orders.columns.deliveryCity")}</th>
+                        <th className="text-uppercase">{t("sales.orders.columns.totalProduct")}</th>
+                        <th className="text-uppercase">{t("sales.orders.columns.createdAt")}</th>
                       </tr>
                     </thead>
                     <tbody>

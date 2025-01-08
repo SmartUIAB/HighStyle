@@ -3,11 +3,15 @@ import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import { Card, CardBody, FormGroup, Input, Label } from "reactstrap";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_CATEGORY, GET_ALL_SUBCATEGORY } from "@/GraphQL/Queries/categoryQueries";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const GeneralForm = ({ formData, setFormData }) => {
 
   const { data: allCategoriesData } = useQuery(GET_ALL_CATEGORY);
   const { data: allSubCategoriesData } = useQuery(GET_ALL_SUBCATEGORY);
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
@@ -19,12 +23,12 @@ const GeneralForm = ({ formData, setFormData }) => {
 
   return (
     <Card>
-      <CommonCardHeader title="General" />
+      <CommonCardHeader title={t("digital.add_product.General")} />
       <CardBody>
         <div className="digital-add needs-validation">
           <FormGroup>
             <Label className="col-form-label pt-0">
-              <span>*</span> Title
+              <span>*</span> {t("digital.add_product.Title")}
             </Label>
             <Input
               id="validationCustom01"
@@ -37,7 +41,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label pt-0">
-              <span>*</span> SKU
+              <span>*</span> {t("digital.add_product.SKU")}
             </Label>
             <Input
               id="validationCustom02"
@@ -50,7 +54,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> Categories
+              <span>*</span> {t("digital.add_product.Categories")}
             </Label>
             <select
               className="form-select"
@@ -71,7 +75,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> Subcategory
+              <span>*</span> {t("digital.add_product.Subcategory")}
             </Label>
             <select
               className="form-select"
@@ -92,7 +96,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> Product Price
+              <span>*</span> {t("digital.add_product.Product Price")}
             </Label>
             <Input
               id="validationCustom03"
@@ -105,7 +109,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> Compatibility
+              <span>*</span> {t("digital.add_product.Compatibility")}
             </Label>
             <Input
               id="validationCustom04"
@@ -118,7 +122,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> Discount
+              <span>*</span> {t("digital.add_product.Discount")}
             </Label>
             <Input
               id="validationCustom05"
@@ -131,7 +135,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> File Format
+              <span>*</span> {t("digital.add_product.File Format")}
             </Label>
             <Input
               id="validationCustom06"
@@ -144,7 +148,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> File Size
+              <span>*</span> {t("digital.add_product.File Size")}
             </Label>
             <Input
               id="validationCustom07"
@@ -157,7 +161,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> License Type
+              <span>*</span> {t("digital.add_product.License Type")}
             </Label>
             <Input
               id="validationCustom08"
@@ -170,7 +174,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> Tags
+              <span>*</span> {t("digital.add_product.Tags")}
             </Label>
             <Input
               id="validationCustom09"
@@ -183,7 +187,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> Version
+              <span>*</span> {t("digital.add_product.Version")}
             </Label>
             <Input
               id="validationCustom10"
@@ -196,7 +200,7 @@ const GeneralForm = ({ formData, setFormData }) => {
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
-              <span>*</span> Status
+              <span>*</span> {t("digital.add_product.Status")}
             </Label>
             <select
               className="form-select"

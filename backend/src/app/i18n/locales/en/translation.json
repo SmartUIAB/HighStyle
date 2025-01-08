@@ -12,5 +12,176 @@
   "Localization": "Localization",
   "Reports": "Reports",
   "Settings": "Settings",
-  "Invoice": "Invoice"
+  "Invoice": "Invoice",
+  "Footer": "Copyright 2022 © Multikart All rights reserved.",
+  "createdBy": "Hand crafted & made with",
+  "search": "Search",
+  "no_data_found": "No Data Found",
+  "table": {
+    "image": "Image",
+    "name": "Name",
+    "description": "Description",
+    "type": "Type",
+    "action": "Action"
+  },
+  "category": {
+    "title": "Product Category",
+    "name": "Category Name",
+    "description": "Category Description",
+    "type": "Category Type",
+    "image": "Category Image",
+    "edit": "Edit Category",
+    "add": "Add Category",
+    "update": "Update",
+    "close": "Close",
+    "delete": "Delete Category"
+  },
+  "subCategory": {
+    "title": "Product Sub Category",
+    "name": "Sub Category Name",
+    "description": "Sub Category Description",
+    "type": "Sub Category Type",
+    "image": "Sub Category Image",
+    "category": "Category",
+    "add": "Add Sub Category",
+    "save": "Save"
+  },
+  "modalTitle": {
+    "editCategory": "Edit Category",
+    "addCategory": "Add Category",
+    "editProduct": "Edit Product",
+    "addProduct": "Add Product",
+    "addSubCategory": "Add Sub Category"
+  },
+  "toast": {
+    "success": {
+      "category": "Category Updated Successfully",
+      "subCategory": "Sub Category Updated Successfully",
+      "deleteCategory": "Deleted Category successfully",
+      "deleteSubCategory": "Deleted Sub Category successfully"
+    },
+    "error": {
+      "category": "Failed to Update Category. Please try again.",
+      "subCategory": "Failed to Update Sub Category. Please try again.",
+      "delete": "Failed to Delete. Please try again."
+    }
+  },
+  "type": {
+    "physical": "Physical",
+    "digital": "Digital"
+  },
+  "digital": {
+    "add_product": {
+      "General": "General",
+      "Title": "Title",
+      "SKU": "SKU",
+      "Categories": "Categories",
+      "Subcategory": "Subcategory",
+      "Product Price": "Product Price",
+      "Compatibility": "Compatibility",
+      "Discount": "Discount",
+      "File Format": "File Format",
+      "File Size": "File Size",
+      "License Type": "License Type",
+      "Tags": "Tags",
+      "Version": "Version",
+      "Status": "Status",
+      "Drag Files or Click to Browse": "Drag Files or Click to Browse",
+      "Add Description": "Add Description",
+      "Meta Data": "Meta Data",
+      "Meta Title": "Meta Title",
+      "Meta Description": "Meta Description",
+      "Add": "Add",
+      "Discard": "Discard",
+      "Add Products": "Add Products",
+      "Multikart Admin panel": "Multikart Admin panel",
+      "Update": "Update",
+      "Digital": "Digital",
+      "Edit Products": "Edit Products"
+    },
+    "product_list": {
+      "product_list": "Product List",
+      "product": "Product",
+      "price": "Price",
+      "status": "Status",
+      "file_format": "File Format",
+      "compatibility": "Compatibility",
+      "created_at": "Created At",
+      "action": "Action"
+    }
+  },
+  "physical": {
+    "product_list": {
+      "title": "Product List",
+      "statusFilter": "Status",
+      "statusAvailable": "Available",
+      "statusUnavailable": "Unavailable",
+      "noDataFound": "No Data Found",
+      "product": "Product",
+      "price": "Price",
+      "status": "Status",
+      "colors": "Colors",
+      "sizes": "Sizes",
+      "category": "Category",
+      "createdAt": "Created At",
+      "action": "Action",
+      "confirmDeletion": "Confirm Deletion",
+      "deleteConfirmationMessage": "Are you sure you want to delete this product?",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "edit": "Edit",
+      "noImage": "No Image"
+    },
+    "addProduct": {
+      "productName": "Product Name",
+      "price": "Price",
+      "sku": "SKU",
+      "color": "Color",
+      "discount": "Discount",
+      "metaTitle": "Meta Title",
+      "metaDescription": "Meta Description",
+      "productTags": "Product Tags",
+      "category": "Category",
+      "subCategory": "Sub Category",
+      "selectCategory": "Select Category",
+      "selectSubCategory": "Select Sub Category",
+      "selectStatus": "Select Status",
+      "stockQuantity": "Stock Quantity",
+      "selectSize": "Select Size",
+      "addDescription": "Add Description",
+      "add": "Add",
+      "edit": "Edit",
+      "discard": "Discard"
+    }
+  },
+  "sales": {
+    "type": "Sales",
+    "orders": {
+      "title": "Orders",
+      "manageOrder": "Manage Order",
+      "columns": {
+        "customer": "Customer",
+        "price": "Price",
+        "paymentStatus": "Payment Status",
+        "orderStatus": "Order Status",
+        "deliveryCity": "Delivery City",
+        "totalProduct": "Total Product",
+        "createdAt": "Created At"
+      }
+    },
+    "transactions": {
+      "title": "Transactions",
+      "subtitle": "Multikart Admin Panel",
+      "details": "Transaction Details",
+      "columns": {
+        "customer": "Customer",
+        "price": "Price",
+        "paymentStatus": "Payment Status",
+        "orderStatus": "Order Status",
+        "deliveryCity": "Delivery City",
+        "transactionId": "Transaction ID",
+        "createdAt": "Created At"
+      }
+    }
+  }
 }

@@ -7,6 +7,8 @@ import { useState } from "react";
 import { DELETE_DIGITAL_PRODUCT } from "@/GraphQL/Mutations/productMutation";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const ProductListDigital = () => {
   const [statusFilter, setStatusFilter] = useState<string>('');
@@ -23,6 +25,9 @@ const ProductListDigital = () => {
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   };
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStatusFilter(e.target.value);
@@ -55,7 +60,7 @@ const ProductListDigital = () => {
 
   return (
     <div className="py-5">
-      <CommonBreadcrumb title="Product List" parent="Digital" />
+      <CommonBreadcrumb title={t("digital.product_list.product_list")} parent={t("digital.add_product.Digital")} />
       <div className="d-flex justify-content-end text-black w-100">
         <FormGroup>
           <select
@@ -65,7 +70,7 @@ const ProductListDigital = () => {
             value={statusFilter}
             onChange={handleStatusChange}
           >
-            <option value="">Status</option>
+            <option value="">{t('digital.product_list.status')}</option>
             <option value="Available">Available</option>
             <option value="Unavailable">Unavailable</option>
           </select>
@@ -81,19 +86,19 @@ const ProductListDigital = () => {
           <table className="table mt-5 w-full" style={{ minWidth: "1200px" }}>
             <thead>
               <tr>
-                <th className="text-uppercase">Product</th>
-                <th className="text-uppercase">Price</th>
-                <th className="text-uppercase">Status</th>
-                <th className="text-uppercase">File Format</th>
-                <th className="text-uppercase">Compatibility</th>
-                <th className="text-uppercase">Created At</th>
-                <th className="text-uppercase">Action</th>
+                <th className="text-uppercase">{t('digital.product_list.product')}</th>
+                <th className="text-uppercase">{t('digital.product_list.price')}</th>
+                <th className="text-uppercase">{t('digital.product_list.status')}</th>
+                <th className="text-uppercase">{t('digital.product_list.file_format')}</th>
+                <th className="text-uppercase">{t('digital.product_list.compatibility')}</th>
+                <th className="text-uppercase">{t('digital.product_list.created_at')}</th>
+                <th className="text-uppercase">{t('digital.product_list.action')}</th>
               </tr>
             </thead>
             <tbody>
               {filteredProducts?.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center">No Data Found</td>
+                  <td colSpan={7} className="text-center">{t("no_data_found")}</td>
                 </tr>
               ) : (
                 filteredProducts?.map((item: any) => (

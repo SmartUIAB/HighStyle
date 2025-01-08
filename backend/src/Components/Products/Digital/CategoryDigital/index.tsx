@@ -9,6 +9,8 @@ import { CREATE_CATEGORY } from "../../../../GraphQL/Mutations/categoryMutations
 import { GET_CATEGORY } from "../../../../GraphQL/Queries/categoryQueries";
 
 import { toast } from "react-toastify";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const CategoryDigital = () => {
   const [open, setOpen] = useState(false);
@@ -25,6 +27,9 @@ const CategoryDigital = () => {
   };
 
   const [createCategory] = useMutation(CREATE_CATEGORY);
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const handleFileChange = (e: any) => {
     const files = e.target.files;
@@ -96,7 +101,7 @@ const CategoryDigital = () => {
 
   return (
     <Fragment>
-      <CommonBreadcrumb title="Category" parent="Physical" />
+      <CommonBreadcrumb title={t("subCategory.category")} parent={t("type.physical")} />
       <Container fluid>
         <Row>
           <Col sm="12">
@@ -105,7 +110,7 @@ const CategoryDigital = () => {
               <CardBody>
                 <div className="btn-popup pull-right">
                   <Button color="primary" onClick={onOpenModal}>
-                    Add Category
+                    {t("modalTitle.addCategory")}
                   </Button>
                   <Modal isOpen={open} toggle={onCloseModal}>
                     <ModalHeader toggle={onCloseModal}>
@@ -116,7 +121,7 @@ const CategoryDigital = () => {
                     <ModalBody>
                       <Form>
                         <FormGroup>
-                          <Label>Category Name:</Label>
+                          <Label>{t("category.name")}:</Label>
                           <Input
                             type="text"
                             value={name}
@@ -125,7 +130,7 @@ const CategoryDigital = () => {
                         </FormGroup>
                         <FormGroup>
                           <Label htmlFor="type" className="col-form-label">
-                            Type:
+                            {t("category.type")}:
                           </Label>
                           <Input
                             id="type"
@@ -137,12 +142,12 @@ const CategoryDigital = () => {
                             <option value="" selected disabled>
                               Select type
                             </option>
-                            <option value="Physical">Physical</option>
-                            <option value="Digital">Digital</option>
+                            <option value="Physical">{t("type.physical")}</option>
+                            <option value="Digital">{t("type.digital")}</option>
                           </Input>
                         </FormGroup>
                         <FormGroup>
-                          <Label>Category Description:</Label>
+                          <Label>{t("category.description")}:</Label>
                           <Input
                             type="text"
                             value={description}
@@ -150,17 +155,17 @@ const CategoryDigital = () => {
                           />
                         </FormGroup>
                         <FormGroup>
-                          <Label>Category Image:</Label>
+                          <Label>{t("table.image")}:</Label>
                           <Input type="file" onChange={handleFileChange} />
                         </FormGroup>
                       </Form>
                     </ModalBody>
                     <ModalFooter>
                       <Button color="primary" onClick={handleSave}>
-                        Save
+                        {t("category.add")}
                       </Button>
                       <Button color="secondary" onClick={onCloseModal}>
-                        Close
+                        {t("category.close")}
                       </Button>
                     </ModalFooter>
                   </Modal>
@@ -176,7 +181,7 @@ const CategoryDigital = () => {
                       pageSize: limit,
                       totalItem: categoriesData?.length
                     }}
-                    class="-striped -highlight"
+                    myClass="-striped -highlight"
                   />
                 </div>
               </CardBody>

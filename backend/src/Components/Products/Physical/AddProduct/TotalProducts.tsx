@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Button, Col, FormGroup, Input, InputGroup, InputGroupText, Label, Row } from "reactstrap";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 interface FormData {
   product_stockquantity: number;
@@ -12,6 +14,8 @@ interface TotalProductsProps {
 
 const TotalProducts: React.FC<TotalProductsProps> = ({ formData, setFormData }) => {
   const [quantity, setQuantity] = useState<number>(formData.product_stockquantity || 1);
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const IncrementItem = () => {
     if (quantity < 9) {
@@ -39,7 +43,7 @@ const TotalProducts: React.FC<TotalProductsProps> = ({ formData, setFormData }) 
     <FormGroup className="mb-3">
       <Row>
         <Col xl="3" sm="4">
-          <Label className="fw-bold mb-0">Stock Quantity:</Label>
+          <Label className="fw-bold mb-0">{t("physical.addProduct.stockQuantity")} :</Label>
         </Col>
         <fieldset className="qty-box ms-0">
           <InputGroup className="bootstrap-touchspin">

@@ -7,6 +7,8 @@ import { CREATE_SUB_CATEGORY } from "../../../../GraphQL/Mutations/categoryMutat
 import { useMutation, useQuery } from "@apollo/client";
 import { GET_ALL_CATEGORY, GET_SUB_CATEGORY } from "@/GraphQL/Queries/categoryQueries";
 import { toast } from "react-toastify";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const SubCategoryDigital = () => {
   const [open, setOpen] = useState(false);
@@ -24,6 +26,9 @@ const SubCategoryDigital = () => {
   };
 
   const [createSubCategory] = useMutation(CREATE_SUB_CATEGORY);
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const onOpenModal = () => {
     setOpen(true);
@@ -44,9 +49,6 @@ const SubCategoryDigital = () => {
   const { data: allCategoriesData } = useQuery(GET_ALL_CATEGORY);
 
   const subcategoriesData = data?.subcategories?.subcategories.filter((item: any) => item.type === 'Digital') || [];
-
-  console.log(subcategoriesData, data, '-=-=-=-=-=');
-
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
@@ -109,7 +111,7 @@ const SubCategoryDigital = () => {
 
   return (
     <Fragment>
-      <CommonBreadcrumb title="Sub Category" parent="Physical" />
+      <CommonBreadcrumb title={t("digital.add_product.Subcategory")} parent={t("type.digital")} />
       <Container fluid>
         <Row>
           <Col sm="12">
@@ -119,20 +121,20 @@ const SubCategoryDigital = () => {
                 <div className="btn-popup pull-right">
                   <ButtonGroup className="btn-popup pull-right">
                     <Button color="primary" onClick={onOpenModal}>
-                      Add Sub Category
+                      {t("modalTitle.addSubCategory")}
                     </Button>
                   </ButtonGroup>
                   <Modal isOpen={open} toggle={onCloseModal}>
                     <ModalHeader toggle={onCloseModal}>
                       <h5 className="modal-title f-w-600" id="exampleModalLabel2">
-                        Add Sub Category
+                        {t("modalTitle.addSubCategory")}
                       </h5>
                     </ModalHeader>
                     <ModalBody>
                       <Form>
                         <FormGroup>
                           <Label htmlFor="category" className="col-form-label">
-                            Category:
+                            {t("subCategory.category")}:
                           </Label>
                           <Input
                             id="category"
@@ -155,7 +157,7 @@ const SubCategoryDigital = () => {
                         </FormGroup>
 
                         <FormGroup>
-                          <Label>Sub Category Name:</Label>
+                          <Label>{t("subCategory.name")}:</Label>
                           <Input
                             type="text"
                             value={name}
@@ -164,7 +166,7 @@ const SubCategoryDigital = () => {
                         </FormGroup>
                         <FormGroup>
                           <Label htmlFor="type" className="col-form-label">
-                            Type:
+                            {t("subCategory.type")}:
                           </Label>
                           <Input
                             id="type"
@@ -176,13 +178,13 @@ const SubCategoryDigital = () => {
                             <option value="" disabled>
                               Select type
                             </option>
-                            <option value="Physical">Physical</option>
-                            <option value="Digital">Digital</option>
+                            <option value="Physical">{t("type.physical")}</option>
+                            <option value="Digital">{t("type.digital")}</option>
                           </Input>
                         </FormGroup>
 
                         <FormGroup>
-                          <Label>Sub Category Description:</Label>
+                          <Label>{t("subCategory.description")}:</Label>
                           <Input
                             type="text"
                             value={description}
@@ -190,17 +192,17 @@ const SubCategoryDigital = () => {
                           />
                         </FormGroup>
                         <FormGroup>
-                          <Label>Sub Category Image:</Label>
+                          <Label>{t("table.image")}:</Label>
                           <Input type="file" onChange={handleFileChange} />
                         </FormGroup>
                       </Form>
                     </ModalBody>
                     <ModalFooter>
                       <Button color="primary" onClick={handleSave}>
-                        Save
+                        {t("subCategory.save")}
                       </Button>
                       <Button color="secondary" onClick={onCloseModal}>
-                        Close
+                        {t("category.close")}
                       </Button>
                     </ModalFooter>
                   </Modal>

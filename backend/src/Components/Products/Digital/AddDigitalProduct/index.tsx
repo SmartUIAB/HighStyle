@@ -11,16 +11,23 @@ import { CREATE_DIGITAL_PRODUCT, UPDATE_DIGITAL_PRODUCT } from "../../../../Grap
 import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 import { DIGITAL_PRODUCT_BY_ID } from "@/GraphQL/Queries/productQueries";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const AddDigitalProduct = () => {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
+  // Ensure `useQuery` is not conditionally rendered
   const { data: digitalProductByID, loading, error, refetch } = useQuery(DIGITAL_PRODUCT_BY_ID, {
     variables: { digitalProductId: id },
     skip: !id,
   });
 
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
+
+  // Default form data, ensuring it's not conditionally set
   const [formData, setFormData] = useState({
     title: "",
     SKU: "",
@@ -42,10 +49,10 @@ const AddDigitalProduct = () => {
     deleteImages: []
   });
 
+  // UseEffect for form data population
   useEffect(() => {
     if (digitalProductByID?.digitalProduct) {
       const product = digitalProductByID.digitalProduct;
-
       setFormData({
         title: product.title || "",
         SKU: product.SKU || "",
@@ -90,9 +97,7 @@ const AddDigitalProduct = () => {
     }
   }, [digitalProductByID, id]);
 
-  const [createDigitalProduct] = useMutation(CREATE_DIGITAL_PRODUCT);
-  const [updateDigitalProduct] = useMutation(UPDATE_DIGITAL_PRODUCT);
-
+  // Handle submission
   const handleValidSubmit = async () => {
     try {
       if (id) {
@@ -123,9 +128,8 @@ const AddDigitalProduct = () => {
         });
 
         if (data) {
-          console.log(data);
           toast.success("Digital Product Updated Successfully");
-          refetch()
+          refetch();
         }
       } else {
         const { data } = await createDigitalProduct({
@@ -192,9 +196,11 @@ const AddDigitalProduct = () => {
 
   if (error) return <div>Error: {error.message}</div>;
 
+
+
   return (
     <Fragment>
-      <CommonBreadcrumb title={id ? "Edit Product" : "Add Products"} parent="Digital" />
+      <CommonBreadcrumb title={id ? t('digital.add_product.Edit Products') : t('digital.add_product.Add Products')} parent={t('digital.add_product.Digital')} />
       <Container fluid>
         <Row className="product-adding">
           <Col xl="6">
@@ -206,9 +212,9 @@ const AddDigitalProduct = () => {
             <MetaDataForm formData={formData} setFormData={setFormData} />
             <div className="offset-xl-3 offset-sm-4 mt-3 d-flex gap-2">
               <Button type="submit" onClick={handleValidSubmit} color="primary">
-                {id ? "Update" : "Add"}
+                {id ? t('digital.add_product.Update') : t('digital.add_product.Add')}
               </Button>
-              <Button color="light">Discard</Button>
+              <Button color="light">{t('digital.add_product.Discard')}</Button>
             </div>
           </Col>
         </Row>
@@ -216,5 +222,6 @@ const AddDigitalProduct = () => {
     </Fragment>
   );
 };
+
 
 export default AddDigitalProduct;

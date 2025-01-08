@@ -1,6 +1,8 @@
 import MDEditor from "@uiw/react-md-editor";
 import { useEffect, useState } from "react";
 import { Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 interface FormData {
   product_size: string;
@@ -17,6 +19,8 @@ const ProductSizeAndDescription: React.FC<ProductSizeAndDescriptionProps> = ({
   setFormData,
 }) => {
   const [value, setValue] = useState<string | undefined>("");
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   // Update the local editor value when formData.product_description changes
   useEffect(() => {
@@ -44,7 +48,7 @@ const ProductSizeAndDescription: React.FC<ProductSizeAndDescriptionProps> = ({
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold mb-0">Select Size :</Label>
+            <Label className="fw-bold mb-0">{t("physical.addProduct.selectSize")} :</Label>
           </Col>
           <Col xl="8" sm="7">
             <Input
@@ -59,7 +63,7 @@ const ProductSizeAndDescription: React.FC<ProductSizeAndDescriptionProps> = ({
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold">Add Description :</Label>
+            <Label className="fw-bold">{t("physical.addProduct.addDescription")} :</Label>
           </Col>
           <Col xl="8" sm="7" className="description-sm">
             <MDEditor value={value} onChange={handleDescriptionChange} />

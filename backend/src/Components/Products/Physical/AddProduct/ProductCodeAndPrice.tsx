@@ -1,6 +1,8 @@
 import { GET_ALL_CATEGORY, GET_ALL_SUBCATEGORY } from "@/GraphQL/Queries/categoryQueries";
 import { useQuery } from "@apollo/client";
 import { Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 interface FormData {
   product_name: string;
@@ -22,6 +24,8 @@ interface ProductCodeAndPriceProps {
 }
 
 const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, setFormData }) => {
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -38,7 +42,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold mb-0">Product Name :</Label>
+            <Label className="fw-bold mb-0">{t("physical.addProduct.productName")} :</Label>
           </Col>
           <Col xl="8" sm="7">
             <Input
@@ -57,7 +61,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold mb-0">Price :</Label>
+            <Label className="fw-bold mb-0">{t("physical.addProduct.price")} :</Label>
           </Col>
           <Col sm="7" xl="8">
             <Input
@@ -77,7 +81,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold mb-0">SKU :</Label>
+            <Label className="fw-bold mb-0">{t("physical.addProduct.sku")}:</Label>
           </Col>
           <Col sm="7" xl="8">
             <Input
@@ -96,7 +100,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold mb-0">Color :</Label>
+            <Label className="fw-bold mb-0">{t("physical.addProduct.color")} :</Label>
           </Col>
           <Col sm="7" xl="8">
             <Input
@@ -115,7 +119,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold mb-0">Discount :</Label>
+            <Label className="fw-bold mb-0">{t("physical.addProduct.discount")} :</Label>
           </Col>
           <Col sm="7" xl="8">
             <Input
@@ -134,7 +138,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold mb-0">Meta Title :</Label>
+            <Label className="fw-bold mb-0">{t("physical.addProduct.metaTitle")} :</Label>
           </Col>
           <Col sm="7" xl="8">
             <Input
@@ -153,7 +157,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold mb-0">Meta Description :</Label>
+            <Label className="fw-bold mb-0">{t("physical.addProduct.metaDescription")} :</Label>
           </Col>
           <Col sm="7" xl="8">
             <Input
@@ -172,7 +176,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold mb-0">Product Tags :</Label>
+            <Label className="fw-bold mb-0">{t("physical.addProduct.productTags")} :</Label>
           </Col>
           <Col sm="7" xl="8">
             <Input
@@ -192,7 +196,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
         <Row>
           <Col xl="3" sm="4">
             <Label htmlFor="category" className="fw-bold mb-0">
-              Category:
+              {t("physical.addProduct.category")} :
             </Label>
           </Col>
           <Col sm="7" xl="8">
@@ -204,7 +208,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               onChange={handleChange}
             >
               <option value="" disabled>
-                Select category
+                {t("physical.addProduct.selectCategory")}
               </option>
               {allCategoriesData?.categorieslist
                 ?.filter((item: any) => item.type === "Physical")
@@ -223,7 +227,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
         <Row>
           <Col xl="3" sm="4">
             <Label htmlFor="category" className="fw-bold mb-0">
-              Sub Category:
+              {t("physical.addProduct.subCategory")}
             </Label>
           </Col>
           <Col sm="7" xl="8">
@@ -235,7 +239,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               onChange={handleChange}
             >
               <option value="" disabled>
-                Select Sub category
+                {t("physical.addProduct.selectSubCategory")}
               </option>
               {allSubCategoriesData?.subcategorieslist
                 ?.filter((item: any) => (item.type === "Physical" && item.category.id === formData.product_category))
@@ -253,7 +257,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
       <FormGroup className="mb-3">
         <Row>
           <Col xl="3" sm="4">
-            <Label className="fw-bold mb-0">Select Status :</Label>
+            <Label className="fw-bold mb-0">{t("physical.addProduct.selectStatus")} :</Label>
           </Col>
           <Col xl="8" sm="7">
             <Input
@@ -263,7 +267,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               onChange={handleChange}
               value={formData.product_status}
             >
-              <option value="" disabled>Select Status</option>
+              <option value="" disabled>{t("physical.addProduct.selectStatus")}</option>
               <option value="Available">Available</option>
               <option value="Unavailable">Unavailable</option>
             </Input>

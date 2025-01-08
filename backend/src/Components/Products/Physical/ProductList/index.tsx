@@ -8,6 +8,8 @@ import { useState } from "react";
 import { DELETE_PHYSICAL_PRODUCT } from "@/GraphQL/Mutations/productMutation";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const ProductList = () => {
   const [statusFilter, setStatusFilter] = useState<string>('');
@@ -16,6 +18,9 @@ const ProductList = () => {
 
   const { data: allProductData, refetch, loading } = useQuery(GET_PHYSICAL_PRODUCT);
   const [deletePhysicalProduct] = useMutation(DELETE_PHYSICAL_PRODUCT)
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const formatedDate = (timestamp: number): string => {
     const date = new Date(timestamp);
@@ -55,7 +60,7 @@ const ProductList = () => {
 
   return (
     <div className="py-5">
-      <CommonBreadcrumb title="Product List" parent="Physical" />
+      <CommonBreadcrumb title={t("physical.product_list.title")} parent={t("type.physical")} />
       <div className="d-flex justify-content-end text-black w-100">
         <FormGroup>
           <select
@@ -65,9 +70,9 @@ const ProductList = () => {
             value={statusFilter}
             onChange={handleStatusChange}
           >
-            <option value="">Status</option>
-            <option value="Available">Available</option>
-            <option value="Unavailable">Unavailable</option>
+            <option value="">{t("physical.product_list.statusFilter")}</option>
+            <option value="Available">{t("physical.product_list.statusAvailable")}</option>
+            <option value="Unavailable">{t("physical.product_list.statusUnavailable")}</option>
           </select>
         </FormGroup>
       </div>
@@ -82,20 +87,20 @@ const ProductList = () => {
           <table className="table mt-5 w-full" style={{ minWidth: '1200px' }}>
             <thead>
               <tr>
-                <th className="text-uppercase">Product</th>
-                <th className="text-uppercase">Price</th>
-                <th className="text-uppercase">Status</th>
-                <th className="text-uppercase">Colors</th>
-                <th className="text-uppercase">Sizes</th>
-                <th className="text-uppercase">Category</th>
-                <th className="text-uppercase">Created At</th>
-                <th className="text-uppercase">Action</th>
+                <th className="text-uppercase">{t("physical.product_list.product")}</th>
+                <th className="text-uppercase">{t("physical.product_list.price")}</th>
+                <th className="text-uppercase">{t("physical.product_list.status")}</th>
+                <th className="text-uppercase">{t("physical.product_list.colors")}</th>
+                <th className="text-uppercase">{t("physical.product_list.sizes")}</th>
+                <th className="text-uppercase">{t("physical.product_list.category")}</th>
+                <th className="text-uppercase">{t("physical.product_list.createdAt")}</th>
+                <th className="text-uppercase">{t("physical.product_list.action")}</th>
               </tr>
             </thead>
             <tbody>
               {filteredProducts?.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="text-center">No Data Found</td>
+                  <td colSpan={8} className="text-center">{t("physical.product_list.noDataFound")}</td>
                 </tr>
               ) : (
                 filteredProducts?.map((item: any, i: any) => (
@@ -105,7 +110,7 @@ const ProductList = () => {
                         src={item.images && item.images.length > 0
                           ? process.env.NEXT_PUBLIC_API_URL + item.images[0]
                           : '/assets/images/download.png'}
-                        alt="no image"
+                        alt={t("pysical.product_list.noImage")}
                         style={{ width: '50px', height: '50px' }}
                       />
                       <Link href={`/en/products/physical/product-detail?id=${item.id}`} >
@@ -147,13 +152,13 @@ const ProductList = () => {
       )}
 
       <Modal isOpen={modalOpen} toggle={toggleModal} className="modal-dialog-centered">
-        <ModalHeader toggle={toggleModal}>Confirm Deletion</ModalHeader>
+        <ModalHeader toggle={toggleModal}>{t("physical.product_list.confirmDeletion")}</ModalHeader>
         <ModalBody>
-          Are you sure you want to delete this product?
+          {t("physical.product_list.deleteConfirmationMessage")}
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" onClick={toggleModal}>Cancel</Button>
-          <Button color="primary" onClick={handleDeletePhysicalProduct}>Delete</Button>
+          <Button color="secondary" onClick={toggleModal}>{t("physical.product_list.cancel")}</Button>
+          <Button color="primary" onClick={handleDeletePhysicalProduct}>{t("physical.product_list.delete")}</Button>
         </ModalFooter>
       </Modal>
     </div>

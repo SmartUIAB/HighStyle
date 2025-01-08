@@ -1,9 +1,13 @@
+import { useTranslation } from "@/app/i18n/client";
+import { useAppSelector } from "@/Redux/Hooks";
 import React, { Fragment, useState } from "react";
 import { Search } from "react-feather";
 import { Form, FormGroup, Input } from "reactstrap";
 
 const SearchHeader = () => {
 	const [searchbar, setSearchbar] = useState(false);
+	const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+	const { t } = useTranslation(i18LangStatus);
 
 	const handleSearchClick = () => {
 		setSearchbar(!searchbar);
@@ -16,7 +20,7 @@ const SearchHeader = () => {
 					<Input
 						className={"form-control-plaintext " + (searchbar ? "open" : "")}
 						type="search"
-						placeholder="Search.."
+						placeholder={t("search")}
 					/>
 					<span
 						className="d-sm-none mobile-search"
