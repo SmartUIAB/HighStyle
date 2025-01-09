@@ -7,8 +7,12 @@ import ProfileStatus from "./ProfileStatus";
 import TabProfile from "./TabProflle";
 import { useQuery } from "@apollo/client";
 import { GET_USER } from "@/GraphQL/Queries/userQueries";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const Profile = () => {
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
   const { data: getUser, loading, refetch } = useQuery(GET_USER);
 
   if (loading) {
@@ -21,7 +25,7 @@ const Profile = () => {
 
   return (
     <Fragment>
-      <CommonBreadcrumb title="Profile" parent="Settings" />
+      <CommonBreadcrumb title={t("settings.profile")} parent={t("settings.settings")} />
       <Container fluid>
         <Row>
           <Col xl="4">

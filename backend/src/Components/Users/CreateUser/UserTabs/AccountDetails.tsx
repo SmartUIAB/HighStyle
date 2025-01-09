@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { Form, FormGroup, Input, Label, Row, Col, Button } from "reactstrap";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
+
 
 interface FormData {
   firstName: string;
@@ -25,6 +28,9 @@ interface AccountDetailsProps {
 }
 
 const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, handleSubmit, errors }) => {
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -36,11 +42,11 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, 
 
   return (
     <Form className="needs-validation user-add" onSubmit={handleSubmit}>
-      <h4>Account Details</h4>
+      <h4>{t("user.create_user.account.accountDetails")}</h4>
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>* First Name</Label>
+            <Label>* {t("user.create_user.account.firstName")}</Label>
           </Col>
           <Col xl="8" md="7">
             <Input
@@ -58,7 +64,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, 
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>* Last Name</Label>
+            <Label>* {t("user.create_user.account.lastName")}</Label>
           </Col>
           <Col xl="8" md="7">
             <Input
@@ -76,7 +82,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, 
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>* Email</Label>
+            <Label>* {t("user.create_user.account.email")}</Label>
           </Col>
           <Col xl="8" md="7">
             <Input
@@ -94,7 +100,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, 
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>* Password</Label>
+            <Label>* {t("user.create_user.account.password")}</Label>
           </Col>
           <Col xl="8" md="7">
             <Input
@@ -112,7 +118,7 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, 
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>* Confirm Password</Label>
+            <Label>* {t("user.create_user.account.confirmPassword")}</Label>
           </Col>
           <Col xl="8" md="7">
             <Input

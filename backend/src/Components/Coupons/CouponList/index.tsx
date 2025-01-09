@@ -8,6 +8,8 @@ import { Edit, Trash2 } from "react-feather";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, Col, Container, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from "reactstrap";
 import { DELETE_COUPON } from "@/GraphQL/Mutations/couponMutations";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const ListCoupons = () => {
   const [isDeleteId, setIsDeleteId] = useState(null);
@@ -16,6 +18,9 @@ const ListCoupons = () => {
 
   const { data: allCouponData, refetch, loading } = useQuery(COUPON_LIST);
   const [deleteCoupon] = useMutation(DELETE_COUPON);
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const handleDeleteCoupon = async () => {
     try {
@@ -45,15 +50,16 @@ const ListCoupons = () => {
   };
 
   const toggleModal = () => setModalOpen(!modalOpen);
+  const lang = localStorage.getItem("i18nextLng")
 
   return (
     <Fragment>
-      <CommonBreadcrumb title="List Coupons" parent="Coupons" />
+      <CommonBreadcrumb title={t("coupon.couponlist.breadcrumb_list_coupons")} parent={t("coupon.couponlist.coupons")} />
       <Container fluid>
         <Row>
           <Col sm="12">
             <Card>
-              <CommonCardHeader title="Coupon List" />
+              <CommonCardHeader title={t("coupon.couponlist.title")} />
               <CardBody>
                 <div id="batchDelete" className="category-table order-table coupon-list-delete">
                   {loading ? (
@@ -64,20 +70,20 @@ const ListCoupons = () => {
                     <table className="table mt-5 w-full" style={{ minWidth: '1200px' }}>
                       <thead>
                         <tr>
-                          <th className="text-uppercase">Name</th>
-                          <th className="text-uppercase">Code</th>
-                          <th className="text-uppercase">Status</th>
-                          <th className="text-uppercase">Discount Type</th>
-                          <th className="text-uppercase">Discount Value</th>
-                          <th className="text-uppercase">Start Date</th>
-                          <th className="text-uppercase">End Date</th>
-                          <th className="text-uppercase">Action</th>
+                          <th className="text-uppercase">{t("coupon.couponlist.name")}</th>
+                          <th className="text-uppercase">{t("coupon.couponlist.code")}</th>
+                          <th className="text-uppercase">{t("coupon.couponlist.status")}</th>
+                          <th className="text-uppercase">{t("coupon.couponlist.discount_type")}</th>
+                          <th className="text-uppercase">{t("coupon.couponlist.discount_value")}</th>
+                          <th className="text-uppercase">{t("coupon.couponlist.start_date")}</th>
+                          <th className="text-uppercase">{t("coupon.couponlist.end_date")}</th>
+                          <th className="text-uppercase">{t("coupon.couponlist.action")}</th>
                         </tr>
                       </thead>
                       <tbody>
                         {allCouponData?.getAllCoupons?.coupons?.length === 0 ? (
                           <tr>
-                            <td colSpan={8} className="text-center">No Coupon Found</td>
+                            <td colSpan={8} className="text-center">{t("coupon.couponlist.no_coupon_found")}</td>
                           </tr>
                         ) : (
                           allCouponData?.getAllCoupons?.coupons?.map((item: any, i: any) => (
@@ -92,7 +98,7 @@ const ListCoupons = () => {
                               <td className="align-middle">{formatedDate(parseInt(item.startDate))}</td>
                               <td className="align-middle">{formatedDate(parseInt(item.endDate))}</td>
                               <td className="align-middle">
-                                <Link href={`/en/coupons/create-coupons?id=${item.id}`}>
+                                <Link href={`/${lang}/coupons/create-coupons?id=${item.id}`}>
                                   <Button color="transparent" className="p-1">
                                     <Edit />
                                   </Button>
@@ -117,14 +123,14 @@ const ListCoupons = () => {
         </Row>
       </Container>
       <Modal isOpen={modalOpen} toggle={toggleModal} className="modal-dialog-centered">
-        <ModalHeader toggle={toggleModal}>Confirm Deletion</ModalHeader>
+        <ModalHeader toggle={toggleModal}>{t("coupon.couponlist.confirmDeletionTitle")}</ModalHeader>
         <ModalBody>
-          Are you sure you want to delete this Coupon?
+          {t("coupon.couponlist.confirmDeletionMessage")}
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" onClick={toggleModal}>Cancel</Button>
+          <Button color="secondary" onClick={toggleModal}>{t("coupon.couponlist.cancel")}</Button>
           <Button color="primary" onClick={handleDeleteCoupon} disabled={isDeleting}>
-            {isDeleting ? <Spinner size="sm" /> : "Delete"}
+            {isDeleting ? <Spinner size="sm" /> : t("coupon.couponlist.delete")}
           </Button>
         </ModalFooter>
       </Modal>

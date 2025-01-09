@@ -7,6 +7,8 @@ import { GET_ALL_PERMISSIONS, USER_BY_ID } from "../../../../GraphQL/Queries/use
 import { CREATE_USER, UPDATE_USER } from "../../../../GraphQL/Mutations/userMutations";
 import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 interface Errors {
   firstName?: string;
@@ -32,6 +34,8 @@ interface Permission {
 }
 
 const UserTabs: React.FC = () => {
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
   const [activeTab, setActiveTab] = useState<number>(0);
   const [errors, setErrors] = useState<Errors>({});
   const [formData, setFormData] = useState<FormData>({
@@ -110,7 +114,7 @@ const UserTabs: React.FC = () => {
         });
 
         if (data) {
-          toast.success("User Updated successfully");
+          toast.success(t("toast.success.userUpdated"));
         }
       } else {
         const { data } = await createUser({
@@ -126,7 +130,7 @@ const UserTabs: React.FC = () => {
         });
 
         if (data) {
-          toast.success("User created successfully");
+          toast.success(t("toast.success.userCreated"));
           setFormData({
             firstName: "",
             lastName: "",
@@ -141,7 +145,7 @@ const UserTabs: React.FC = () => {
     } catch (error) {
       console.error("Error creating user:", error);
 
-      toast.error("Error creating user. Please try again later.");
+      toast.error(t("toast.error.userCreateError"));
     }
   };
 
@@ -175,33 +179,33 @@ const UserTabs: React.FC = () => {
     let isValid = true;
 
     if (!formData.firstName) {
-      newErrors.firstName = "First name is required";
+      newErrors.firstName = t("validateForm.firstNameRequired");
       isValid = false;
     }
 
     if (!formData.lastName) {
-      newErrors.lastName = "Last name is required";
+      newErrors.lastName = t("validateForm.lastNameRequired");
       isValid = false;
     }
 
     if (!formData.email) {
-      newErrors.email = "Email is required";
+      newErrors.email = t("validateForm.emailRequired");
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = t("validateForm.emailInvalid");
       isValid = false;
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = t("validateForm.passwordRequired");
       isValid = false;
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Confirm password is required";
+      newErrors.confirmPassword = t("validateForm.confirmPasswordRequired");
       isValid = false;
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = t("validateForm.passwordMismatch");
       isValid = false;
     }
 
@@ -212,7 +216,7 @@ const UserTabs: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      alert("Form submitted successfully!");
+      alert(t("alert.formSubmitted"));
     }
   };
 
@@ -220,8 +224,8 @@ const UserTabs: React.FC = () => {
     <Fragment>
       <Tabs selectedIndex={activeTab} onSelect={(index) => setActiveTab(index)}>
         <TabList className="nav nav-tabs tab-coupon">
-          <Tab className="nav-link">Account</Tab>
-          <Tab className="nav-link">Permission</Tab>
+          <Tab className="nav-link">{t("user.create_user.accountTab")}</Tab>
+          <Tab className="nav-link">{t("user.create_user.permissionTab")}</Tab>
         </TabList>
 
         <TabPanel>
@@ -260,7 +264,7 @@ const UserTabs: React.FC = () => {
                                 name={`permission-${permission.id}`}
                                 onChange={() => handlePermissionChange(permission.id, true)}
                               />
-                              Allow
+                              {t("user.create_user.permission.allow")}
                             </Label>
                             <Label className="d-block">
                               <Input
@@ -271,7 +275,7 @@ const UserTabs: React.FC = () => {
                                 name={`permission-${permission.id}`}
                                 onChange={() => handlePermissionChange(permission.id, false)}
                               />
-                              Deny
+                              {t("user.create_user.permission.deny")}
                             </Label>
                           </FormGroup>
                         </Col>
@@ -288,11 +292,11 @@ const UserTabs: React.FC = () => {
       <div className="pull-right">
         {activeTab < 1 ? (
           <Button color="primary" onClick={handleNext}>
-            Next
+            {t("user.create_user.permission.next")}
           </Button>
         ) : (
           <Button color="primary" onClick={handleSave}>
-            Save
+            {t("user.create_user.permission.save")}
           </Button>
         )}
       </div>

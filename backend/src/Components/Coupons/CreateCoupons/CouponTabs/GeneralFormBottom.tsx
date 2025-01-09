@@ -1,8 +1,14 @@
 //@ts-nocheck
+import { useTranslation } from "@/app/i18n/client";
+import { useAppSelector } from "@/Redux/Hooks";
 import React from "react";
 import { Col, FormGroup, Input, Label, Row } from "reactstrap";
 
 const GeneralFormBottom = ({ formData, setFormData }) => {
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+    const { t } = useTranslation(i18LangStatus);
+
   const handleInputChange = (e: any) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData: any) => ({
@@ -16,7 +22,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Free Shipping</Label>
+            <Label>{t("coupon.addcoupon.free_shipping")}</Label>
           </Col>
           <Col md="7">
             <Label className="d-block">
@@ -28,7 +34,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
                 checked={formData.allowFreeShipping}
                 onChange={handleInputChange}
               />
-              Allow Free Shipping
+              {t("coupon.addcoupon.allow_free_shipping")}
             </Label>
           </Col>
         </Row>
@@ -36,7 +42,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Quantity</Label>
+            <Label>{t("coupon.addcoupon.quantity")}</Label>
           </Col>
           <Col md="7">
             <Input
@@ -52,7 +58,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Discount Type</Label>
+            <Label>{t("coupon.addcoupon.discount_type")}</Label>
           </Col>
           <Col md="7">
             <select
@@ -72,7 +78,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Discount Value</Label>
+            <Label>{t("coupon.addcoupon.discount_value")}</Label>
           </Col>
           <Col md="7">
             <Input
@@ -88,7 +94,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Status</Label>
+            <Label>{t("coupon.addcoupon.status")}</Label>
           </Col>
           <Col md="7">
             <Label className="d-block">
@@ -100,7 +106,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
                 checked={formData.statusActive}
                 onChange={handleInputChange}
               />
-              Enable the Coupon
+              {t("coupon.addcoupon.enable_the_coupon")}
             </Label>
           </Col>
         </Row>

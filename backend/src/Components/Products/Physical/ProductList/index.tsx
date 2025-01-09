@@ -55,7 +55,7 @@ const ProductList = () => {
   }
 
   const toggleModal = () => setModalOpen(!modalOpen);
-
+  const lang = localStorage.getItem("i18nextLng")
 
 
   return (
@@ -113,7 +113,7 @@ const ProductList = () => {
                         alt={t("pysical.product_list.noImage")}
                         style={{ width: '50px', height: '50px' }}
                       />
-                      <Link href={`/en/products/physical/product-detail?id=${item.id}`} >
+                      <Link href={`/${lang}/products/physical/product-detail?id=${item.id}`} >
                         <div className="d-flex flex-column">
                           <div>{item.title}</div>
                           <div>{item.SKU}</div>
@@ -131,7 +131,7 @@ const ProductList = () => {
                     <td className="align-middle">{item.category?.name}</td>
                     <td className="align-middle">{formatedDate(parseInt(item.createdAt))}</td>
                     <td className="align-middle">
-                      <Link href={`/en/products/physical/add-product?id=${item.id}`}>
+                      <Link href={`/${lang}/products/physical/add-product?id=${item.id}`}>
                         <Button color="transparent" className="p-1">
                           <Edit />
                         </Button>

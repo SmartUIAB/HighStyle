@@ -1,5 +1,7 @@
 import { Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import { useState, ChangeEvent } from "react";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 interface FormData {
   usageLimit: number;
@@ -12,6 +14,10 @@ interface UsageFormProps {
 }
 
 const UsageForm: React.FC<UsageFormProps> = ({ formData, setFormData }) => {
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: parseFloat(value) });
@@ -19,11 +25,11 @@ const UsageForm: React.FC<UsageFormProps> = ({ formData, setFormData }) => {
 
   return (
     <Form className="needs-validation" noValidate>
-      <h4>Usage Limits</h4>
+      <h4>{t("coupon.addcoupon.usage_limits")}</h4>
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Per Limit</Label>
+            <Label>{t("coupon.addcoupon.per_limit")}</Label>
           </Col>
           <Col md="7">
             <Input
@@ -39,7 +45,7 @@ const UsageForm: React.FC<UsageFormProps> = ({ formData, setFormData }) => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Per Customer</Label>
+            <Label>{t("coupon.addcoupon.per_customer")}</Label>
           </Col>
           <Col md="7">
             <Input

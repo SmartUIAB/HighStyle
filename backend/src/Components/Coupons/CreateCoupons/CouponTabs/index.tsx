@@ -10,6 +10,8 @@ import { CREATE_COUPON, UPDATE_COUPON } from '../../../../GraphQL/Mutations/coup
 import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 import { GET_COUPON_BY_ID } from "@/GraphQL/Queries/couponQueries";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 interface FormData {
   name: string;
@@ -53,6 +55,9 @@ const CouponTabs: React.FC = () => {
 
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const { data: couponByID, refetch, loading: fetching } = useQuery(GET_COUPON_BY_ID, {
     variables: { getCouponByIdId: id },
@@ -197,9 +202,9 @@ const CouponTabs: React.FC = () => {
     <Fragment>
       <Tabs selectedIndex={selectedIndex} onSelect={(index) => setSelectedIndex(index)}>
         <TabList className="nav nav-tabs tab-coupon">
-          <Tab className={`nav-link ${selectedIndex === 0 ? "active" : ""}`}>General</Tab>
-          <Tab className={`nav-link ${selectedIndex === 1 ? "active" : ""}`}>Restriction</Tab>
-          <Tab className={`nav-link ${selectedIndex === 2 ? "active" : ""}`}>Usage</Tab>
+          <Tab className={`nav-link ${selectedIndex === 0 ? "active" : ""}`}>{t("coupon.addcoupon.general")}</Tab>
+          <Tab className={`nav-link ${selectedIndex === 1 ? "active" : ""}`}>{t("coupon.addcoupon.restriction")}</Tab>
+          <Tab className={`nav-link ${selectedIndex === 2 ? "active" : ""}`}>{t("coupon.addcoupon.usage")}</Tab>
         </TabList>
         <TabPanel>
           <div className="tab-pane fade active show">
@@ -215,10 +220,10 @@ const CouponTabs: React.FC = () => {
       </Tabs>
       <div className="pull-right">
         {selectedIndex < 2 ? (
-          <Button onClick={handleNext} disabled={loading}>Next</Button>
+          <Button onClick={handleNext} disabled={loading}>{t("coupon.addcoupon.next")}</Button>
         ) : (
           <Button onClick={handleSave} disabled={loading}>
-            {loading ? <Spinner size="sm" color="light" /> : "Save"}
+              {loading ? <Spinner size="sm" color="light" /> :  t("coupon.addcoupon.save") }
           </Button>
         )}
       </div>

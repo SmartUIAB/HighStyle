@@ -8,6 +8,7 @@ import { Breadcrumb, BreadcrumbItem, Col, Container, Row } from "reactstrap";
 const CommonBreadcrumb = ({ title, parent }: CommonBreadcrumbType) => {
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
+  const lang = localStorage.getItem("i18nextLng")
   return (
     <Container fluid>
       <div className="page-header">
@@ -23,7 +24,7 @@ const CommonBreadcrumb = ({ title, parent }: CommonBreadcrumbType) => {
           <Col lg="6">
             <Breadcrumb className=" pull-right">
               <BreadcrumbItem>
-                <Link href="/dashboard">
+                <Link href={`/${lang}/dashboard`}>
                   <Home />
                 </Link>
               </BreadcrumbItem>

@@ -58,13 +58,30 @@
       "category": "Categoria atualizada com sucesso",
       "subCategory": "Subcategoria atualizada com sucesso",
       "deleteCategory": "Categoria excluída com sucesso",
-      "deleteSubCategory": "Subcategoria excluída com sucesso"
+      "deleteSubCategory": "Subcategoria excluída com sucesso",
+      "userCreated": "Usuário criado com sucesso",
+      "userUpdated": "Usuário atualizado com sucesso",
+      "userDeleted": "Usuário excluído com sucesso"
     },
     "error": {
       "category": "Falha ao atualizar a categoria. Por favor, tente novamente.",
       "subCategory": "Falha ao atualizar a subcategoria. Por favor, tente novamente.",
-      "delete": "Falha ao excluir. Por favor, tente novamente."
+      "delete": "Falha ao excluir. Por favor, tente novamente.",
+      "userCreateError": "Erro ao criar o usuário. Por favor, tente novamente mais tarde.",
+      "userDeleteError": "Falha ao excluir o usuário"
     }
+  },
+  "validateForm": {
+    "firstNameRequired": "O primeiro nome é obrigatório",
+    "lastNameRequired": "O sobrenome é obrigatório",
+    "emailRequired": "O e-mail é obrigatório",
+    "emailInvalid": "O e-mail é inválido",
+    "passwordRequired": "A senha é obrigatória",
+    "confirmPasswordRequired": "A confirmação da senha é obrigatória",
+    "passwordMismatch": "As senhas não coincidem"
+  },
+  "alert": {
+    "formSubmitted": "Formulário enviado com sucesso!"
   },
   "type": {
     "physical": "Físico",
@@ -167,7 +184,8 @@
         "deliveryCity": "Cidade de Entrega",
         "totalProduct": "Total de Produtos",
         "createdAt": "Criado em"
-      }
+      },
+      "noOrderFound": "Nenhum pedido encontrado"
     },
     "transactions": {
       "title": "Transações",
@@ -181,7 +199,180 @@
         "deliveryCity": "Cidade de Entrega",
         "transactionId": "ID da Transação",
         "createdAt": "Criado em"
+      },
+      "noTransactionFound": "Nenhuma transação encontrada"
+    }
+  },
+  "coupon": {
+    "couponlist": {
+      "title": "Lista de Cupons",
+      "name": "Nome",
+      "code": "Código",
+      "status": "Status",
+      "discount_type": "Tipo de Desconto",
+      "discount_value": "Valor do Desconto",
+      "start_date": "Data de Início",
+      "end_date": "Data de Término",
+      "action": "Ação",
+      "list_coupons_title": "Lista de Cupons",
+      "coupons": "Cupons",
+      "breadcrumb_list_coupons": "Lista de Cupons",
+      "no_coupon_found": "Nenhum cupom encontrado",
+      "confirmDeletionTitle": "Confirmar exclusão",
+      "confirmDeletionMessage": "Tem certeza de que deseja excluir este cupom?",
+      "cancel": "Cancelar",
+      "delete": "Excluir"
+    },
+    "addcoupon": {
+      "name": "Nome",
+      "code": "Código",
+      "start_date": "Data de Início",
+      "end_date": "Data de Término",
+      "free_shipping": "Frete Grátis",
+      "allow_free_shipping": "Permitir Frete Grátis",
+      "quantity": "Quantidade",
+      "discount_type": "Tipo de Desconto",
+      "discount_value": "Valor do Desconto",
+      "status": "Status",
+      "general": "Geral",
+      "restriction": "Restrição",
+      "usage": "Uso",
+      "discount_coupon_details": "Detalhes do Cupom de Desconto",
+      "coupon": "Cupom",
+      "create_coupon": "Criar Cupom",
+      "products": "Produtos",
+      "minimum_spend": "Gasto Mínimo",
+      "maximum_spend": "Gasto Máximo",
+      "per_limit": "Limite por Pessoa",
+      "per_customer": "Por Cliente",
+      "usage_limits": "Limites de Uso",
+      "save": "Salvar",
+      "enable_the_coupon": "Habilitar o Cupom",
+      "next": "Próximo",
+      "selected_products": "Produtos Selecionados"
+    }
+  },
+  "media": {
+    "title": "Mídia",
+    "dropzone_media": "Zona de Upload de Mídia",
+    "upload": "Carregar",
+    "file_name": "Nome do Arquivo",
+    "media_file_list": "Lista de Arquivos de Mídia",
+    "action": "Ação",
+    "no_data_found": "Nenhum dado encontrado"
+  },
+  "user": {
+    "userlist": {
+      "title": "Lista de Usuários",
+      "users": "Usuários",
+      "create_user": "Criar Usuário",
+      "profile_image": "Imagem de Perfil",
+      "first_name": "Primeiro Nome",
+      "last_name": "Sobrenome",
+      "email": "E-mail",
+      "action": "Ação",
+      "no_users_found": "Nenhum usuário encontrado",
+      "confirm_deletion": "Confirmar Exclusão",
+      "confirm_message": "Tem certeza de que deseja excluir este usuário?",
+      "cancel": "Cancelar",
+      "delete": "Excluir",
+      "fetchError": "Erro ao buscar a lista de usuários"
+    },
+    "create_user": {
+      "title": "Adicionar Usuário",
+      "accountTab": "Conta",
+      "permissionTab": "Permissão",
+      "account": {
+        "accountDetails": "Detalhes da Conta",
+        "firstName": "Primeiro Nome",
+        "lastName": "Sobrenome",
+        "email": "E-mail",
+        "password": "Senha",
+        "confirmPassword": "Confirmar Senha"
+      },
+      "permission": {
+        "allow": "Permitir",
+        "deny": "Negar",
+        "next": "Próximo",
+        "save": "Salvar"
       }
     }
+  },
+  "vendors": {
+    "vendorList": {
+      "title": "Lista de Fornecedores",
+      "vendors": "Fornecedores",
+      "createVendor": "Criar Fornecedor",
+      "vendorDetails": "Detalhes do Fornecedor",
+      "name": "Nome",
+      "businessType": "Tipo de Negócio",
+      "contactNumber": "Número de Contato",
+      "email": "E-mail",
+      "address": "Endereço",
+      "status": "Status",
+      "action": "Ação",
+      "noVendorsFound": "Nenhum fornecedor encontrado.",
+      "confirmDeletion": "Confirmar Exclusão",
+      "deleteConfirmationMessage": "Tem certeza de que deseja excluir este fornecedor?",
+      "cancel": "Cancelar",
+      "delete": "Excluir",
+      "deletedVendorSuccessfully": "Fornecedor excluído com sucesso",
+      "failedToDeleteVendor": "Falha ao excluir fornecedor"
+    },
+    "create_vendor": {
+      "addVendor": "Adicionar fornecedor",
+      "vendors": "Fornecedores",
+      "accountDetails": "Detalhes da conta",
+      "name": "Nome",
+      "businessType": "Tipo de negócio",
+      "selectType": "Selecionar tipo",
+      "physical": "Físico",
+      "digital": "Digital",
+      "address": "Endereço",
+      "contactNumber": "Número de contato",
+      "email": "Email",
+      "password": "Senha",
+      "confirmPassword": "Confirmar senha",
+      "account": "Conta",
+      "permission": "Permissão",
+      "allow": "Permitir",
+      "deny": "Negar",
+      "saveVendor": "Salvar fornecedor",
+      "updateVendor": "Atualizar fornecedor",
+      "requiredField": "Este campo é obrigatório",
+      "passwordMismatch": "As senhas não coincidem",
+      "loadingPermissions": "Carregando permissões",
+      "errorLoadingPermissions": "Erro ao carregar permissões"
+    }
+  },
+  "settings": {
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "contact": "Contato",
+    "employeeStatus": "Status do Funcionário",
+    "performance": "Desempenho",
+    "overtime": "Horas Extras",
+    "leavesTaken": "Licenças Tiradas",
+    "deactivateAccount": "Desativar Conta",
+    "deactivateReasons": {
+      "privacyConcern": "Eu tenho uma preocupação de privacidade",
+      "temporary": "Isso é temporário",
+      "other": "Outro"
+    },
+    "deleteAccount": "Excluir Conta",
+    "deleteReasons": {
+      "noLongerUsable": "Não é mais utilizável",
+      "switchAccount": "Quero mudar para outra conta",
+      "other": "Outro"
+    },
+    "notifications": "Notificações",
+    "desktopNotifications": "Permitir Notificações de Desktop",
+    "enableNotifications": "Ativar Notificações",
+    "ownActivityNotifications": "Receber notificações sobre minha própria atividade",
+    "dnd": "DND",
+    "firstName": "Primeiro Nome",
+    "lastName": "Sobrenome",
+    "email": "E-mail",
+    "company": "Empresa"
   }
 }

@@ -33,8 +33,7 @@ const SalesTransaction = () => {
                   {/* Loader */}
                   {loading ? (
                     <div className="text-center my-5">
-                      <Spinner style={{ width: '3rem', height: '3rem' }} />
-                      <p>Loading Transactions...</p>
+                      <Spinner style={{ color: '#ff8084' }} />
                     </div>
                   ) : (
                     <table className="table mt-5 w-full" style={{ minWidth: '1200px' }}>
@@ -52,7 +51,7 @@ const SalesTransaction = () => {
                       <tbody>
                         {data?.getAllTransactions?.transactions?.length === 0 ? (
                           <tr>
-                            <td colSpan={8} className="text-center">No Transaction Found</td>
+                            <td colSpan={8} className="text-center">{t("sales.transactions.noTransactionFound")}</td>
                           </tr>
                         ) : (
                           data?.getAllTransactions?.transactions.map((item: any, i: any) => (

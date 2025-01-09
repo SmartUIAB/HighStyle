@@ -18,6 +18,8 @@ import { DELETE_MEDIA, UPLOAD_MEDIA } from "../../GraphQL/Mutations/mediaMutatio
 import { toast } from "react-toastify";
 import MediaUploader from "./mediaUploader";
 import { Trash2 } from "react-feather";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 interface Media {
   id: string;
@@ -50,6 +52,9 @@ const Media: React.FC = () => {
       limit: 10,
     },
   });
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   const [uploadMedia] = useMutation(UPLOAD_MEDIA);
   const [deleteMedia] = useMutation(DELETE_MEDIA);
@@ -92,24 +97,24 @@ const Media: React.FC = () => {
 
   return (
     <Fragment>
-      <CommonBreadcrumb title="Media" parent="Media" />
+      <CommonBreadcrumb title={t("media.title")} parent={t("media.title")} />
       <Container fluid>
         <Card>
           <CardHeader>
-            <h5>Dropzone Media</h5>
+            <h5>{t("media.dropzone_media")}</h5>
           </CardHeader>
           <CardBody>
             <MediaUploader formData={formData} setFormData={setFormData} />
             <div className="pull-right">
               <Button onClick={handleSave} disabled={loading}>
-                {loading ? <Spinner size="sm" color="light" /> : "Upload"}
+                {loading ? <Spinner size="sm" color="light" /> : t("media.upload")}
               </Button>
             </div>
           </CardBody>
         </Card>
         <Card>
           <CardHeader>
-            <h5>Media File List</h5>
+            <h5>{t("media.media_file_list")}</h5>
           </CardHeader>
           <CardBody>
             <div
@@ -122,16 +127,16 @@ const Media: React.FC = () => {
               >
                 <thead>
                   <tr>
-                    <th className="text-uppercase">Media</th>
-                    <th className="text-uppercase">File Name</th>
-                    <th className="text-uppercase">Action</th>
+                    <th className="text-uppercase">{t("media.title")}</th>
+                    <th className="text-uppercase">{t("media.file_name")}</th>
+                    <th className="text-uppercase">{t("media.action")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {allMediaData?.getAllImages?.images?.length === 0 ? (
                     <tr>
                       <td colSpan={8} className="text-center">
-                        No Data Found
+                        {t("media.no_data_found")}
                       </td>
                     </tr>
                   ) : (

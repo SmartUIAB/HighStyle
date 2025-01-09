@@ -14,11 +14,8 @@ const UserMenu = () => {
   const handleLogOut = async () => {
     try {
       const { data } = await logoutMutation();
-      console.log('**********"');
-      console.log("dhdghjsd", data);
 
       if (data.logout) {
-        console.log("dhdghjsd++++=");
         Cookies.remove("token");
         router.replace("/auth/login");
       }
@@ -27,6 +24,8 @@ const UserMenu = () => {
       toast.error(error.message);
     }
   };
+
+  const lang = localStorage.getItem("i18nextLng")
 
   return (
     <Fragment>
@@ -44,7 +43,7 @@ const UserMenu = () => {
         </div>
         <ul className="profile-dropdown onhover-show-div p-20 profile-dropdown-hover">
           <li>
-            <Link href={`/settings/profile`}>
+            <Link href={`/${lang}/settings/profile`}>
               <i data-feather="user"></i>Edit Profile
             </Link>
           </li>

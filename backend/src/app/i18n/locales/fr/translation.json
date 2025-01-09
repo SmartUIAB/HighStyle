@@ -58,13 +58,30 @@
       "category": "Catégorie mise à jour avec succès",
       "subCategory": "Sous-catégorie mise à jour avec succès",
       "deleteCategory": "Catégorie supprimée avec succès",
-      "deleteSubCategory": "Sous-catégorie supprimée avec succès"
+      "deleteSubCategory": "Sous-catégorie supprimée avec succès",
+      "userCreated": "Utilisateur créé avec succès",
+      "userUpdated": "Utilisateur mis à jour avec succès",
+      "userDeleted": "Utilisateur supprimé avec succès"
     },
     "error": {
       "category": "Échec de la mise à jour de la catégorie. Veuillez réessayer.",
       "subCategory": "Échec de la mise à jour de la sous-catégorie. Veuillez réessayer.",
-      "delete": "Échec de la suppression. Veuillez réessayer."
+      "delete": "Échec de la suppression. Veuillez réessayer.",
+      "userCreateError": "Erreur lors de la création de l'utilisateur. Veuillez réessayer plus tard.",
+      "userDeleteError": "Échec de la suppression de l'utilisateur"
     }
+  },
+  "validateForm": {
+    "firstNameRequired": "Le prénom est requis",
+    "lastNameRequired": "Le nom de famille est requis",
+    "emailRequired": "L'adresse e-mail est requise",
+    "emailInvalid": "L'adresse e-mail est invalide",
+    "passwordRequired": "Le mot de passe est requis",
+    "confirmPasswordRequired": "La confirmation du mot de passe est requise",
+    "passwordMismatch": "Les mots de passe ne correspondent pas"
+  },
+  "alert": {
+    "formSubmitted": "Formulaire soumis avec succès !"
   },
   "type": {
     "physical": "Physique",
@@ -167,7 +184,8 @@
         "deliveryCity": "Ville de Livraison",
         "totalProduct": "Total des Produits",
         "createdAt": "Créé le"
-      }
+      },
+      "noOrderFound": "Aucune commande trouvée"
     },
     "transactions": {
       "title": "Transactions",
@@ -181,7 +199,180 @@
         "deliveryCity": "Ville de Livraison",
         "transactionId": "ID de Transaction",
         "createdAt": "Créé le"
+      },
+      "noTransactionFound": "Aucune transaction trouvée"
+    }
+  },
+  "coupon": {
+    "couponlist": {
+      "title": "Liste des Coupons",
+      "name": "Nom",
+      "code": "Code",
+      "status": "Statut",
+      "discount_type": "Type de Réduction",
+      "discount_value": "Valeur de la Réduction",
+      "start_date": "Date de Début",
+      "end_date": "Date de Fin",
+      "action": "Action",
+      "list_coupons_title": "Liste des Coupons",
+      "coupons": "Coupons",
+      "breadcrumb_list_coupons": "Liste des Coupons",
+      "no_coupon_found": "Aucun coupon trouvé",
+      "confirmDeletionTitle": "Confirmer la suppression",
+      "confirmDeletionMessage": "Êtes-vous sûr de vouloir supprimer ce coupon ?",
+      "cancel": "Annuler",
+      "delete": "Supprimer"
+    },
+    "addcoupon": {
+      "name": "Nom",
+      "code": "Code",
+      "start_date": "Date de Début",
+      "end_date": "Date de Fin",
+      "free_shipping": "Livraison Gratuite",
+      "allow_free_shipping": "Autoriser la Livraison Gratuite",
+      "quantity": "Quantité",
+      "discount_type": "Type de Réduction",
+      "discount_value": "Valeur de la Réduction",
+      "status": "Statut",
+      "general": "Général",
+      "restriction": "Restriction",
+      "usage": "Utilisation",
+      "discount_coupon_details": "Détails du Coupon de Réduction",
+      "coupon": "Coupon",
+      "create_coupon": "Créer un Coupon",
+      "products": "Produits",
+      "minimum_spend": "Dépense Minimale",
+      "maximum_spend": "Dépense Maximale",
+      "per_limit": "Limite par Personne",
+      "per_customer": "Par Client",
+      "usage_limits": "Limites d'Utilisation",
+      "save": "Sauvegarder",
+      "enable_the_coupon": "Activer le Coupon",
+      "next": "Suivant",
+      "selected_products": "Produits Sélectionnés"
+    }
+  },
+  "media": {
+    "title": "Média",
+    "dropzone_media": "Zone de Dépôt Média",
+    "upload": "Télécharger",
+    "file_name": "Nom du Fichier",
+    "media_file_list": "Liste des Fichiers Média",
+    "action": "Action",
+    "no_data_found": "Aucune donnée trouvée"
+  },
+  "user": {
+    "userlist": {
+      "title": "Liste des Utilisateurs",
+      "users": "Utilisateurs",
+      "create_user": "Créer un Utilisateur",
+      "profile_image": "Image de Profil",
+      "first_name": "Prénom",
+      "last_name": "Nom",
+      "email": "E-mail",
+      "action": "Action",
+      "no_users_found": "Aucun utilisateur trouvé",
+      "confirm_deletion": "Confirmer la Suppression",
+      "confirm_message": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "fetchError": "Erreur lors de la récupération de la liste des utilisateurs"
+    },
+    "create_user": {
+      "title": "Ajouter un Utilisateur",
+      "accountTab": "Compte",
+      "permissionTab": "Permission",
+      "account": {
+        "accountDetails": "Détails du Compte",
+        "firstName": "Prénom",
+        "lastName": "Nom de Famille",
+        "email": "Email",
+        "password": "Mot de Passe",
+        "confirmPassword": "Confirmer le Mot de Passe"
+      },
+      "permission": {
+        "allow": "Permettre",
+        "deny": "Refuser",
+        "next": "Suivant",
+        "save": "Enregistrer"
       }
     }
+  },
+  "vendors": {
+    "vendorList": {
+      "title": "Liste des Fournisseurs",
+      "vendors": "Fournisseurs",
+      "createVendor": "Créer un Fournisseur",
+      "vendorDetails": "Détails du Fournisseur",
+      "name": "Nom",
+      "businessType": "Type d'Entreprise",
+      "contactNumber": "Numéro de Contact",
+      "email": "E-mail",
+      "address": "Adresse",
+      "status": "Statut",
+      "action": "Action",
+      "noVendorsFound": "Aucun fournisseur trouvé.",
+      "confirmDeletion": "Confirmer la Suppression",
+      "deleteConfirmationMessage": "Êtes-vous sûr de vouloir supprimer ce fournisseur ?",
+      "cancel": "Annuler",
+      "delete": "Supprimer",
+      "deletedVendorSuccessfully": "Fournisseur supprimé avec succès",
+      "failedToDeleteVendor": "Échec de la suppression du fournisseur"
+    },
+    "create_vendor": {
+      "addVendor": "Ajouter fournisseur",
+      "vendors": "Fournisseurs",
+      "accountDetails": "Détails du compte",
+      "name": "Nom",
+      "businessType": "Type d'entreprise",
+      "selectType": "Sélectionner le type",
+      "physical": "Physique",
+      "digital": "Numérique",
+      "address": "Adresse",
+      "contactNumber": "Numéro de contact",
+      "email": "Email",
+      "password": "Mot de passe",
+      "confirmPassword": "Confirmer le mot de passe",
+      "account": "Compte",
+      "permission": "Permission",
+      "allow": "Permettre",
+      "deny": "Refuser",
+      "saveVendor": "Enregistrer le fournisseur",
+      "updateVendor": "Mettre à jour le fournisseur",
+      "requiredField": "Ce champ est obligatoire",
+      "passwordMismatch": "Les mots de passe ne correspondent pas",
+      "loadingPermissions": "Chargement des permissions",
+      "errorLoadingPermissions": "Erreur de chargement des permissions"
+    }
+  },
+  "settings": {
+    "profile": "Profil",
+    "settings": "Paramètres",
+    "contact": "Contact",
+    "employeeStatus": "Statut de l'Employé",
+    "performance": "Performance",
+    "overtime": "Heures Supplémentaires",
+    "leavesTaken": "Congés Pris",
+    "deactivateAccount": "Désactiver le Compte",
+    "deactivateReasons": {
+      "privacyConcern": "J'ai une préoccupation de confidentialité",
+      "temporary": "C'est temporaire",
+      "other": "Autre"
+    },
+    "deleteAccount": "Supprimer le Compte",
+    "deleteReasons": {
+      "noLongerUsable": "Plus utilisable",
+      "switchAccount": "Voulez-vous passer à un autre compte",
+      "other": "Autre"
+    },
+    "notifications": "Notifications",
+    "desktopNotifications": "Autoriser les Notifications de Bureau",
+    "enableNotifications": "Activer les Notifications",
+    "ownActivityNotifications": "Recevoir des notifications pour mes propres activités",
+    "dnd": "DND",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "email": "E-mail",
+    "company": "Entreprise"
   }
 }

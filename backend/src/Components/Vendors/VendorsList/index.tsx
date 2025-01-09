@@ -7,8 +7,12 @@ import { toast } from "react-toastify";
 import { Button, Card, CardBody, CardHeader, Container, Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "reactstrap";
 import { DELETE_VENDOR } from '../../../GraphQL/Mutations/vendorMutations'
 import { VENDOR_LIST } from '../../../GraphQL/Queries/vendorQueries'
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const VendorsList = () => {
+    const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+    const { t } = useTranslation(i18LangStatus);
   const [modalOpen, setModalOpen] = useState(false);
   const [isDeleteId, setIsDeleteId] = useState(null);
 
@@ -26,30 +30,33 @@ const VendorsList = () => {
         variables: { deleteVendorId: isDeleteId },
       });
       if (data) {
-        toast.success("Deleted Vendor successfully");
+        toast.success(t("vendors.vendorList.deletedVendorSuccessfully"));
         setModalOpen(false);
         refetch()
       }
     } catch (error) {
       console.error("Error deleting User:", error);
-      toast.error("Failed to delete User");
+      toast.error(t("vendors.vendorList.failedToDeleteVendor"));
     }
   }
 
   const toggleModal = () => setModalOpen(!modalOpen);
+
+  const lang = localStorage.getItem("i18nextLng")
+
   return (
     <Fragment>
-      <CommonBreadcrumb title="Vendor List" parent="Vendors" />
+      <CommonBreadcrumb title={t("vendors.vendorList.title")} parent={t("vendors.vendorList.vendors")} />
       <Container fluid>
         <Card>
           <CardHeader>
-            <h5>Vendor Details</h5>
+            <h5>{t("vendors.vendorList.vendorDetails")}</h5>
           </CardHeader>
           <CardBody>
             <div className="btn-popup pull-right">
-              <Link href='/en/vendors/create-vendors'>
+              <Link href={`/${lang}/vendors/create-vendors`}>
                 <Button color="secondary">
-                  Create Vendor
+                  {t("vendors.vendorList.createVendor")}
                 </Button>
               </Link>
             </div>
@@ -58,18 +65,18 @@ const VendorsList = () => {
               <table className="table mt-5 w-full" style={{ minWidth: '1200px' }}>
                 <thead>
                   <tr>
-                    <th className="text-uppercase">Name</th>
-                    <th className="text-uppercase">Business Type</th>
-                    <th className="text-uppercase">Contact Number</th>
-                    <th className="text-uppercase">Email</th>
-                    <th className="text-uppercase">address</th>
-                    <th className="text-uppercase">status</th>
-                    <th className="text-uppercase">Action</th>
+                    <th className="text-uppercase">{t("vendors.vendorList.name")}</th>
+                    <th className="text-uppercase">{t("vendors.vendorList.businessType")}</th>
+                    <th className="text-uppercase">{t("vendors.vendorList.contactNumber")}</th>
+                    <th className="text-uppercase">{t("vendors.vendorList.email")}</th>
+                    <th className="text-uppercase">{t("vendors.vendorList.address")}</th>
+                    <th className="text-uppercase">{t("vendors.vendorList.status")}</th>
+                    <th className="text-uppercase">{t("vendors.vendorList.action")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {data?.vendors?.vendors?.length > 0 ? (
-                    data.vendors.vendors.map((vendor: any) => (
+                    data.vendors.vendorList.vendors.vendorList.map((vendor: any) => (
                       <tr key={vendor.id}>
                         <td>
                           <img
@@ -84,7 +91,7 @@ const VendorsList = () => {
                         <td className="align-middle">{vendor.address}</td>
                         <td className="align-middle">{vendor.status}</td>
                         <td className="align-middle">
-                          <Link href={`/en/vendors/create-vendors?id=${vendor.id}`}>
+                          <Link href={`/${lang}/vendors/create-vendors?id=${vendor.id}`}>
                             <Button color="transparent" className="p-1">
                               <Edit />
                             </Button>
@@ -103,7 +110,7 @@ const VendorsList = () => {
                   ) : (
                     <tr>
                       <td colSpan={7} className="text-center">
-                        No vendors found.
+                          {t("vendors.vendorList.noVendorsFound")}
                       </td>
                     </tr>
                   )}
@@ -115,13 +122,13 @@ const VendorsList = () => {
         </Card>
       </Container>
       <Modal isOpen={modalOpen} toggle={toggleModal} className="modal-dialog-centered">
-        <ModalHeader toggle={toggleModal}>Confirm Deletion</ModalHeader>
+        <ModalHeader toggle={toggleModal}>{t("vendors.vendorList.confirmDeletion")}</ModalHeader>
         <ModalBody>
-          Are you sure you want to delete this Vendor?
+          {t("vendors.vendorList.deleteConfirmationMessage")}
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" onClick={toggleModal}>Cancel</Button>
-          <Button color="primary" onClick={handleDeleteVendor}>Delete</Button>
+          <Button color="secondary" onClick={toggleModal}>{t("vendors.vendorList.cancel")}</Button>
+          <Button color="primary" onClick={handleDeleteVendor}>{t("vendors.vendorList.delete")}</Button>
         </ModalFooter>
       </Modal>
     </Fragment>

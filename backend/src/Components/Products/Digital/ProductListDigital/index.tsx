@@ -57,6 +57,7 @@ const ProductListDigital = () => {
   };
 
   const toggleModal = () => setModalOpen(!modalOpen);
+  const lang = localStorage.getItem("i18nextLng")
 
   return (
     <div className="py-5">
@@ -120,7 +121,7 @@ const ProductListDigital = () => {
                     <td className="align-middle">{item.compatibility.toString()}</td>
                     <td className="align-middle">{formatedDate(parseInt(item.createdAt))}</td>
                     <td className="align-middle">
-                      <Link href={`/en/products/digital/digital-add-product?id=${item.id}`}>
+                      <Link href={`/${lang}/products/digital/digital-add-product?id=${item.id}`}>
                         <Button color="transparent" className="p-1">
                           <Edit />
                         </Button>

@@ -8,6 +8,8 @@ import { CREATE_VENDOR, UPDATE_VENDOR } from "../../../GraphQL/Mutations/vendorM
 import { toast } from "react-toastify";
 import { useSearchParams } from "next/navigation";
 import { VENDOR_BY_ID } from "@/GraphQL/Queries/vendorQueries";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 interface FormData {
   name: string;
@@ -31,6 +33,8 @@ interface ErrorData {
 }
 
 const CreateVendors = () => {
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
   const [activeTab, setActiveTab] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -217,21 +221,21 @@ const CreateVendors = () => {
 
   return (
     <Fragment>
-      <CommonBreadcrumb title="Add Vendor" parent="Vendors" />
+      <CommonBreadcrumb title={t("vendors.create_vendor.addVendor")} parent={t("vendors.create_vendor.vendors")} />
       <Container fluid>
         <Tabs selectedIndex={activeTab} onSelect={(index) => setActiveTab(index)}>
           <TabList className="nav nav-tabs tab-coupon">
-            <Tab className="nav-link">Account</Tab>
-            <Tab className="nav-link">Permission</Tab>
+            <Tab className="nav-link">{t("vendors.create_vendor.account")}</Tab>
+            <Tab className="nav-link">{t("vendors.create_vendor.permission")}</Tab>
           </TabList>
 
           <TabPanel>
             <Form className="needs-validation user-add">
-              <h4>Account Details</h4>
+              <h4>{t("vendors.create_vendor.accountDetails")}</h4>
               <FormGroup>
                 <Row>
                   <Col xl="3" md="4">
-                    <Label>* Name</Label>
+                    <Label>* {t("vendors.create_vendor.name")}</Label>
                   </Col>
                   <Col xl="8" md="7">
                     <Input
@@ -250,7 +254,7 @@ const CreateVendors = () => {
               <FormGroup>
                 <Row>
                   <Col xl="3" md="4">
-                    <Label>* Business Type</Label>
+                    <Label>* {t("vendors.create_vendor.businessType")}</Label>
                   </Col>
                   <Col xl="8" md="7">
                     <Input
@@ -262,10 +266,10 @@ const CreateVendors = () => {
                       invalid={!!errors.businessType}
                     >
                       <option value="" disabled>
-                        Select type
+                        {t("vendors.create_vendor.selectType")}
                       </option>
-                      <option value="Physical">Physical</option>
-                      <option value="Digital">Digital</option>
+                      <option value="Physical">{t("vendors.create_vendor.physical")}</option>
+                      <option value="Digital">{t("vendors.create_vendor.digital")}</option>
                     </Input>
                     {errors.businessType && <div className="invalid-feedback">{errors.businessType}</div>}
                   </Col>
@@ -275,7 +279,7 @@ const CreateVendors = () => {
               <FormGroup>
                 <Row>
                   <Col xl="3" md="4">
-                    <Label>* Address</Label>
+                    <Label>* {t("vendors.create_vendor.address")}</Label>
                   </Col>
                   <Col xl="8" md="7">
                     <Input
@@ -294,7 +298,7 @@ const CreateVendors = () => {
               <FormGroup>
                 <Row>
                   <Col xl="3" md="4">
-                    <Label>* Contact Number</Label>
+                    <Label>* {t("vendors.create_vendor.contactNumber")}</Label>
                   </Col>
                   <Col xl="8" md="7">
                     <Input
@@ -314,7 +318,7 @@ const CreateVendors = () => {
               <FormGroup>
                 <Row>
                   <Col xl="3" md="4">
-                    <Label>* Email</Label>
+                    <Label>* {t("vendors.create_vendor.email")}</Label>
                   </Col>
                   <Col xl="8" md="7">
                     <Input
@@ -333,7 +337,7 @@ const CreateVendors = () => {
               <FormGroup>
                 <Row>
                   <Col xl="3" md="4">
-                    <Label>* Password</Label>
+                    <Label>* {t("vendors.create_vendor.password")}</Label>
                   </Col>
                   <Col xl="8" md="7">
                     <Input
@@ -352,7 +356,7 @@ const CreateVendors = () => {
               <FormGroup>
                 <Row>
                   <Col xl="3" md="4">
-                    <Label>* Confirm Password</Label>
+                    <Label>* {t("vendors.create_vendor.confirmPassword")}</Label>
                   </Col>
                   <Col xl="8" md="7">
                     <Input
@@ -377,7 +381,7 @@ const CreateVendors = () => {
                   <Spinner style={{ color: '#ff8084' }} />
                 </div>
               ) : error ? (
-                <p>Error loading permissions: {error.message}</p>
+                <p>{t("vendors.create_vendor.errorLoadingPermissions")}: {error.message}</p>
               ) : (
                 <div className="permission-block">
                   {Object.entries(groupedPermissions).map(([moduleName, permissions]: any) => (
@@ -399,7 +403,7 @@ const CreateVendors = () => {
                                   name={`permission-${permission.id}`}
                                   onChange={() => handlePermissionChange(permission.id, true)}
                                 />
-                                Allow
+                                {t("vendors.create_vendor.allow")}
                               </Label>
                               <Label className="d-block">
                                 <Input
@@ -410,7 +414,7 @@ const CreateVendors = () => {
                                   name={`permission-${permission.id}`}
                                   onChange={() => handlePermissionChange(permission.id, false)}
                                 />
-                                Deny
+                                {t("vendors.create_vendor.deny")}
                               </Label>
                             </FormGroup>
                           </Col>
@@ -431,7 +435,7 @@ const CreateVendors = () => {
             className="px-5"
             onClick={handleSave}
           >
-            {id ? "Update Vendor" : "Save Vendor"}
+            {id ? t("vendors.create_vendor.updateVendor") : t("vendors.create_vendor.saveVendor")}
           </Button>
         </div>
       </Container>

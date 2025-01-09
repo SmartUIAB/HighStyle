@@ -1,3 +1,5 @@
+import { useTranslation } from "@/app/i18n/client";
+import { useAppSelector } from "@/Redux/Hooks";
 import { useState } from "react";
 import { Col, FormGroup, Input, Label, Row } from "reactstrap";
 
@@ -14,6 +16,10 @@ interface GeneFormTopProps {
 }
 
 const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData({ ...formData, [id]: value });
@@ -24,7 +30,7 @@ const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>* Name</Label>
+            <Label>* {t("coupon.addcoupon.name")}</Label>
           </Col>
           <Col md="7">
             <Input
@@ -40,7 +46,7 @@ const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>* Code</Label>
+            <Label>* {t("coupon.addcoupon.code")}</Label>
           </Col>
           <Col md="7">
             <Input
@@ -59,7 +65,7 @@ const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Start Date</Label>
+            <Label>{t("coupon.addcoupon.start_date")}</Label>
           </Col>
           <Col md="7">
             <Input
@@ -76,7 +82,7 @@ const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>End Date</Label>
+            <Label>{t("coupon.addcoupon.end_date")}</Label>
           </Col>
           <Col md="7">
             <Input
