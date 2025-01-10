@@ -137,5 +137,78 @@
     "our_collection": "Notre Collection",
     "special_products": "Produits Spéciaux",
     "instagram": "Instagram"
-  }
+  },
+  "productlist": {
+    "route_name": {
+      "product_list": "Liste des Produits"
+    },
+    "error": {
+      "loading_products": "Erreur lors du chargement des produits !",
+      "issue_loading": "Un problème est survenu lors du chargement des données produit. Veuillez réessayer plus tard."
+    },
+    "placeholder": {
+      "search_products": "Rechercher des produits..."
+    },
+    "info": {
+      "no_products_found": "Aucun produit trouvé",
+      "adjust_filters": "Essayez d'ajuster vos filtres ou votre recherche."
+    },
+    "pagination": {
+      "prev": "Précédent",
+      "next": "Suivant"
+    },
+    "status": {
+      "available": "Disponible",
+      "out_of_stock": "Rupture de stock"
+    },
+    "details": {
+      "price": "Prix",
+      "colors": "Couleurs",
+      "sizes": "Tailles",
+      "file_format": "Format de fichier",
+      "file_size": "Taille du fichier",
+      "compatibility": "Compatibilité",
+      "status": "Statut"
+    }
+  },
+  "compare": {
+    "title": "Comparer",
+    "home": "Accueil",
+    "empty": {
+      "title": "Votre panier est vide",
+      "message": "Explorez davantage et sélectionnez quelques articles."
+    },
+    "product_name": "Nom du produit",
+    "product_image": "Image du produit",
+    "product_description": "Description du produit",
+    "availability": "Disponibilité",
+    "remove": "Retirer",
+    "on_sale": "En promotion",
+    "add_to_cart": "Ajouter au panier",
+    "not_available": "Non disponible",
+    "available": "Disponible",
+    "action": "Action"
+  },
+  "wishlist": {
+    "image": "Image",
+    "product_name": "Nom du produit",
+    "price": "Prix",
+    "availability": "Disponibilité",
+    "action": "Action",
+    "out_of_stock": "Rupture de stock",
+    "continue_shopping": "Continuer vos achats",
+    "check_out": "Passer à la caisse",
+    "remove_from_wishlist": "Retirer de la liste de souhaits",
+    "add_to_cart": "Ajouter au panier",
+    "home": "Accueil",
+    "wishlist": "Liste de souhaits"
+  },
+  "quickview": {
+    "product_details": "Détails du produit",
+    "quantity": "Quantité",
+    "add_to_cart": "Ajouter au panier",
+    "view_detail": "Voir les détails",
+    "product_description": "Description du produit"
+  },
+  "logout": "Se déconnecter"
 }

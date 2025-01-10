@@ -27,7 +27,7 @@ import {
 import { toast } from "react-toastify";
 import { CREATE_ORDER } from "../../../../../GraphQL/Mutations/orderMutations";
 import { loadStripe } from "@stripe/stripe-js";
-import LocaleLink from "../../../../../components/LocaleLink";
+import LocalLink from "../../../../../components/LocalLink";
 import { useTranslation } from "react-i18next";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_SECRET_KEY);
@@ -174,7 +174,7 @@ const CartPage = () => {
                     <tbody key={index}>
                       <tr>
                         <td>
-                          <LocaleLink
+                          <LocalLink
                             href={`/product-details/` + item.ProductID}
                           >
                             <Media
@@ -185,14 +185,14 @@ const CartPage = () => {
                               }
                               alt=""
                             />
-                          </LocaleLink>
+                          </LocalLink>
                         </td>
                         <td>
-                          <LocaleLink
+                          <LocalLink
                             href={`/product-details/` + item.ProductID}
                           >
                             {item.title}
-                          </LocaleLink>
+                          </LocalLink>
                         </td>
                         <td>
                           <h2>{item.price}</h2>
@@ -239,12 +239,9 @@ const CartPage = () => {
             </Row>
             <Row className="cart-buttons">
               <Col xs="6">
-                <LocaleLink
-                  href={`/shop/left_sidebar`}
-                  className="btn btn-solid"
-                >
+                <LocalLink href={`/`} className="btn btn-solid">
                   {t("cart_details.continue_shopping")}
-                </LocaleLink>
+                </LocalLink>
               </Col>
               <Col xs="6">
                 <button onClick={handleCheckout} className="btn btn-solid">

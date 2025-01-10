@@ -1,16 +1,13 @@
 import Link from 'next/link';
 
-const LocaleLink = ({ href, children, ...props }) => {
-    // Get the saved language from localStorage
+const LocalLink = ({ href, children, ...props }) => {
     const savedLanguage =
         typeof window !== "undefined" && localStorage.getItem("i18nextLng")
             ? localStorage.getItem("i18nextLng")
-            : "en"; // Default to "en" if no language is saved
+            : "en";
 
-    // Ensure href starts with a slash for consistency
     const normalizedHref = href?.startsWith("/") ? href : `/${href}`;
 
-    // Construct the localized href
     const localizedHref = `/${savedLanguage}${normalizedHref}`;
 
     return (
@@ -20,4 +17,4 @@ const LocaleLink = ({ href, children, ...props }) => {
     );
 };
 
-export default LocaleLink;
+export default LocalLink;

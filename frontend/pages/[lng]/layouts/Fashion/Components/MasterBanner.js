@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Col, Container, Row } from "reactstrap";
-import LocaleLink from "../../../../../components/LocaleLink";
+import LocalLink from "../../../../../components/LocalLink";
 import { useTranslation } from "react-i18next";
 
 const MasterBanner = ({ img, title, desc, link, classes, btn, btnClass }) => {
@@ -15,13 +15,13 @@ const MasterBanner = ({ img, title, desc, link, classes, btn, btnClass }) => {
                 <div>
                   <h4>{title}</h4>
                   <h1>{desc}</h1>
-                  <LocaleLink
+                  <LocalLink
                     href={link}
                     className={`btn ${btnClass ? btnClass : "btn-solid"}`}
                   >
                     {/* <a > */}
                     {btn ? btn : t("landing_page.shop_now")} {/* </a> */}
-                  </LocaleLink>
+                  </LocalLink>
                 </div>
               </div>
             </Col>

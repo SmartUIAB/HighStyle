@@ -9,7 +9,7 @@ import seven from "../../public/assets/images/collection/7.jpg";
 import eight from "../../public/assets/images/collection/8.jpg";
 import nine from "../../public/assets/images/collection/9.jpg";
 import eleven from "../../public/assets/images/collection/11.jpg";
-import LocaleLink from "../../../components/LocaleLink";
+import LocalLink from "../../../components/LocalLink";
 
 const MasterCollectionData = [
   {
@@ -101,9 +101,9 @@ const MasterCollection = ({ img, totalProducts, type, about, link, btn }) => {
           <h4>{totalProducts}</h4>
           <h3>{type}</h3>
           <p>{about}</p>
-          <LocaleLink href={link} className="btn btn-outline">
+          <LocalLink href={link} className="btn btn-outline">
             {btn}
-          </LocaleLink>
+          </LocalLink>
         </div>
       </div>
     </Col>

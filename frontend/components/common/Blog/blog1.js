@@ -5,7 +5,7 @@ import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client";
 import { Slider3 } from "../../../services/script";
 import { Media, Container, Row, Col } from "reactstrap";
-import LocaleLink from "../../LocaleLink";
+import LocalLink from "../../LocalLink";
 import { useTranslation } from "react-i18next";
 
 const GET_PRODUCTS = gql`
@@ -53,17 +53,17 @@ const BlogSection = ({ type, sectionClass, title, inner, hrClass }) => {
                 {data &&
                   data.blog.map((item, index) => (
                     <Col md="12" key={index}>
-                      <LocaleLink href={`/blogs/blog_detail`}>
+                      <LocalLink href={`/blogs/blog_detail`}>
                         <div className="classic-effect">
                           <Media src={item.img} className="img-fluid" alt="" />
                           <span></span>
                         </div>
-                      </LocaleLink>
+                      </LocalLink>
                       <div className="blog-details">
                         <h4>{item.title}</h4>
-                        <LocaleLink href={`/blogs/blog_detail`}>
+                        <LocalLink href={`/blogs/blog_detail`}>
                           <p>{item.desc} </p>
-                        </LocaleLink>
+                        </LocalLink>
                         <hr className="style1" />
                         <h6>by: {item.date}</h6>
                       </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import CommonLayout from "../../components/shop/common-layout";
 import { Container, Row, Col } from "reactstrap";
-import LocaleLink from "../../../components/LocaleLink";
+import LocalLink from "../../../components/LocalLink";
 
 const Data = [
   {
@@ -570,22 +570,22 @@ const MasterSiteMap = ({ data }) => {
           ? data.subtitles.map((sub1, i) => {
               return (
                 <li key={i}>
-                  <LocaleLink href={sub1.link}>
+                  <LocalLink href={sub1.link}>
                     <i
                       className="fa fa-chevron-right me-1"
                       aria-hidden="true"
                     ></i>
                     {sub1.title}
                     {sub1.style ? sub1.style : ""}
-                  </LocaleLink>
+                  </LocalLink>
                   <ul>
                     {sub1.subtitle
                       ? sub1.subtitle.map((sub2, i) => {
                           return (
                             <li key={i}>
-                              <LocaleLink href={sub2.link}>
+                              <LocalLink href={sub2.link}>
                                 {sub2.title ? sub2.title : ""}
-                              </LocaleLink>
+                              </LocalLink>
                             </li>
                           );
                         })

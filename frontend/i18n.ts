@@ -6,12 +6,12 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 
 i18n
-  .use(Backend) // Use HTTP backend to fetch translation files
+  .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     fallbackLng: ["en"],
-    supportedLngs: ["en", "es", "fr", "pt"], // Add the supported languages here
+    supportedLngs: ["en", "es", "fr", "pt"],
     load: "all",
     preload: false,
     keySeparator: ".",

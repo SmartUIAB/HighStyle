@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 import LogoImage from "../../headers/common/logo";
 import CopyRight from "./copyright";
-import LocaleLink from "../../LocaleLink";
+import LocalLink from "../../LocalLink";
 
 const MasterFooter = ({
   containerFluid,
@@ -185,28 +185,28 @@ const MasterFooter = ({
                     <div className="footer-contant">
                       <ul>
                         <li>
-                          <LocaleLink href={`/shop/left_sidebar`}>
+                          <LocalLink href={`/shop/left_sidebar`}>
                             {t("footer.account.links.women")}{" "}
                             {/* Localization for women */}
-                          </LocaleLink>
+                          </LocalLink>
                         </li>
                         <li>
-                          <LocaleLink href={`/shop/left_sidebar`}>
+                          <LocalLink href={`/shop/left_sidebar`}>
                             {t("footer.account.links.clothes")}{" "}
                             {/* Localization for clothes */}
-                          </LocaleLink>
+                          </LocalLink>
                         </li>
                         <li>
-                          <LocaleLink href={`/shop/left_sidebar`}>
+                          <LocalLink href={`/shop/left_sidebar`}>
                             {t("footer.account.links.accessories")}{" "}
                             {/* Localization for accessories */}
-                          </LocaleLink>
+                          </LocalLink>
                         </li>
                         <li>
-                          <LocaleLink href={`/shop/left_sidebar`}>
+                          <LocalLink href={`/shop/left_sidebar`}>
                             {t("footer.account.links.presents")}{" "}
                             {/* Localization for presents */}
-                          </LocaleLink>
+                          </LocalLink>
                         </li>
                       </ul>
                     </div>

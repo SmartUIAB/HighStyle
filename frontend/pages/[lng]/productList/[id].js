@@ -14,11 +14,13 @@ import {
 import {
   GET_DIGITAL_PRODUCT,
   GET_PHYSICAL_PRODUCT,
-} from "../../GraphQL/Queries/productQueries";
+} from "../../../GraphQL/Queries/productQueries";
 import { useQuery } from "@apollo/client";
 import Link from "next/link";
-import CommonLayout from "../../components/shop/common-layout";
+import CommonLayout from "../../../components/shop/common-layout";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
+import LocalLink from "../../../components/LocalLink";
 
 const ProductList = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,6 +28,8 @@ const ProductList = () => {
   const productsPerPage = 6;
 
   const { t } = useTranslation();
+  const router = useRouter();
+  const { id } = router.query || {};
 
   const {
     data: allPhysicalProductData,
@@ -44,18 +48,20 @@ const ProductList = () => {
     ...(allDigitalProductData?.digitalProducts?.products || []),
   ];
 
+  console.log("mergedProducts", mergedProducts);
+
   const loading = loadingPhysical || loadingDigital;
 
   if (errorPhysical || errorDigital) {
     return (
-      <CommonLayout parent="Product" title={t("route_name.product_list")}>
+      <CommonLayout
+        parent={t("productlist.route_name.product_list")}
+        title={t("productlist.route_name.product_list")}
+      >
         <Container className="mt-4">
           <Alert variant="danger">
-            <h4>Error loading products!</h4>
-            <p>
-              There was an issue loading the product data. Please try again
-              later.
-            </p>
+            <h4>{t("productlist.error.loading_products")}</h4>
+            <p>{t("productlist.error.issue_loading")}.</p>
           </Alert>
         </Container>
       </CommonLayout>
@@ -67,9 +73,12 @@ const ProductList = () => {
     setCurrentPage(1);
   };
 
-  const filteredProducts = mergedProducts.filter((product) =>
-    product.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredProducts = mergedProducts
+    .filter((product) => product.subcategory.id === id) // Filter by subcategory ID if available
+    .filter(
+      (product) =>
+        product.title.toLowerCase().includes(searchTerm.toLowerCase()) // Filter by search term
+    );
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -86,18 +95,23 @@ const ProductList = () => {
 
   return (
     <>
-      <CommonLayout parent="Product" title={t("route_name.product_list")}>
+      <CommonLayout
+        parent="Product"
+        title={t("productlist.route_name.product_list")}
+      >
         <Container className="mt-4">
-          <Form className="mb-4">
-            <InputGroup>
-              <Form.Control
-                type="text"
-                placeholder="Search for products..."
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-            </InputGroup>
-          </Form>
+          {!loading && filteredProducts.length > 0 && (
+            <Form className="mb-4">
+              <InputGroup>
+                <Form.Control
+                  type="text"
+                  placeholder={t("productlist.placeholder.search_products")}
+                  value={searchTerm}
+                  onChange={handleSearch}
+                />
+              </InputGroup>
+            </Form>
+          )}
 
           {loading ? (
             <div
@@ -106,12 +120,12 @@ const ProductList = () => {
             >
               <Spinner animation="border" variant="primary" />
             </div>
-          ) : (
+          ) : filteredProducts.length > 0 ? (
             <>
               <Row>
                 {currentProducts.map((product) => (
                   <Col md={4} sm={6} xs={12} key={product.id} className="mb-4">
-                    <Link href={`/product-details/${product.id}`} passHref>
+                    <LocalLink href={`/product-details/${product.id}`} passHref>
                       <Card className="h-100 shadow-sm">
                         {product.images && product.images.length > 1 ? (
                           <Carousel interval={null} className="p-3">
@@ -155,7 +169,7 @@ const ProductList = () => {
                             {product.description}
                           </Card.Text>
                           <Card.Text className="mt-auto">
-                            <strong>Price: </strong>
+                            <strong>{t("productlist.details.price")}: </strong>
                             <span className="text-success">
                               $
                               {(
@@ -169,28 +183,36 @@ const ProductList = () => {
                             <br />
                             {product.colors && product.colors.length > 0 && (
                               <>
-                                <strong>Colors: </strong>
+                                <strong>
+                                  {t("productlist.details.colors")}:{" "}
+                                </strong>
                                 {product.colors.join(", ")}
                                 <br />
                               </>
                             )}
                             {product.sizes && product.sizes.length > 0 && (
                               <>
-                                <strong>Sizes: </strong>
+                                <strong>
+                                  {t("productlist.details.sizes")}:{" "}
+                                </strong>
                                 {product.sizes.join(", ")}
                                 <br />
                               </>
                             )}
                             {product.fileFormat && (
                               <>
-                                <strong>File Format: </strong>
+                                <strong>
+                                  {t("productlist.details.file_format")}:{" "}
+                                </strong>
                                 {product.fileFormat}
                                 <br />
                               </>
                             )}
                             {product.fileSize && (
                               <>
-                                <strong>File Size: </strong>
+                                <strong>
+                                  {t("productlist.details.file_size")}:{" "}
+                                </strong>
                                 {product.fileSize}
                                 <br />
                               </>
@@ -198,12 +220,14 @@ const ProductList = () => {
                             {product.compatibility &&
                               product.compatibility.length > 0 && (
                                 <>
-                                  <strong>Compatibility: </strong>
+                                  <strong>
+                                    {t("productlist.details.compatibility")}:{" "}
+                                  </strong>
                                   {product.compatibility.join(", ")}
                                   <br />
                                 </>
                               )}
-                            <strong>Status: </strong>
+                            <strong>{t("productlist.details.status")}: </strong>
                             <span
                               className={
                                 product.status === "Available"
@@ -212,13 +236,13 @@ const ProductList = () => {
                               }
                             >
                               {product.status === "Available"
-                                ? "Available"
-                                : "Out of Stock"}
+                                ? t("productlist.status.available")
+                                : t("productlist.status.out_of_stock")}
                             </span>
                           </Card.Text>
                         </Card.Body>
                       </Card>
-                    </Link>
+                    </LocalLink>
                   </Col>
                 ))}
               </Row>
@@ -243,6 +267,11 @@ const ProductList = () => {
                 />
               </Pagination>
             </>
+          ) : (
+            <Alert variant="info">
+              <h4>{t("productlist.info.no_products_found")}</h4>
+              <p>{t("productlist.info.adjust_filters")}</p>
+            </Alert>
           )}
         </Container>
       </CommonLayout>

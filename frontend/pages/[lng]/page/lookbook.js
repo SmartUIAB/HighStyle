@@ -7,13 +7,13 @@ import lookbook2 from "../../public/assets/images/lookbook2.jpg";
 import twentyseven from "../../public/assets/images/pro3/27.jpg";
 import twentyeight from "../../public/assets/images/pro3/28.jpg";
 import CommonLayout from "../../components/shop/common-layout";
-import LocaleLink from "../../../components/LocaleLink";
+import LocalLink from "../../../components/LocalLink";
 
 const LookBookDot = ({ img, title, price, num, details, classes, link }) => {
   return (
     <div className={classes}>
       <span>{num}</span>
-      <LocaleLink href={link}>
+      <LocalLink href={link}>
         <div className="dot-showbox">
           <Media src={img} className="img-fluid blur-up lazyload" alt="" />
           <div className="dot-info">
@@ -22,7 +22,7 @@ const LookBookDot = ({ img, title, price, num, details, classes, link }) => {
             <h6>{details}</h6>
           </div>
         </div>
-      </LocaleLink>
+      </LocalLink>
     </div>
   );
 };
@@ -37,13 +37,13 @@ const Lookbook = () => {
               <div className="lookbook-block">
                 <div>
                   <Media
-                    src={'/assets/images/lookbook.jpg'}
+                    src={"/assets/images/lookbook.jpg"}
                     className="img-fluid blur-up lazyload bg-img"
                     alt=""
                   />
                 </div>
                 <LookBookDot
-                  img={'/assets/images/pro3/2.jpg'}
+                  img={"/assets/images/pro3/2.jpg"}
                   num={"1"}
                   title="tee"
                   details="details"
@@ -52,7 +52,7 @@ const Lookbook = () => {
                   link="#"
                 />
                 <LookBookDot
-                  img={'/assets/images/pro3/1.jpg'}
+                  img={"/assets/images/pro3/1.jpg"}
                   num={"2"}
                   title="tee"
                   details="details"
@@ -66,13 +66,13 @@ const Lookbook = () => {
               <div className="lookbook-block">
                 <div>
                   <Media
-                    src={'/assets/images/lookbook2.jpg'}
+                    src={"/assets/images/lookbook2.jpg"}
                     className="img-fluid blur-up lazyload bg-img"
                     alt=""
                   />
                 </div>
                 <LookBookDot
-                  img={'/assets/images/pro3/27.jpg'}
+                  img={"/assets/images/pro3/27.jpg"}
                   num={"1"}
                   title="tee"
                   details="details"
@@ -81,7 +81,7 @@ const Lookbook = () => {
                   link="#"
                 />
                 <LookBookDot
-                  img={'/assets/images/pro3/28.jpg'}
+                  img={"/assets/images/pro3/28.jpg"}
                   num={"2"}
                   title="tee"
                   details="details"

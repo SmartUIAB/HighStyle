@@ -5,7 +5,7 @@ import { LOGIN_USER } from "../../../../GraphQL/Mutations/authMutations";
 import { useMutation } from "@apollo/client";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import LocaleLink from "../../../../components/LocaleLink";
+import LocalLink from "../../../../components/LocalLink";
 import { useTranslation } from "react-i18next";
 
 const Login = () => {
@@ -119,9 +119,9 @@ const Login = () => {
                   and easy. It allows you to be able to order from our shop. To
                   start shopping click register.
                 </p>
-                <LocaleLink href="/page/account/register" passHref>
+                <LocalLink href="/page/account/register" passHref>
                   <span className="btn btn-solid">Create an Account</span>
-                </LocaleLink>
+                </LocalLink>
               </div>
             </Col>
           </Row>

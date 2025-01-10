@@ -1,10 +1,10 @@
 import React, { Fragment } from "react";
-import LocaleLink from "../../LocaleLink";
+import LocalLink from "../../LocalLink";
 
 const LogoImage = ({ logo }) => {
   return (
     <Fragment>
-      <LocaleLink href={"/"}>
+      <LocalLink href={"/"}>
         {/* <a> */}
         <img
           src={`/assets/images/icon/${logo ? logo : "logo.png"}`}
@@ -12,7 +12,7 @@ const LogoImage = ({ logo }) => {
           className="img-fluid"
         />
         {/* </a> */}
-      </LocaleLink>
+      </LocalLink>
     </Fragment>
   );
 };

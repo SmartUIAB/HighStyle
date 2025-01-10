@@ -1,9 +1,7 @@
 import React, { Fragment } from "react";
-import { Row, Col, Media } from "reactstrap";
-import fashion from "../../../public/assets/images/mega-menu/fashion.jpg";
 import { useQuery } from "@apollo/client";
 import { GET_CATEGORY_LIST } from "../../../GraphQL/Queries/categoriesQueries";
-import LocaleLink from "../../LocaleLink";
+import LocalLink from "../../LocalLink";
 
 const SideBar = () => {
   const {
@@ -52,15 +50,15 @@ const SideBar = () => {
                   <ul>
                     {category?.subcategories.map((subcategory) => (
                       <li key={subcategory?.id}>
-                        <LocaleLink
-                          href="/productList"
+                        <LocalLink
+                          href={`/productList/${subcategory?.id}`}
                           onClick={(e) => toggleSubmenu(e, "opensub2")}
                         >
                           {subcategory?.name}
                           {subcategory?.type === "Physical" && (
                             <span className="sub-arrow"></span>
                           )}
-                        </LocaleLink>
+                        </LocalLink>
                       </li>
                     ))}
                   </ul>

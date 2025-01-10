@@ -4,7 +4,7 @@ import { MENUITEMS } from "../../constant/menu";
 import { Container, Row } from "reactstrap";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
-import LocaleLink from "../../LocaleLink";
+import LocalLink from "../../LocalLink";
 
 const NavBar = () => {
   const { t } = useTranslation();
@@ -20,7 +20,6 @@ const NavBar = () => {
       setNavClose({ right: "-300px" });
     }
   }, []);
-
 
   const openNav = () => {
     setNavClose({ right: "0px" });
@@ -148,13 +147,14 @@ const NavBar = () => {
               return (
                 <li
                   key={i}
-                  className={` ${menuItem.megaMenu ? "mega-menu" : ""}`}>
+                  className={` ${menuItem.megaMenu ? "mega-menu" : ""}`}
+                >
                   {menuItem.type == "link" ? (
-                    <LocaleLink href={menuItem.path} className="nav-link">
+                    <LocalLink href={menuItem.path} className="nav-link">
                       {/* <a > */}
                       {t(menuItem.title)}
                       {/* </a> */}
-                    </LocaleLink>
+                    </LocalLink>
                   ) : (
                     <a className="nav-link" onClick={(e) => openMblNav(e)}>
                       {t(menuItem.title)}
@@ -169,11 +169,13 @@ const NavBar = () => {
                             key={index}
                             className={`${
                               childrenItem.children ? "sub-menu " : ""
-                            }`}>
+                            }`}
+                          >
                             {childrenItem.type === "sub" ? (
                               <a
                                 href={null}
-                                onClick={() => toggletNavActive(childrenItem)}>
+                                onClick={() => toggletNavActive(childrenItem)}
+                              >
                                 {childrenItem.title}
                                 {childrenItem.tag === "new" ? (
                                   <span className="new-tag">new</span>
@@ -186,7 +188,7 @@ const NavBar = () => {
                               ""
                             )}
                             {childrenItem.type === "link" ? (
-                              <LocaleLink href={`${childrenItem.path}`}>
+                              <LocalLink href={`${childrenItem.path}`}>
                                 {/* <a> */}
                                 {childrenItem.title}
                                 {childrenItem.tag === "new" ? (
@@ -195,7 +197,7 @@ const NavBar = () => {
                                   ""
                                 )}
                                 {/* </a> */}
-                              </LocaleLink>
+                              </LocalLink>
                             ) : (
                               ""
                             )}
@@ -203,14 +205,16 @@ const NavBar = () => {
                               <ul
                                 className={`nav-sub-childmenu ${
                                   childrenItem.active ? "menu-open " : "active"
-                                }`}>
+                                }`}
+                              >
                                 {childrenItem.children.map(
                                   (childrenSubItem, key) => (
                                     <li key={key}>
                                       {childrenSubItem.type === "link" ? (
-                                        <LocaleLink
+                                        <LocalLink
                                           href={childrenSubItem.path}
-                                          className="sub-menu-title">
+                                          className="sub-menu-title"
+                                        >
                                           {/* <a > */}
                                           {childrenSubItem.title}
                                           {childrenSubItem.tag === "new" ? (
@@ -219,7 +223,7 @@ const NavBar = () => {
                                             ""
                                           )}
                                           {/* </a> */}
-                                        </LocaleLink>
+                                        </LocalLink>
                                       ) : (
                                         ""
                                       )}
@@ -240,7 +244,8 @@ const NavBar = () => {
                         <div
                           className={`mega-menu-container${
                             menuItem.megaMenu ? "" : " opensubmenu"
-                          }`}>
+                          }`}
+                        >
                           {menuItem.megaMenu === true ? (
                             <Container>
                               <Row>
@@ -256,13 +261,15 @@ const NavBar = () => {
                                           ? "col"
                                           : ""
                                       } `}
-                                      key={i}>
+                                      key={i}
+                                    >
                                       <div className="link-section">
                                         <div className="menu-title">
                                           <h5
                                             onClick={(e) =>
                                               handleMegaSubmenu(e)
-                                            }>
+                                            }
+                                          >
                                             {megaMenuItem.title}
                                           </h5>
                                         </div>
@@ -273,7 +280,7 @@ const NavBar = () => {
                                                   (subMegaMenuItem, i) => {
                                                     return (
                                                       <li key={i}>
-                                                        <LocaleLink
+                                                        <LocalLink
                                                           href={
                                                             subMegaMenuItem.path
                                                           }
@@ -286,7 +293,7 @@ const NavBar = () => {
                                                               subMegaMenuItem.title
                                                             }
                                                           </>
-                                                        </LocaleLink>
+                                                        </LocalLink>
                                                       </li>
                                                     );
                                                   }
@@ -295,14 +302,15 @@ const NavBar = () => {
                                                   (subMegaMenuItem, i) => {
                                                     return (
                                                       <li key={i}>
-                                                        <LocaleLink
+                                                        <LocalLink
                                                           href={
                                                             subMegaMenuItem.path
-                                                          }>
+                                                          }
+                                                        >
                                                           {
                                                             subMegaMenuItem.title
                                                           }
-                                                        </LocaleLink>
+                                                        </LocalLink>
                                                       </li>
                                                     );
                                                   }

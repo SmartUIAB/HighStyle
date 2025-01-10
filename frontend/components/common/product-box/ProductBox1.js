@@ -5,7 +5,7 @@ import { Row, Col, Media, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { CurrencyContext } from "../../../helpers/Currency/CurrencyContext";
 import CartContext from "../../../helpers/cart";
 import MasterProductDetail from "./MasterProductDetail";
-import LocaleLink from "../../LocaleLink";
+import LocalLink from "../../LocalLink";
 
 const ProductItem = ({
   product,
@@ -58,7 +58,7 @@ const ProductItem = ({
   return (
     <div className="product-box product-wrap">
       <div className="img-wrapper">
-      <div className="lable-block">
+        <div className="lable-block">
           {product.new === "true" ? <span className="lable3">new</span> : ""}
           {product.sale === "true" ? (
             <span className="lable4">on sale</span>
@@ -128,14 +128,14 @@ const ProductItem = ({
                         <span> successfully added to your Compare list</span>
                       </h5>
                       <div className="buttons d-flex justify-content-center">
-                        <LocaleLink href="/page/compare">
+                        <LocalLink href="/page/compare">
                           <button
                             className="btn-sm btn-solid"
                             onClick={addCompare}
                           >
                             View Compare list
                           </button>
-                        </LocaleLink>
+                        </LocalLink>
                       </div>
                     </div>
                   </div>

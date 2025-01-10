@@ -3,7 +3,7 @@ import CartHeader from "../headers/common/cart-header";
 import { Media } from "reactstrap";
 import { useQuery } from "@apollo/client";
 import { GET_CART } from "../../GraphQL/Queries/cartQueries";
-import LocaleLink from "../LocaleLink";
+import LocalLink from "../LocalLink";
 import { useTranslation } from "react-i18next";
 
 const CartContainer = ({ icon }) => {
@@ -28,12 +28,12 @@ const CartContainer = ({ icon }) => {
         <div className="cart-qty-cls">
           {cartList?.getCart?.products?.length || 0}
         </div>
-        <LocaleLink href={`/page/account/cart`}>
+        <LocalLink href={`/page/account/cart`}>
           <div>
             <Media src={icon} className="img-fluid" alt="" />
             <i className="fa fa-shopping-cart"></i>
           </div>
-        </LocaleLink>
+        </LocalLink>
         <ul className="show-div shopping-cart">
           {cartList?.getCart?.products?.map((item, index) => (
             <CartHeader
@@ -54,15 +54,15 @@ const CartContainer = ({ icon }) => {
               </li>
               <li>
                 <div className="buttons view-cart">
-                  <LocaleLink href={`/page/account/cart`}>
+                  <LocalLink href={`/page/account/cart`}>
                     {t("product_details.addToCart")}
-                  </LocaleLink>
-                  <LocaleLink
+                  </LocalLink>
+                  <LocalLink
                     href={`/page/account/checkout`}
                     className="checkout"
                   >
                     {t("cart_details.check_out")}
-                  </LocaleLink>
+                  </LocalLink>
                 </div>
               </li>
             </div>

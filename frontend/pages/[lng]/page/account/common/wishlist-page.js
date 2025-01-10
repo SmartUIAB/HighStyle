@@ -1,22 +1,46 @@
 import React, { useContext } from "react";
 import { Container, Row, Col, Table } from "reactstrap";
 import { WishlistContext } from "../../../../../helpers/wishlist/WishlistContext";
-import CartContext from "../../../../../helpers/cart/index";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import LocaleLink from "../../../../../components/LocaleLink";
+import LocalLink from "../../../../../components/LocalLink";
+import { toast } from "react-toastify";
+import { CREATE_ADD_TO_CART } from "../../../../../GraphQL/Mutations/cartMutations";
+import { useMutation } from "@apollo/client";
+import { useTranslation } from "react-i18next";
 
 const WishlistPage = () => {
   const router = useRouter();
   const context = useContext(WishlistContext);
-  const cartContext = useContext(CartContext);
 
   const wishlist = context.wishlistItems;
   const removeFromWish = context.removeFromWish;
-  const addCart = cartContext.addToCart;
+  const { t } = useTranslation();
 
-  const checkOut = () => {
-    router.push("/page/account/checkout");
+  const [createcart] = useMutation(CREATE_ADD_TO_CART);
+
+  const handleAddToCart = async (product) => {
+    const userData = JSON.parse(localStorage.getItem("customerDetail"));
+    const { data } = await createcart({
+      variables: {
+        input: {
+          userId: userData?.id,
+          products: {
+            ProductID: product.id,
+            price: product.price,
+            quantity: 1,
+            color: product.colors[0] || null,
+            size: product.sizes[0] || null,
+            totalAmount: product.price,
+            title: product.title,
+          },
+        },
+      },
+    });
+    if (data) {
+      toast.success(t("product_details.addToCart"));
+    } else {
+      toast.error(t("product_details.addToCartError"));
+    }
   };
 
   return (
@@ -29,11 +53,11 @@ const WishlistPage = () => {
                 <Table className="table cart-table table-responsive-xs">
                   <thead>
                     <tr className="table-head">
-                      <th scope="col">image</th>
-                      <th scope="col">product name</th>
-                      <th scope="col">price</th>
-                      <th scope="col">availability</th>
-                      <th scope="col">action</th>
+                      <th scope="col">{t("wishlist.image")}</th>
+                      <th scope="col">{t("wishlist.product_name")}</th>
+                      <th scope="col">{t("wishlist.price")}</th>
+                      <th scope="col">{t("wishlist.availability")}</th>
+                      <th scope="col">{t("wishlist.action")}</th>
                     </tr>
                   </thead>
                   {wishlist.map((item, i) => (
@@ -41,17 +65,22 @@ const WishlistPage = () => {
                       <tr>
                         <td>
                           <a href="#">
-                            <img src={item.images[0].src} alt="" />
+                            <img
+                              src={
+                                process.env.NEXT_PUBLIC_API_KEY + item.images[0]
+                              }
+                              alt=""
+                            />
                           </a>
                         </td>
                         <td>
                           <a href="#">{item.title}</a>
                           <Row className="mobile-cart-content">
                             <div className="col-xs-3">
-                              <p>out of stock</p>
+                              <p>{item.status}</p>
                             </div>
                             <div className="col-xs-3">
-                              <h2 className="td-color">$63.00</h2>
+                              <h2 className="td-color">${item.price}</h2>
                             </div>
                             <div className="col-xs-3">
                               <h2 className="td-color">
@@ -69,7 +98,7 @@ const WishlistPage = () => {
                           <h2>${item.price}</h2>
                         </td>
                         <td>
-                          <p>{item.stock > 0 ? "In Stock" : "out of Stock"}</p>
+                          <p>{item.status}</p>
                         </td>
                         <td>
                           <a
@@ -82,7 +111,7 @@ const WishlistPage = () => {
                           <a
                             href={null}
                             className="cart"
-                            onClick={() => addCart(item)}
+                            onClick={() => handleAddToCart(item)}
                           >
                             <i className="fa fa-shopping-cart"></i>
                           </a>
@@ -95,11 +124,15 @@ const WishlistPage = () => {
             </Row>
             <Row className="wishlist-buttons">
               <Col sm="12">
-                <LocaleLink href={"/"} className="btn btn-solid">
-                  continue shopping
-                </LocaleLink>
-                <a href={null} className="btn btn-solid" onClick={checkOut}>
-                  check out
+                <LocalLink href={"/"} className="btn btn-solid">
+                  {t("wishlist.continue_shopping")}
+                </LocalLink>
+                <a
+                  href={null}
+                  className="btn btn-solid"
+                  onClick={() => handleAddToCart(item)}
+                >
+                  {t("wishlist.check_out")}
                 </a>
               </Col>
             </Row>

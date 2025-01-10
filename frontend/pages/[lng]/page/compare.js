@@ -2,16 +2,45 @@ import React, { useContext } from "react";
 import CommonLayout from "../../../components/shop/common-layout";
 import { Container, Row, Table, Media, Col } from "reactstrap";
 import { CompareContext } from "../../../helpers/Compare/CompareContext";
-import { CurrencyContext } from "../../../helpers/Currency/CurrencyContext";
+import { useTranslation } from "react-i18next";
+import { CREATE_ADD_TO_CART } from "../../../GraphQL/Mutations/cartMutations";
+import { useMutation } from "@apollo/client";
+import { toast } from "react-toastify";
 
 const Compare = () => {
   const contextCompare = useContext(CompareContext);
-  const curContext = useContext(CurrencyContext);
-  const symbol = curContext.state.symbol;
   const compareItem = contextCompare.compareItems;
+  const { t } = useTranslation();
+
+  const [createcart] = useMutation(CREATE_ADD_TO_CART);
+
+  const handleAddToCart = async (product) => {
+    const userData = JSON.parse(localStorage.getItem("customerDetail"));
+    const { data } = await createcart({
+      variables: {
+        input: {
+          userId: userData?.id,
+          products: {
+            ProductID: product.id,
+            price: product.price,
+            quantity: 1,
+            color: product.colors[0] || null,
+            size: product.sizes[0] || null,
+            totalAmount: product.price,
+            title: product.title,
+          },
+        },
+      },
+    });
+    if (data) {
+      toast.success(t("product_details.addToCart"));
+    } else {
+      toast.error(t("product_details.addToCartError"));
+    }
+  };
 
   return (
-    <CommonLayout parent="home" title="compare">
+    <CommonLayout parent={t("compare.home")} title={t("compare.title")}>
       <section className="compare-padding">
         <Container>
           <Row>
@@ -22,7 +51,7 @@ const Compare = () => {
                     <Table className="table">
                       <thead>
                         <tr className="th-compare">
-                          <td>Action</td>
+                          <td>{t("compare.action")}</td>
                           {compareItem.map((item, i) => (
                             <th className="item-row" key={i}>
                               <button
@@ -32,7 +61,7 @@ const Compare = () => {
                                   contextCompare.removeFromComapre(item)
                                 }
                               >
-                                Remove
+                                {t("compare.remove")}
                               </button>
                             </th>
                           ))}
@@ -40,7 +69,9 @@ const Compare = () => {
                       </thead>
                       <tbody id="table-compare">
                         <tr>
-                          <th className="product-name">Product Name</th>
+                          <th className="product-name">
+                            {t("compare.product_name")}
+                          </th>
                           {compareItem.map((item, i) => (
                             <td className="grid-link__title" key={i}>
                               {item.title}
@@ -48,28 +79,32 @@ const Compare = () => {
                           ))}
                         </tr>
                         <tr>
-                          <th className="product-name">Product Image</th>
+                          <th className="product-name">
+                            {t("compare.product_image")}
+                          </th>
                           {compareItem.map((item, i) => (
                             <td className="item-row" key={i}>
                               <img
-                                src={item.images[0].src}
+                                src={
+                                  process.env.NEXT_PUBLIC_API_KEY +
+                                  item.images[0]
+                                }
                                 alt=""
                                 className="featured-image"
                               />
                               <div className="product-price product_price">
-                                <strong>On Sale:</strong>
-                                <span>
-                                  {symbol}
-                                  {item.price}
-                                </span>
+                                <strong> {t("compare.on_sale")}:</strong>
+                                <span>{item.price}</span>
                               </div>
                               <form className="variants clearfix">
                                 <input type="hidden" />
                                 <button
+                                  type="button"
                                   title="Add to Cart"
                                   className="add-to-cart btn btn-solid"
+                                  onClick={() => handleAddToCart(item)}
                                 >
-                                  Add to Cart
+                                  {t("compare.add_to_cart")}
                                 </button>
                               </form>
                               <p className="grid-link__title hidden">
@@ -79,7 +114,9 @@ const Compare = () => {
                           ))}
                         </tr>
                         <tr>
-                          <th className="product-name">Product Description</th>
+                          <th className="product-name">
+                            {t("compare.product_description")}
+                          </th>
                           {compareItem.map((item, i) => (
                             <td className="item-row" key={i}>
                               <p className="description-compare">
@@ -89,13 +126,15 @@ const Compare = () => {
                           ))}
                         </tr>
                         <tr>
-                          <th className="product-name">Availability</th>
+                          <th className="product-name">
+                            {t("compare.availability")}
+                          </th>
                           {compareItem.map((item, i) => (
                             <td className="available-stock" key={i}>
                               <p>
                                 {item.stock >= 0
-                                  ? "Not Available"
-                                  : "Available"}
+                                  ? t("compare.not_available")
+                                  : t("compare.available")}
                               </p>
                             </td>
                           ))}
@@ -117,9 +156,9 @@ const Compare = () => {
                               alt=""
                             />
                             <h3>
-                              <strong>Your Cart is Empty</strong>
+                              <strong>{t("compare.empty.title")}</strong>
                             </h3>
-                            <h4>Explore more shortlist some items.</h4>
+                            <h4>{t("compare.empty.message")}.</h4>
                           </Col>
                         </div>
                       </Col>

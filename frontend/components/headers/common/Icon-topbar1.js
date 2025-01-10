@@ -11,7 +11,7 @@ import cart from "../../../public/assets/images/icon/shopping-cart.png";
 import Currency from "./currency";
 import CartContainer from "../../containers/CartContainer";
 import SearchOverlay from "./search-overlay";
-import LocaleLink from "../../LocaleLink";
+import LocalLink from "../../LocalLink";
 const IconTopbar = () => {
   const context = useContext(CartContext);
   const openNav = () => {
@@ -73,26 +73,26 @@ const IconTopbar = () => {
               <div className="menu-right pull-right">
                 <ul className="header-dropdown">
                   <li className="mobile-wishlist">
-                    <LocaleLink href="/page/account/wishlist">
+                    <LocalLink href="/page/account/wishlist">
                       {/* <a> */}
                       <i className="fa fa-heart" aria-hidden="true"></i>
                       <Media src={like.src} alt="" />
                       {/* </a> */}
-                    </LocaleLink>
+                    </LocalLink>
                   </li>
                   <li className="onhover-dropdown mobile-account">
                     <Media src={user.src} alt="" />
                     <i className="fa fa-user" aria-hidden="true"></i>
                     <ul className="onhover-show-div">
                       <li>
-                        <LocaleLink href="/page/account/login" data-lng="en">
+                        <LocalLink href="/page/account/login" data-lng="en">
                           Logga in
-                        </LocaleLink>
+                        </LocalLink>
                       </li>
                       <li>
-                        <LocaleLink href="/" data-lng="es">
+                        <LocalLink href="/" data-lng="es">
                           Logga ut
-                        </LocaleLink>
+                        </LocalLink>
                       </li>
                     </ul>
                   </li>

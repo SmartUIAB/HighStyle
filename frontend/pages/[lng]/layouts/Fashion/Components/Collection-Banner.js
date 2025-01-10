@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Container, Row, Col, Media } from "reactstrap";
 import banner1 from "../../../../../public/assets/images/sub-banner1.jpg";
 import banner2 from "../../../../../public/assets/images/sub-banner2.jpg";
-import LocaleLink from "../../../../../components/LocaleLink";
+import LocalLink from "../../../../../components/LocalLink";
 import { useTranslation } from "react-i18next";
 
 const Data = [
@@ -26,7 +26,7 @@ const MasterCollectionBanner = ({ img, about, offer, link, classes }) => {
   const { t } = useTranslation();
   return (
     <Col md="6">
-      <LocaleLink href={link}>
+      <LocalLink href={link}>
         <div className={`collection-banner ${classes}`}>
           <Media src={img} className="img-fluid" alt="" />
           <div className="contain-banner">
@@ -36,7 +36,7 @@ const MasterCollectionBanner = ({ img, about, offer, link, classes }) => {
             </div>
           </div>
         </div>
-      </LocaleLink>
+      </LocalLink>
     </Col>
   );
 };

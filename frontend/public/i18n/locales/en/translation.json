@@ -137,5 +137,78 @@
     "our_collection": "Our Collection",
     "special_products": "Special Products",
     "instagram": "Instagram"
-  }
+  },
+  "productlist": {
+    "route_name": {
+      "product_list": "Product List"
+    },
+    "error": {
+      "loading_products": "Error loading products!",
+      "issue_loading": "There was an issue loading the product data. Please try again later."
+    },
+    "placeholder": {
+      "search_products": "Search for products..."
+    },
+    "info": {
+      "no_products_found": "No Products Found",
+      "adjust_filters": "Try adjusting your filters or search query."
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "status": {
+      "available": "Available",
+      "out_of_stock": "Out of Stock"
+    },
+    "details": {
+      "price": "Price",
+      "colors": "Colors",
+      "sizes": "Sizes",
+      "file_format": "File Format",
+      "file_size": "File Size",
+      "compatibility": "Compatibility",
+      "status": "Status"
+    }
+  },
+  "compare": {
+    "home": "Home",
+    "title": "Compare",
+    "empty": {
+      "title": "Your Cart is Empty",
+      "message": "Explore more shortlist some items."
+    },
+    "product_name": "Product Name",
+    "product_image": "Product Image",
+    "product_description": "Product Description",
+    "availability": "Availability",
+    "remove": "Remove",
+    "on_sale": "On Sale",
+    "add_to_cart": "Add to Cart",
+    "not_available": "Not Available",
+    "available": "Available",
+    "action": "Action"
+  },
+  "wishlist": {
+    "image": "Image",
+    "product_name": "Product Name",
+    "price": "Price",
+    "availability": "Availability",
+    "action": "Action",
+    "out_of_stock": "Out of stock",
+    "continue_shopping": "Continue Shopping",
+    "check_out": "Check Out",
+    "remove_from_wishlist": "Remove from Wishlist",
+    "add_to_cart": "Add to Cart",
+    "home": "Home",
+    "wishlist": "Wishlist"
+  },
+  "quickview": {
+    "product_details": "Product Details",
+    "quantity": "Quantity",
+    "add_to_cart": "Add to Cart",
+    "view_detail": "View Detail",
+    "product_description": "Product Description"
+  },
+  "logout": "Logout"
 }

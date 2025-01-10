@@ -137,5 +137,78 @@
     "our_collection": "Nossa Coleção",
     "special_products": "Produtos Especiais",
     "instagram": "Instagram"
-  }
+  },
+  "productlist": {
+    "route_name": {
+      "product_list": "Lista de Produtos"
+    },
+    "error": {
+      "loading_products": "Erro ao carregar os produtos!",
+      "issue_loading": "Houve um problema ao carregar os dados do produto. Por favor, tente novamente mais tarde."
+    },
+    "placeholder": {
+      "search_products": "Buscar produtos..."
+    },
+    "info": {
+      "no_products_found": "Nenhum produto encontrado",
+      "adjust_filters": "Tente ajustar seus filtros ou sua pesquisa."
+    },
+    "pagination": {
+      "prev": "Anterior",
+      "next": "Próximo"
+    },
+    "status": {
+      "available": "Disponível",
+      "out_of_stock": "Esgotado"
+    },
+    "details": {
+      "price": "Preço",
+      "colors": "Cores",
+      "sizes": "Tamanhos",
+      "file_format": "Formato do Arquivo",
+      "file_size": "Tamanho do Arquivo",
+      "compatibility": "Compatibilidade",
+      "status": "Status"
+    }
+  },
+  "compare": {
+    "title": "Comparar",
+    "home": "Início",
+    "empty": {
+      "title": "Seu carrinho está vazio",
+      "message": "Explore mais e selecione alguns itens."
+    },
+    "product_name": "Nome do produto",
+    "product_image": "Imagem do produto",
+    "product_description": "Descrição do produto",
+    "availability": "Disponibilidade",
+    "remove": "Remover",
+    "on_sale": "Em promoção",
+    "add_to_cart": "Adicionar ao carrinho",
+    "not_available": "Não disponível",
+    "available": "Disponível",
+    "action": "Ação"
+  },
+  "wishlist": {
+    "image": "Imagem",
+    "product_name": "Nome do produto",
+    "price": "Preço",
+    "availability": "Disponibilidade",
+    "action": "Ação",
+    "out_of_stock": "Fora de estoque",
+    "continue_shopping": "Continuar comprando",
+    "check_out": "Finalizar compra",
+    "remove_from_wishlist": "Remover da lista de desejos",
+    "add_to_cart": "Adicionar ao carrinho",
+    "home": "Início",
+    "wishlist": "Lista de desejos"
+  },
+  "quickview": {
+    "product_details": "Detalhes do produto",
+    "quantity": "Quantidade",
+    "add_to_cart": "Adicionar ao carrinho",
+    "view_detail": "Ver detalhes",
+    "product_description": "Descrição do produto"
+  },
+  "logout": "Sair"
 }

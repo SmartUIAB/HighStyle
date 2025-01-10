@@ -3,44 +3,43 @@ import Link from "next/link";
 import { Media } from "reactstrap";
 import { DELETE_CART_ITEM } from "../../../GraphQL/Mutations/cartMutations";
 import { useMutation } from "@apollo/client";
-import LocaleLink from "../../LocaleLink";
+import LocalLink from "../../LocalLink";
 
 const CartHeader = ({ item, symbol }) => {
-    const [deleteCart] = useMutation(DELETE_CART_ITEM);
+  const [deleteCart] = useMutation(DELETE_CART_ITEM);
 
   const removeFromCart = async (item) => {
-      const { data } = await deleteCart({
-        variables: {
-          cartId: cartItems.getCart.id,
-          productId: item._id,
-        },
-      });
-      if (data) {
-        refetch();
-      } else {
-        toast.error("Failed to remove item from cart");
-      }
-    };
+    const { data } = await deleteCart({
+      variables: {
+        cartId: cartItems.getCart.id,
+        productId: item._id,
+      },
+    });
+    if (data) {
+      refetch();
+    } else {
+      toast.error("Failed to remove item from cart");
+    }
+  };
   return (
     <Fragment>
       <li>
         <div className="media">
-          <LocaleLink href={"/product-details/" + item.ProductID}>
+          <LocalLink href={"/product-details/" + item.ProductID}>
             <Media
               alt=""
               className="me-3"
               src={process.env.NEXT_PUBLIC_API_KEY + `${item.image}`}
             />
-          </LocaleLink>
+          </LocalLink>
           <div className="media-body">
-            <LocaleLink href={"/product-details/" + item.id}>
+            <LocalLink href={"/product-details/" + item.id}>
               <h6>{item.title}</h6>
-            </LocaleLink>
+            </LocalLink>
 
             <h4>
               <span>
-                {item.qty} x
-                {(item.price).toFixed(2)}
+                {item.qty} x{item.price.toFixed(2)}
               </span>
             </h4>
           </div>

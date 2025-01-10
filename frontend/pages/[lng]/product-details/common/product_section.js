@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Container, Row, Col, Media, Modal, ModalBody } from "reactstrap";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { CurrencyContext } from "../../../../helpers/Currency/CurrencyContext";
 import CartContext from "../../../../helpers/cart";
@@ -12,38 +12,47 @@ import {
   GET_PHYSICAL_PRODUCT,
 } from "../../../../GraphQL/Queries/productQueries";
 import { useTranslation } from "react-i18next";
+import { CREATE_ADD_TO_CART } from "../../../../GraphQL/Mutations/cartMutations";
+import LocalLink from "../../../../components/LocalLink";
+import { toast } from "react-toastify";
 
 const ProductSection = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const curContext = useContext(CurrencyContext);
   const wishlistContext = useContext(WishlistContext);
   const compareContext = useContext(CompareContext);
-  const symbol = curContext.state.symbol;
-  const currency = curContext.state;
-  const cartCtx = useContext(CartContext);
-  const addToCart = cartCtx.addToCart;
-  const quantity = cartCtx.quantity;
-  const plusQty = cartCtx.plusQty;
-  const minusQty = cartCtx.minusQty;
-  const setQuantity = cartCtx.setQuantity;
+  const [quantity, setQuantity] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState();
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
   const uniqueTags = [];
   const { id } = router.query;
 
-  const changeQty = (e) => {
-    setQuantity(parseInt(e.target.value));
-  };
+  const [createcart] = useMutation(CREATE_ADD_TO_CART);
 
-  const clickProductDetail = (product) => {
-    const titleProps = product.title.split(" ").join("");
-    router.push(
-      `/product-details/${product.id}` + "-" + `${titleProps}`,
-      undefined,
-      { shallow: true }
-    );
+  const handleAddToCart = async (product) => {
+    const userData = JSON.parse(localStorage.getItem("customerDetail"));
+    const { data } = await createcart({
+      variables: {
+        input: {
+          userId: userData?.id,
+          products: {
+            ProductID: product.id,
+            price: product.price,
+            quantity: quantity,
+            color: product.colors[0] || null,
+            size: product.sizes[0] || null,
+            totalAmount: product.price * quantity,
+            title: product.title,
+          },
+        },
+      },
+    });
+    if (data) {
+      toast.success(t("product_details.addToCart"));
+    } else {
+      toast.error(t("product_details.addToCartError"));
+    }
   };
 
   const getSelectedProduct = (item) => {
@@ -70,6 +79,33 @@ const ProductSection = () => {
   const loading = loadingPhysical || loadingDigital;
 
   const relatedProduct = mergedProducts.filter((item) => item.id !== id);
+
+  const handleChange = (event) => {
+    const newQuantity = parseInt(event.target.value, 10);
+    if (
+      !isNaN(newQuantity) &&
+      newQuantity > 0 &&
+      newQuantity <= stockQuantity
+    ) {
+      setQuantity(newQuantity);
+    }
+  };
+
+  const product = selectedProduct;
+  const isDigital = product?.__typename === "DigitalProduct";
+  const stockQuantity = isDigital ? Infinity : product?.stockQuantity || 0;
+
+  const IncrementItem = () => {
+    if (quantity < stockQuantity) {
+      setQuantity((prevQuantity) => prevQuantity + 1);
+    }
+  };
+
+  const DecreaseItem = () => {
+    if (quantity > 1) {
+      setQuantity((prevQuantity) => prevQuantity - 1);
+    }
+  };
 
   return (
     <section className="section-b-space ratio_asos">
@@ -118,7 +154,7 @@ const ProductSection = () => {
                           data-toggle="modal"
                           data-target="#addtocart"
                           title="Add to cart"
-                          onClick={() => addToCart(product, quantity)}
+                          onClick={() => handleAddToCart(product)}
                         >
                           <i className="fa fa-shopping-cart"></i>
                         </button>
@@ -195,9 +231,7 @@ const ProductSection = () => {
                 <Col lg="6" className="rtl-text">
                   <div className="product-right">
                     <h2> {selectedProduct.title} </h2>
-                    <h3>
-                      {(selectedProduct.price * currency.value).toFixed(2)}
-                    </h3>
+                    <h3>{selectedProduct.price.toFixed(2)}</h3>
                     {selectedProduct.variants ? (
                       <ul className="color-variant">
                         {uniqueTags ? (
@@ -244,7 +278,9 @@ const ProductSection = () => {
                       ""
                     )}
                     <div className="border-product">
-                      <h6 className="product-title">product details</h6>
+                      <h6 className="product-title">
+                        {t("quickview.product_details")}
+                      </h6>
                       <p>{selectedProduct.description}</p>
                     </div>
                     <div className="product-description border-product">
@@ -263,14 +299,17 @@ const ProductSection = () => {
                       ) : (
                         ""
                       )}
-                      <h6 className="product-title">quantity</h6>
+                      <h6 className="product-title">
+                        {t("quickview.quantity")}
+                      </h6>
                       <div className="qty-box">
                         <div className="input-group">
                           <span className="input-group-prepend">
                             <button
                               type="button"
                               className="btn quantity-left-minus"
-                              onClick={minusQty}
+                              onClick={DecreaseItem}
+                              disabled={quantity <= 1}
                               data-type="minus"
                               data-field=""
                             >
@@ -281,14 +320,17 @@ const ProductSection = () => {
                             type="text"
                             name="quantity"
                             value={quantity}
-                            onChange={changeQty}
+                            onChange={handleChange}
+                            min="1"
+                            max={stockQuantity}
                             className="form-control input-number"
                           />
                           <span className="input-group-prepend">
                             <button
                               type="button"
                               className="btn quantity-right-plus"
-                              onClick={() => plusQty(selectedProduct)}
+                              onClick={IncrementItem}
+                              disabled={quantity >= stockQuantity}
                               data-type="plus"
                               data-field=""
                             >
@@ -301,16 +343,21 @@ const ProductSection = () => {
                     <div className="product-buttons">
                       <button
                         className="btn btn-solid"
-                        onClick={() => addToCart(selectedProduct, quantity)}
+                        onClick={() => handleAddToCart(selectedProduct)}
                       >
-                        add to cart
+                        {t("quickview.add_to_cart")}
                       </button>
-                      <button
-                        className="btn btn-solid"
-                        onClick={() => clickProductDetail(selectedProduct)}
+                      <LocalLink
+                        href={`/product-details/${selectedProduct.id}`}
+                        passHref
                       >
-                        View detail
-                      </button>
+                        <button
+                          className="btn btn-solid"
+                          onClick={() => setModal(false)}
+                        >
+                          {t("quickview.view_detail")}
+                        </button>
+                      </LocalLink>
                     </div>
                   </div>
                 </Col>

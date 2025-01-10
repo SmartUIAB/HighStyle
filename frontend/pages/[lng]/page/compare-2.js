@@ -3,15 +3,14 @@ import CommonLayout from "../../components/shop/common-layout";
 import { Slider4 } from "../../services/script";
 import { Container, Row, Col } from "reactstrap";
 import Slider from "react-slick";
-import LocaleLink from "../../../components/LocaleLink";
+import LocalLink from "../../../components/LocalLink";
 
 const CompareItemsData = [
   {
     img: "../assets/images/pro3/1.jpg",
     title: "slim fit shirt",
     price: "$555",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     brand: "Zara",
     size: ["xl", "L", "M", "S", "xs"],
     color: ["Red", "Blue", "Pink"],
@@ -23,8 +22,7 @@ const CompareItemsData = [
     img: "../assets/images/pro3/2.jpg",
     title: "slim fit shirt",
     price: "$555",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     brand: "Zara",
     size: ["S", "XS"],
     color: ["Blue", "Pink"],
@@ -36,8 +34,7 @@ const CompareItemsData = [
     img: "../assets/images/pro3/3.jpg",
     title: "slim fit shirt",
     price: "$555",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     brand: "Zara",
     size: ["XL", "L", "M", "S", "XS"],
     color: ["Red", "Blue", "Pink"],
@@ -49,8 +46,7 @@ const CompareItemsData = [
     img: "../assets/images/pro3/4.jpg",
     title: "slim fit shirt",
     price: "$555",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     brand: "Zara",
     size: ["XL", "L"],
     color: ["Red", "Blue", "Black"],
@@ -62,8 +58,7 @@ const CompareItemsData = [
     img: "../assets/images/pro3/5.jpg",
     title: "slim fit shirt",
     price: "$555",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     brand: "Zara",
     size: ["s", "xs"],
     color: ["blue", "pink"],
@@ -75,8 +70,7 @@ const CompareItemsData = [
     img: "../assets/images/pro3/6.jpg",
     title: "slim fit shirt",
     price: "$555",
-    desc:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
+    desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
     brand: "Zara",
     size: ["s", "xs"],
     color: ["blue", "pink"],
@@ -174,9 +168,9 @@ const CompareItems = ({
           </div>
         </div>
         <div className="btn-part">
-          <LocaleLink href={link} className="btn btn-solid">
+          <LocalLink href={link} className="btn btn-solid">
             add to cart
-          </LocaleLink>
+          </LocalLink>
         </div>
       </div>
     </div>

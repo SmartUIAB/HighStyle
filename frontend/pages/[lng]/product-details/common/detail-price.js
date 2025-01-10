@@ -7,7 +7,7 @@ import MasterSocial from "./master_social";
 import { useMutation } from "@apollo/client";
 import { toast } from "react-toastify";
 import { CREATE_ADD_TO_CART } from "../../../../GraphQL/Mutations/cartMutations";
-import LocaleLink from "../../../../components/LocaleLink";
+import LocalLink from "../../../../components/LocalLink";
 import { useTranslation } from "react-i18next";
 
 const DetailsWithPrice = ({ item, stickyClass }) => {
@@ -181,9 +181,9 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
         >
           {t("product_details.addToCart")}
         </button>
-        <LocaleLink href="/page/account/checkout" className="btn btn-solid">
+        <LocalLink href="/page/account/checkout" className="btn btn-solid">
           {t("product_details.buyNow")}
-        </LocaleLink>
+        </LocalLink>
       </div>
 
       <div className="border-product">
