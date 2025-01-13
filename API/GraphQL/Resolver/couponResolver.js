@@ -29,20 +29,17 @@ const couponResolver = {
   },
 
   Mutation: {
-    // Create a new coupon
     createCoupon: async (_, { input }) => {
       const newCoupon = new Coupon(input);
       await newCoupon.save();
       return newCoupon;
     },
 
-    // Delete multiple coupons at once
     deleteCoupons: async (_, { ids }) => {
       const result = await Coupon.deleteMany({ _id: { $in: ids } });
       return result.deletedCount > 0;
     },
 
-    //update coupon at once
     updateCoupon: async (_, { id, input }) => {
       const updatedCoupon = await Coupon.findByIdAndUpdate(id, input, {
         new: true,

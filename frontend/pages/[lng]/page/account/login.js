@@ -62,17 +62,17 @@ const Login = () => {
   };
 
   return (
-    <CommonLayout parent="home" title="login">
+    <CommonLayout parent={t("route_name.home")} title={t("top_header.login")}>
       <section className="login-page section-b-space">
         <Container>
           <Row>
             <Col lg="6">
-              <h3>{t("welcome")}</h3>
+              <h3>{t("login.welcome")}</h3>
               <div className="theme-card">
                 <Form className="theme-form">
                   <div className="form-group">
                     <Label className="form-label" for="email">
-                      Email
+                      {t("login.email")}
                     </Label>
                     <Input
                       type="email"
@@ -89,7 +89,7 @@ const Login = () => {
                   </div>
                   <div className="form-group">
                     <Label className="form-label" for="review">
-                      Password
+                      {t("login.password")}
                     </Label>
                     <Input
                       type="password"
@@ -105,22 +105,20 @@ const Login = () => {
                     )}
                   </div>
                   <a onClick={handleSubmit} className="btn btn-solid">
-                    Login
+                    {t("login.login_button")}
                   </a>
                 </Form>
               </div>
             </Col>
             <Col lg="6" className="right-login">
-              <h3>New Customer</h3>
+              <h3> {t("login.new_customer")}</h3>
               <div className="theme-card authentication-right">
-                <h6 className="title-font">Create An Account</h6>
-                <p>
-                  Sign up for a free account at our store. Registration is quick
-                  and easy. It allows you to be able to order from our shop. To
-                  start shopping click register.
-                </p>
+                <h6 className="title-font">{t("login.register_button")}</h6>
+                <p>{t("login.create_account_description")}</p>
                 <LocalLink href="/page/account/register" passHref>
-                  <span className="btn btn-solid">Create an Account</span>
+                  <span className="btn btn-solid">
+                    {t("login.register_button")}
+                  </span>
                 </LocalLink>
               </div>
             </Col>

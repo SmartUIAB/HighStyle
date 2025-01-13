@@ -5,6 +5,7 @@ import { useMutation } from "@apollo/client";
 import { REGISTER_USER } from "../../../../GraphQL/Mutations/authMutations";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -15,10 +16,10 @@ const Register = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [craeteCustomer] = useMutation(REGISTER_USER);
+  const [createCustomer] = useMutation(REGISTER_USER);
   const router = useRouter();
+  const { t } = useTranslation();
 
-  // Handle input changes
   const handleChange = (event) => {
     const { id, value } = event.target;
     setFormData((prevState) => ({
@@ -27,36 +28,33 @@ const Register = () => {
     }));
   };
 
-  // Validate form fields
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.fname.trim()) newErrors.fname = "First Name is required";
-    if (!formData.lname.trim()) newErrors.lname = "Last Name is required";
+    if (!formData.fname.trim()) newErrors.fname = t("register.error.firstName");
+    if (!formData.lname.trim()) newErrors.lname = t("register.error.lastName");
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = t("register.error.email");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Email is not valid";
+      newErrors.email = t("register.error.emailInvalid");
     }
     if (!formData.password.trim()) {
-      newErrors.password = "Password is required";
+      newErrors.password = t("register.error.password");
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters long";
+      newErrors.password = t("register.error.passwordLength");
     }
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Returns true if no errors
+    return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Validate form
     if (!validateForm()) {
       return;
     }
 
     try {
-      const { data } = await craeteCustomer({
+      const { data } = await createCustomer({
         variables: {
           input: {
             email: formData.email,
@@ -68,33 +66,33 @@ const Register = () => {
       });
 
       if (data) {
-        toast.success("Customer Created Successfully");
+        toast.success(t("register.successMessage"));
         router.replace("/");
       }
     } catch (error) {
-      toast.error("An error occurred while creating the account");
+      toast.error(t("register.errorMessage"));
     }
   };
 
   return (
-    <CommonLayout parent="home" title="register">
+    <CommonLayout parent={t("route_name.home")} title={t("register.title")}>
       <section className="register-page section-b-space">
         <Container>
           <Row>
             <Col lg="12">
-              <h3>Create Account</h3>
+              <h3>{t("register.title")}</h3>
               <div className="theme-card">
                 <Form className="theme-form" onSubmit={handleSubmit}>
                   <Row>
                     <Col md="6">
                       <Label className="form-label" for="fname">
-                        First Name
+                        {t("register.firstName")}
                       </Label>
                       <Input
                         type="text"
                         className="form-control"
                         id="fname"
-                        placeholder="First Name"
+                        placeholder={t("register.firstName")}
                         required
                         value={formData.fname}
                         onChange={handleChange}
@@ -105,13 +103,13 @@ const Register = () => {
                     </Col>
                     <Col md="6">
                       <Label className="form-label" for="lname">
-                        Last Name
+                        {t("register.lastName")}
                       </Label>
                       <Input
                         type="text"
                         className="form-control"
                         id="lname"
-                        placeholder="Last Name"
+                        placeholder={t("register.lastName")}
                         required
                         value={formData.lname}
                         onChange={handleChange}
@@ -124,13 +122,13 @@ const Register = () => {
                   <Row>
                     <Col md="6">
                       <Label className="form-label" for="email">
-                        Email
+                        {t("register.email")}
                       </Label>
                       <Input
                         type="email"
                         className="form-control"
                         id="email"
-                        placeholder="Email"
+                        placeholder={t("register.email")}
                         required
                         value={formData.email}
                         onChange={handleChange}
@@ -141,13 +139,13 @@ const Register = () => {
                     </Col>
                     <Col md="6">
                       <Label className="form-label" for="password">
-                        Password
+                        {t("register.password")}
                       </Label>
                       <Input
                         type="password"
                         className="form-control"
                         id="password"
-                        placeholder="Enter your password"
+                        placeholder={t("register.password")}
                         required
                         value={formData.password}
                         onChange={handleChange}
@@ -158,7 +156,7 @@ const Register = () => {
                     </Col>
                     <Col md="12">
                       <Button type="submit" className="btn btn-solid w-auto">
-                        Create Account
+                        {t("register.createAccount")}
                       </Button>
                     </Col>
                   </Row>

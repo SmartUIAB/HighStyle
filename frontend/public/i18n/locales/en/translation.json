@@ -210,5 +210,33 @@
     "view_detail": "View Detail",
     "product_description": "Product Description"
   },
-  "logout": "Logout"
+  "logout": "Logout",
+  "login": {
+    "welcome": "Welcome Back",
+    "email": "Email",
+    "password": "Password",
+    "new_customer": "New Customer",
+    "create_account": "Create An Account",
+    "create_account_description": "Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order from our shop. To start shopping click register.",
+    "login_button": "Login",
+    "register_button": "Create an Account"
+  },
+  "register":{
+    "title": "Create Account",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "createAccount": "Create Account",
+    "errors": {
+      "firstName": "First Name is required",
+      "lastName": "Last Name is required",
+      "email": "Email is required",
+      "emailInvalid": "Email is not valid",
+      "password": "Password is required",
+      "passwordLength": "Password must be at least 6 characters long"
+    },
+    "successMessage": "Customer Created Successfully",
+    "errorMessage": "An error occurred while creating the account"
+  }
 }

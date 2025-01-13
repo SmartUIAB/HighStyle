@@ -210,5 +210,33 @@
     "view_detail": "Ver detalhes",
     "product_description": "Descrição do produto"
   },
-  "logout": "Sair"
+  "logout": "Sair",
+  "login": {
+    "welcome": "Bem-vindo de volta",
+    "email": "E-mail",
+    "password": "Senha",
+    "new_customer": "Novo cliente",
+    "create_account": "Criar uma conta",
+    "create_account_description": "Inscreva-se para uma conta gratuita em nossa loja. O registro é rápido e fácil. Ele permite que você faça pedidos em nossa loja. Para começar a comprar, clique em registrar.",
+    "login_button": "Entrar",
+    "register_button": "Criar uma conta"
+  },
+  "register":{
+    "title": "Criar Conta",
+    "firstName": "Primeiro Nome",
+    "lastName": "Último Nome",
+    "email": "E-mail",
+    "password": "Senha",
+    "createAccount": "Criar Conta",
+    "errors": {
+      "firstName": "O Primeiro Nome é obrigatório",
+      "lastName": "O Último Nome é obrigatório",
+      "email": "O E-mail é obrigatório",
+      "emailInvalid": "O E-mail não é válido",
+      "password": "A Senha é obrigatória",
+      "passwordLength": "A Senha deve ter pelo menos 6 caracteres"
+    },
+    "successMessage": "Conta criada com sucesso",
+    "errorMessage": "Ocorreu um erro ao criar a conta"
+  }
 }

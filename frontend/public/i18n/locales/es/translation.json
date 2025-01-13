@@ -210,5 +210,33 @@
     "view_detail": "Ver detalles",
     "product_description": "Descripción del producto"
   },
-  "logout": "Cerrar sesión"
+  "logout": "Cerrar sesión",
+  "login": {
+    "welcome": "Bienvenido de nuevo",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "new_customer": "Nuevo cliente",
+    "create_account": "Crear una cuenta",
+    "create_account_description": "Regístrate para obtener una cuenta gratuita en nuestra tienda. El registro es rápido y fácil. Te permite realizar pedidos en nuestra tienda. Para empezar a comprar, haz clic en registrar.",
+    "login_button": "Iniciar sesión",
+    "register_button": "Crear una cuenta"
+  },
+  "register":{
+    "title": "Crear Cuenta",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "createAccount": "Crear Cuenta",
+    "errors": {
+      "firstName": "El Nombre es obligatorio",
+      "lastName": "El Apellido es obligatorio",
+      "email": "El Correo Electrónico es obligatorio",
+      "emailInvalid": "El Correo Electrónico no es válido",
+      "password": "La Contraseña es obligatoria",
+      "passwordLength": "La Contraseña debe tener al menos 6 caracteres"
+    },
+    "successMessage": "Cuenta creada exitosamente",
+    "errorMessage": "Ocurrió un error al crear la cuenta"
+  }
 }
