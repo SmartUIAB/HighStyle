@@ -201,7 +201,9 @@
     "remove_from_wishlist": "Remove from Wishlist",
     "add_to_cart": "Add to Cart",
     "home": "Home",
-    "wishlist": "Wishlist"
+    "wishlist": "Wishlist",
+    "removeFromFavourite": "Remove Favourite Product Successfully",
+    "notAvailableFavouriteProduct":"Favourite product not available"
   },
   "quickview": {
     "product_details": "Product Details",

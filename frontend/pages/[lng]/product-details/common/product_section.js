@@ -1,10 +1,6 @@
 import React, { useContext, useState } from "react";
 import { Container, Row, Col, Media, Modal, ModalBody } from "reactstrap";
 import { useMutation, useQuery } from "@apollo/client";
-import { gql } from "@apollo/client";
-import { CurrencyContext } from "../../../../helpers/Currency/CurrencyContext";
-import CartContext from "../../../../helpers/cart";
-import { WishlistContext } from "../../../../helpers/wishlist/WishlistContext";
 import { CompareContext } from "../../../../helpers/Compare/CompareContext";
 import { useRouter } from "next/router";
 import {
@@ -15,11 +11,11 @@ import { useTranslation } from "react-i18next";
 import { CREATE_ADD_TO_CART } from "../../../../GraphQL/Mutations/cartMutations";
 import LocalLink from "../../../../components/LocalLink";
 import { toast } from "react-toastify";
+import { ADD_TO_FAVOURITE } from "../../../../GraphQL/Mutations/favouriteMutations";
 
 const ProductSection = () => {
   const { t } = useTranslation();
   const router = useRouter();
-  const wishlistContext = useContext(WishlistContext);
   const compareContext = useContext(CompareContext);
   const [quantity, setQuantity] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState();
@@ -29,9 +25,10 @@ const ProductSection = () => {
   const { id } = router.query;
 
   const [createcart] = useMutation(CREATE_ADD_TO_CART);
+  const [addtofavourite] = useMutation(ADD_TO_FAVOURITE);
+  const userData = JSON.parse(localStorage.getItem("customerDetail"));
 
   const handleAddToCart = async (product) => {
-    const userData = JSON.parse(localStorage.getItem("customerDetail"));
     const { data } = await createcart({
       variables: {
         input: {
@@ -107,6 +104,26 @@ const ProductSection = () => {
     }
   };
 
+  const handleAddFavourite = async (product) => {
+    try {
+      const { data } = await addtofavourite({
+        variables: {
+          userId: userData?.id,
+          productId: product.id,
+          productType: product.__typename,
+        },
+      });
+
+      if (data) {
+        toast.success("Add to Favourite Successfully");
+      } else {
+        toast.error("Failed to Remove Favourite Product");
+      }
+    } catch (error) {
+      toast.error("An error occurred while adding the product from favourites");
+    }
+  };
+
   return (
     <section className="section-b-space ratio_asos">
       <Container>
@@ -160,7 +177,7 @@ const ProductSection = () => {
                         </button>
                         <a
                           href="#"
-                          onClick={() => wishlistContext.addToWish(product)}
+                          onClick={() => handleAddFavourite(product)}
                           title="Add to Wishlist"
                         >
                           <i className="fa fa-heart" aria-hidden="true"></i>

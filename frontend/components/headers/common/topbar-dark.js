@@ -55,6 +55,12 @@ const TopBar = ({ topClass }) => {
                   {t("top_header.wishlist")}
                 </LocalLink>
               </li>
+              <li className="mobile-wishlist">
+                <LocalLink href={`/page/account/orders`}>
+                  <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                  Orders
+                </LocalLink>
+              </li>
               <li className="onhover-dropdown mobile-account">
                 <i className="fa fa-user" aria-hidden="true"></i>{" "}
                 {t("top_header.my_account")}

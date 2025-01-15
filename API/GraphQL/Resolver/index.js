@@ -13,6 +13,7 @@ const menuResolvers = require("./menuResolver");
 const pageResolvers = require("./pageResolver");
 const orderResolvers = require("./orderResolver");
 const notificationResolver = require("./notificationResolver");
+const favouriteResolver = require("./favouriteResolver");
 
 const resolver = {
   Query: {
@@ -27,7 +28,8 @@ const resolver = {
     ...mediaResolver.Query,
     ...menuResolvers.Query,
     ...pageResolvers.Query,
-    ...notificationResolver.Query
+    ...notificationResolver.Query,
+    ...favouriteResolver.Query,
   },
   Mutation: {
     ...userResolver.Mutation,
@@ -42,7 +44,8 @@ const resolver = {
     ...menuResolvers.Mutation,
     ...pageResolvers.Mutation,
     ...orderResolvers.Mutation,
-    ...notificationResolver.Mutation
+    ...notificationResolver.Mutation,
+    ...favouriteResolver.Mutation,
   },
   Category: {
     ...fieldResolver.Category,

@@ -201,7 +201,9 @@
     "remove_from_wishlist": "Remover da lista de desejos",
     "add_to_cart": "Adicionar ao carrinho",
     "home": "Início",
-    "wishlist": "Lista de desejos"
+    "wishlist": "Lista de desejos",
+    "removeFromFavourite": "Produto favorito removido com sucesso",
+    "notAvailableFavouriteProduct": "Produto favorito não disponível"
   },
   "quickview": {
     "product_details": "Detalhes do produto",

@@ -16,11 +16,6 @@ const typeDefs = require("./GraphQL/TypeDef/index");
 const DatabaseConnection = require("./Config/DataBase");
 const { authenticateUser } = require("./Utilities/authUtils");
 
-const Stripe = require("stripe");
-const stripe = Stripe(
-  "sk_test_51PKusfSF45ceFcmoNjxILNypOpmyM12iZCIMU9nsvWA9LD3qmATfJCoIfygNecX95pp1slJMjOIWFifaiuQNZpOa00D5A3D3f6"
-);
-
 const app = express();
 
 /* ---------------------------- Middleware setup ---------------------------- */

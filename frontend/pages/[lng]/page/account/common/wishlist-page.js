@@ -1,51 +1,90 @@
-import React, { useContext } from "react";
-import { Container, Row, Col, Table } from "reactstrap";
-import { WishlistContext } from "../../../../../helpers/wishlist/WishlistContext";
-import { useRouter } from "next/router";
+import React from "react";
+import { Container, Row, Col, Table, Spinner } from "reactstrap";
 import LocalLink from "../../../../../components/LocalLink";
 import { toast } from "react-toastify";
 import { CREATE_ADD_TO_CART } from "../../../../../GraphQL/Mutations/cartMutations";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
+import { GET_FAVOURITE_PRODUCT } from "../../../../../GraphQL/Queries/favouriteQueries";
+import { REMOVE_FAVOURITE } from "../../../../../GraphQL/Mutations/favouriteMutations";
 
 const WishlistPage = () => {
-  const router = useRouter();
-  const context = useContext(WishlistContext);
-
-  const wishlist = context.wishlistItems;
-  const removeFromWish = context.removeFromWish;
   const { t } = useTranslation();
 
   const [createcart] = useMutation(CREATE_ADD_TO_CART);
+  const [removeFavourite] = useMutation(REMOVE_FAVOURITE);
+  const userData = JSON.parse(localStorage.getItem("customerDetail"));
+
+  const {
+    data: favouriteData,
+    loading,
+    refetch,
+  } = useQuery(GET_FAVOURITE_PRODUCT, {
+    variables: {
+      userId: userData?.id,
+    },
+  });
 
   const handleAddToCart = async (product) => {
-    const userData = JSON.parse(localStorage.getItem("customerDetail"));
-    const { data } = await createcart({
-      variables: {
-        input: {
-          userId: userData?.id,
-          products: {
-            ProductID: product.id,
-            price: product.price,
-            quantity: 1,
-            color: product.colors[0] || null,
-            size: product.sizes[0] || null,
-            totalAmount: product.price,
-            title: product.title,
+    try {
+      const { data } = await createcart({
+        variables: {
+          input: {
+            userId: userData?.id,
+            products: {
+              ProductID: product?.productId._id,
+              price: product?.productId.price,
+              quantity: 1,
+              color: product?.productId.colors[0] || null,
+              size: product?.productId.sizes[0] || null,
+              totalAmount: product?.productId.price,
+              title: product?.productId.title,
+            },
           },
         },
-      },
-    });
-    if (data) {
-      toast.success(t("product_details.addToCart"));
-    } else {
+      });
+      if (data) {
+        toast.success(t("product_details.addToCart"));
+        refetch();
+      } else {
+        toast.error(t("product_details.addToCartError"));
+      }
+    } catch (error) {
+      console.error(error);
       toast.error(t("product_details.addToCartError"));
     }
   };
 
+  const handleRemoveFromFavourite = async (product) => {
+    try {
+      const { data } = await removeFavourite({
+        variables: {
+          userId: product.userId,
+          productId: product.productId._id,
+          productType: product.productType,
+        },
+      });
+
+      if (data) {
+        toast.success(t("wishlist.removeFromFavourite"));
+        refetch();
+      } else {
+        toast.error("Failed to Remove Favourite Product");
+      }
+    } catch (error) {
+      toast.error(
+        "An error occurred while removing the product from favourites"
+      );
+    }
+  };
+
+  if (loading) {
+    return <Spinner style={{ color: "#ff8084" }} />;
+  }
+
   return (
     <>
-      {wishlist.length >= 0 ? (
+      {favouriteData?.getFavourites.length > 0 ? (
         <section className="wishlist-section section-b-space">
           <Container>
             <Row>
@@ -60,27 +99,30 @@ const WishlistPage = () => {
                       <th scope="col">{t("wishlist.action")}</th>
                     </tr>
                   </thead>
-                  {wishlist.map((item, i) => (
+                  {favouriteData?.getFavourites.map((item, i) => (
                     <tbody key={i}>
                       <tr>
                         <td>
                           <a href="#">
                             <img
                               src={
-                                process.env.NEXT_PUBLIC_API_KEY + item.images[0]
+                                process.env.NEXT_PUBLIC_API_KEY +
+                                item.productId.images[0]
                               }
-                              alt=""
+                              alt="product"
                             />
                           </a>
                         </td>
                         <td>
-                          <a href="#">{item.title}</a>
+                          <a href="#">{item.productId.title}</a>
                           <Row className="mobile-cart-content">
                             <div className="col-xs-3">
-                              <p>{item.status}</p>
+                              <p>{item.productId.status}</p>
                             </div>
                             <div className="col-xs-3">
-                              <h2 className="td-color">${item.price}</h2>
+                              <h2 className="td-color">
+                                ${item.productId.price}
+                              </h2>
                             </div>
                             <div className="col-xs-3">
                               <h2 className="td-color">
@@ -95,16 +137,16 @@ const WishlistPage = () => {
                           </Row>
                         </td>
                         <td>
-                          <h2>${item.price}</h2>
+                          <h2>${item.productId.price}</h2>
                         </td>
                         <td>
-                          <p>{item.status}</p>
+                          <p>{item.productId.status}</p>
                         </td>
                         <td>
                           <a
                             href={null}
                             className="icon me-3"
-                            onClick={() => removeFromWish(item)}
+                            onClick={() => handleRemoveFromFavourite(item)}
                           >
                             <i className="fa fa-times"></i>
                           </a>
@@ -127,19 +169,12 @@ const WishlistPage = () => {
                 <LocalLink href={"/"} className="btn btn-solid">
                   {t("wishlist.continue_shopping")}
                 </LocalLink>
-                <a
-                  href={null}
-                  className="btn btn-solid"
-                  onClick={() => handleAddToCart(item)}
-                >
-                  {t("wishlist.check_out")}
-                </a>
               </Col>
             </Row>
           </Container>
         </section>
       ) : (
-        ""
+        <p>{t("wishlist.notAvailableFavouriteProduct")}</p>
       )}
     </>
   );
