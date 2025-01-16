@@ -4,8 +4,31 @@ const Cart = require("../../Model/cartModel");
 const Customer = require("../../Model/customerModel");
 const Order = require("../../Model/orderModel");
 const CustomError = require("../../Utilities/CustomError");
+const PhysicalProduct = require("../../Model/physicalProductModel");
 
 const orderResolvers = {
+  Query: {
+    GetMyOrder: async (_, { customerId }) => {
+      try {
+        const customer = await Customer.findById(customerId);
+        if (!customer) {
+          throw new CustomError("Customer not found", 404);
+        }
+
+        const orders = await Order.find({ customer: customerId })
+          .populate("customer", "name email")
+          .populate("products.productId", "name price description");
+          
+        return orders;
+      } catch (error) {
+        console.error(error);
+        throw new CustomError(
+          error.message || "Error fetching orders",
+          error.statusCode || 500
+        );
+      }
+    },
+  },
   Mutation: {
     AddOrder: async (_, { customerId, cartId, shippingAddress }) => {
       try {
@@ -19,8 +42,16 @@ const orderResolvers = {
           throw new CustomError("Cart not found");
         }
 
+        const physicalProducts = await PhysicalProduct.find();
+
+        const physicalProductIds = new Set(
+          physicalProducts.map((physical) => physical._id)
+        );
+
         const products = cart?.products?.map((item) => ({
-          productType: "PHYSICAL",
+          productType: physicalProductIds.has(item.ProductID)
+            ? "PHYSICAL"
+            : "DIGITAL",
           productId: item?.ProductID,
           quantity: item?.quantity,
         }));

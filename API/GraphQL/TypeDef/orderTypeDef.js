@@ -9,6 +9,10 @@ const orderTypeDefs = gql`
     ): CreateOrderResponses
   }
 
+  type Query {
+    GetMyOrder(customerId: ID!): [Order]
+  }
+
   type CreateOrderResponses {
     order: String
     paymentIntentClientSecret: String

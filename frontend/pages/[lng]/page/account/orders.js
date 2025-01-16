@@ -6,7 +6,7 @@ import OrdersPage from "./common/ordersPage";
 const orders = () => {
   const { t } = useTranslation();
   return (
-    <CommonLayout parent="Home" title="Orders">
+    <CommonLayout parent={t("compare.home")} title={t("myOrders.myOrders")}>
       <OrdersPage />
     </CommonLayout>
   );

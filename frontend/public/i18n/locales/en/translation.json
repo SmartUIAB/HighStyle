@@ -203,7 +203,7 @@
     "home": "Home",
     "wishlist": "Wishlist",
     "removeFromFavourite": "Remove Favourite Product Successfully",
-    "notAvailableFavouriteProduct":"Favourite product not available"
+    "notAvailableFavouriteProduct": "Favourite product not available"
   },
   "quickview": {
     "product_details": "Product Details",
@@ -223,7 +223,7 @@
     "login_button": "Login",
     "register_button": "Create an Account"
   },
-  "register":{
+  "register": {
     "title": "Create Account",
     "firstName": "First Name",
     "lastName": "Last Name",
@@ -240,5 +240,27 @@
     },
     "successMessage": "Customer Created Successfully",
     "errorMessage": "An error occurred while creating the account"
+  },
+  "myOrders": {
+    "myOrders": "My Orders",
+    "searchPlaceholder": "Search by Order ID or Status...",
+    "noOrdersFound": "No orders found.",
+    "orderId": "Order ID",
+    "date": "Date",
+    "total": "Total",
+    "status": "Status",
+    "items": "Items",
+    "actions": "Actions",
+    "trackOrder": "Track Order",
+    "viewProduct": "View Product",
+    "refreshing": "Refreshing...",
+    "number": "No."
+  },
+  "orderStatus": {
+    "pending": "Pending",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "completed": "Completed",
+    "canceled": "Canceled"
   }
 }

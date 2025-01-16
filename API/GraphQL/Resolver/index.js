@@ -28,6 +28,7 @@ const resolver = {
     ...mediaResolver.Query,
     ...menuResolvers.Query,
     ...pageResolvers.Query,
+    ...orderResolvers.Query,
     ...notificationResolver.Query,
     ...favouriteResolver.Query,
   },

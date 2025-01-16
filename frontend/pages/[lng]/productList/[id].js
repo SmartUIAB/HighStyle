@@ -16,7 +16,6 @@ import {
   GET_PHYSICAL_PRODUCT,
 } from "../../../GraphQL/Queries/productQueries";
 import { useQuery } from "@apollo/client";
-import Link from "next/link";
 import CommonLayout from "../../../components/shop/common-layout";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
@@ -171,11 +170,7 @@ const ProductList = () => {
                           <Card.Text className="mt-auto">
                             <strong>{t("productlist.details.price")}: </strong>
                             <span className="text-success">
-                              $
-                              {(
-                                product.price -
-                                (product.price * (product.discount || 0)) / 100
-                              ).toFixed(2)}
+                              ${product.price.toFixed(2)}
                             </span>{" "}
                             {product.discount && (
                               <s className="text-muted">${product.price}</s>

@@ -223,7 +223,7 @@
     "login_button": "Iniciar sesión",
     "register_button": "Crear una cuenta"
   },
-  "register":{
+  "register": {
     "title": "Crear Cuenta",
     "firstName": "Nombre",
     "lastName": "Apellido",
@@ -240,5 +240,27 @@
     },
     "successMessage": "Cuenta creada exitosamente",
     "errorMessage": "Ocurrió un error al crear la cuenta"
+  },
+  "myOrders": {
+    "myOrders": "Mis Pedidos",
+    "searchPlaceholder": "Buscar por ID de Pedido o Estado...",
+    "noOrdersFound": "No se encontraron pedidos.",
+    "orderId": "ID de Pedido",
+    "date": "Fecha",
+    "total": "Total",
+    "status": "Estado",
+    "items": "Artículos",
+    "actions": "Acciones",
+    "trackOrder": "Rastrear Pedido",
+    "viewProduct": "Ver Producto",
+    "refreshing": "Actualizando...",
+    "number": "N.º"
+  },
+  "orderStatus": {
+    "pending": "Pendiente",
+    "shipped": "Enviado",
+    "delivered": "Entregado",
+    "completed": "Completado",
+    "canceled": "Cancelado"
   }
 }

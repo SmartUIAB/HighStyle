@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import sizeChart from "../../../../public/assets/images/size-chart.jpg";
 import { Modal, ModalBody, ModalHeader, Media, Input } from "reactstrap";
 import CountdownComponent from "../../../../components/common/widgets/countdownComponent";
@@ -20,6 +19,7 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
   const toggle = () => setModal(!modal);
 
   const [createcart] = useMutation(CREATE_ADD_TO_CART);
+  const userData = JSON.parse(localStorage.getItem("customerDetail"));
 
   const product = item;
   const isDigital = product?.__typename === "DigitalProduct";
@@ -50,7 +50,6 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
 
   const handleAddToCart = async () => {
     if (product) {
-      const userData = JSON.parse(localStorage.getItem("customerDetail"));
       const { data } = await createcart({
         variables: {
           input: {
@@ -79,12 +78,14 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
     <div className={`product-right ${stickyClass}`}>
       <h2>{product?.title}</h2>
       <h4>
-        <del>{product?.price}</del>
+        <del>
+          ${product?.price + product?.price * (product?.discount / 100)}
+        </del>
         <span>
           {product?.discount}% {t("product_details.off")}
         </span>
       </h4>
-      <h3>{product?.price - (product?.price * product?.discount) / 100}</h3>
+      <h3>${product?.price.toFixed(2)}</h3>
 
       {!isDigital && product?.colors?.length > 0 && (
         <ul className="color-variant">
