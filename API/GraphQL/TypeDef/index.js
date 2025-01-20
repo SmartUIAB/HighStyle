@@ -14,6 +14,7 @@ const cartTypeDefs = require("./cartTypeDef");
 const orderTypeDefs = require("./orderTypeDef");
 const notificationTypeDefs = require("./notificationTypeDef");
 const favouriteTypeDef = require("./favouriteTypeDef");
+const reviewTypeDef = require("./reviewTypeDef")
 
 const typeDefs = gql`
   ${userTypeDefs}
@@ -31,6 +32,7 @@ const typeDefs = gql`
   ${orderTypeDefs}
   ${notificationTypeDefs}
   ${favouriteTypeDef}
+  ${reviewTypeDef}
 `;
 
 module.exports = typeDefs;

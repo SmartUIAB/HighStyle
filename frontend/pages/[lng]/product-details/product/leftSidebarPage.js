@@ -167,7 +167,12 @@ const LeftSidebarPage = () => {
                   </Row>
                 )}
               </Container>
-              <ProductTab />
+              <ProductTab
+                item={
+                  physicalProductData?.physicalProduct ||
+                  digitalProductData?.digitalProduct
+                }
+              />
             </Col>
           </Row>
         </Container>

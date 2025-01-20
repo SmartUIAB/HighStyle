@@ -116,7 +116,9 @@
     "version": "Version",
     "compatibility": "Compatibility",
     "off": "Off",
-    "relatedProduct": "Related Product"
+    "relatedProduct": "Related Product",
+    "selectColorAndSize": "Please select both color and size before adding to the cart.",
+    "fileDetails": "File Details"
   },
   "landing_page": {
     "welcome": "Welcome to Fashion",
@@ -169,6 +171,11 @@
       "file_size": "File Size",
       "compatibility": "Compatibility",
       "status": "Status"
+    },
+    "sort": {
+      "hightolow": "High to Low",
+      "lowtohigh": "Low to High",
+      "default": "Default"
     }
   },
   "compare": {

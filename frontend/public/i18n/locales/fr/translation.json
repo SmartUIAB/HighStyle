@@ -116,7 +116,9 @@
     "version": "Version",
     "compatibility": "Compatibilité",
     "off": "Réduction",
-    "relatedProduct": "Produit Connexe"
+    "relatedProduct": "Produit Connexe",
+    "selectColorAndSize": "Veuillez sélectionner à la fois la couleur et la taille avant d'ajouter au panier.",
+    "fileDetails": "Détails du fichier"
   },
   "landing_page": {
     "welcome": "Bienvenue dans la Mode",
@@ -169,6 +171,11 @@
       "file_size": "Taille du fichier",
       "compatibility": "Compatibilité",
       "status": "Statut"
+    },
+    "sort": {
+      "hightolow": "Du plus cher au moins cher",
+      "lowtohigh": "Du moins cher au plus cher",
+      "default": "Défaut"
     }
   },
   "compare": {

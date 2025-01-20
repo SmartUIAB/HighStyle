@@ -116,7 +116,9 @@
     "version": "Versão",
     "compatibility": "Compatibilidade",
     "off": "Desconto",
-    "relatedProduct": "Produto Relacionado"
+    "relatedProduct": "Produto Relacionado",
+    "selectColorAndSize": "Por favor, selecione tanto a cor quanto o tamanho antes de adicionar ao carrinho.",
+    "fileDetails": "Detalhes do arquivo"
   },
   "landing_page": {
     "welcome": "Bem-vindo à Moda",
@@ -169,6 +171,11 @@
       "file_size": "Tamanho do Arquivo",
       "compatibility": "Compatibilidade",
       "status": "Status"
+    },
+    "sort": {
+      "hightolow": "Maior para Menor",
+      "lowtohigh": "Menor para Maior",
+      "default": "Padrão"
     }
   },
   "compare": {

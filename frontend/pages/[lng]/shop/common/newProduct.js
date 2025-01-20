@@ -7,6 +7,7 @@ import {
   GET_PHYSICAL_PRODUCT,
 } from "../../../../GraphQL/Queries/productQueries";
 import { useTranslation } from "react-i18next";
+import LocalLink from "../../../../components/LocalLink";
 
 const NewProduct = () => {
   const { t } = useTranslation();
@@ -40,7 +41,7 @@ const NewProduct = () => {
               {mergedProducts &&
                 mergedProducts.slice(0, 3).map((product, index) => (
                   <div className="media" key={index}>
-                    <a href={`/product-details/${product.id}`}>
+                    <LocalLink href={`/product-details/${product.id}`}>
                       <Media
                         src={
                           process.env.NEXT_PUBLIC_API_KEY + product.images[0]
@@ -48,7 +49,7 @@ const NewProduct = () => {
                         alt={`Thumbnail ${index}`}
                         className="img-fluid blur-up lazyload"
                       />
-                    </a>
+                    </LocalLink>
                     <div className="media-body align-self-center">
                       <div className="rating">
                         <i className="fa fa-star"></i>{" "}
@@ -60,7 +61,7 @@ const NewProduct = () => {
                       <a href={null}>
                         <h6>{product.title}</h6>
                       </a>
-                      <h4>{product.price}</h4>
+                      <h4>{product.price.toFixed(2)}</h4>
                     </div>
                   </div>
                 ))}

@@ -142,7 +142,7 @@ const ProductSection = () => {
                   <div className="product-box">
                     <div className="img-wrapper">
                       <div className="front">
-                        <a href={null}>
+                        <LocalLink href={`/product-details/${product.id}`}>
                           <Media
                             onClick={() => clickProductDetail(product)}
                             src={
@@ -152,10 +152,10 @@ const ProductSection = () => {
                             className="img-fluid blur-up lazyload bg-img"
                             alt=""
                           />
-                        </a>
+                        </LocalLink>
                       </div>
                       <div className="back">
-                        <a href={null}>
+                        <LocalLink href={`/product-details/${product.id}`}>
                           <Media
                             src={
                               process.env.NEXT_PUBLIC_API_KEY +
@@ -164,7 +164,7 @@ const ProductSection = () => {
                             className="img-fluid blur-up lazyload bg-img"
                             alt=""
                           />
-                        </a>
+                        </LocalLink>
                       </div>
                       <div className="cart-info cart-wrap">
                         <button
@@ -211,12 +211,18 @@ const ProductSection = () => {
                       <a href={null}>
                         <h6>{product.title}</h6>
                       </a>
-                      <h4>{product.price}</h4>
-                      <ul className="color-variant">
-                        <li className="bg-light0"></li>
-                        <li className="bg-light1"></li>
-                        <li className="bg-light2"></li>
-                      </ul>
+                      <h4>{product.price.toFixed(2)}</h4>
+                      {product.__typename === "PhysicalProduct" && (
+                        <ul className="color-variant">
+                          {product.colors.map((color, index) => (
+                            <li
+                              key={index}
+                              style={{ backgroundColor: color }}
+                              className={`color-item ${index}`}
+                            ></li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   </div>
                 </Col>

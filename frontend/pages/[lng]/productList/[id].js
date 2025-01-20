@@ -24,6 +24,7 @@ import LocalLink from "../../../components/LocalLink";
 const ProductList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortOrder, setSortOrder] = useState("");
   const productsPerPage = 6;
 
   const { t } = useTranslation();
@@ -72,12 +73,21 @@ const ProductList = () => {
     setCurrentPage(1);
   };
 
-  const filteredProducts = mergedProducts
-    .filter((product) => product.subcategory.id === id) // Filter by subcategory ID if available
-    .filter(
-      (product) =>
-        product.title.toLowerCase().includes(searchTerm.toLowerCase()) // Filter by search term
+  const handleSortChange = (e) => {
+    setSortOrder(e.target.value);
+  };
+
+  let filteredProducts = mergedProducts
+    .filter((product) => product.subcategory.id === id)
+    .filter((product) =>
+      product.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+  if (sortOrder === "lowToHigh") {
+    filteredProducts = filteredProducts.sort((a, b) => a.price - b.price);
+  } else if (sortOrder === "highToLow") {
+    filteredProducts = filteredProducts.sort((a, b) => b.price - a.price);
+  }
 
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
@@ -100,16 +110,31 @@ const ProductList = () => {
       >
         <Container className="mt-4">
           {!loading && filteredProducts.length > 0 && (
-            <Form className="mb-4">
-              <InputGroup>
-                <Form.Control
-                  type="text"
-                  placeholder={t("productlist.placeholder.search_products")}
-                  value={searchTerm}
-                  onChange={handleSearch}
-                />
-              </InputGroup>
-            </Form>
+            <>
+              <Form className="mb-4">
+                <InputGroup>
+                  <Form.Control
+                    type="text"
+                    placeholder={t("productlist.placeholder.search_products")}
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                  <Form.Select
+                    value={sortOrder}
+                    onChange={handleSortChange}
+                    className="ms-2"
+                  >
+                    <option value="">{t("productlist.sort.default")}</option>
+                    <option value="lowToHigh">
+                      {t("productlist.sort.lowtohigh")}
+                    </option>
+                    <option value="highToLow">
+                      {t("productlist.sort.hightolow")}
+                    </option>
+                  </Form.Select>
+                </InputGroup>
+              </Form>
+            </>
           )}
 
           {loading ? (
@@ -175,65 +200,6 @@ const ProductList = () => {
                             {product.discount && (
                               <s className="text-muted">${product.price}</s>
                             )}
-                            <br />
-                            {product.colors && product.colors.length > 0 && (
-                              <>
-                                <strong>
-                                  {t("productlist.details.colors")}:{" "}
-                                </strong>
-                                {product.colors.join(", ")}
-                                <br />
-                              </>
-                            )}
-                            {product.sizes && product.sizes.length > 0 && (
-                              <>
-                                <strong>
-                                  {t("productlist.details.sizes")}:{" "}
-                                </strong>
-                                {product.sizes.join(", ")}
-                                <br />
-                              </>
-                            )}
-                            {product.fileFormat && (
-                              <>
-                                <strong>
-                                  {t("productlist.details.file_format")}:{" "}
-                                </strong>
-                                {product.fileFormat}
-                                <br />
-                              </>
-                            )}
-                            {product.fileSize && (
-                              <>
-                                <strong>
-                                  {t("productlist.details.file_size")}:{" "}
-                                </strong>
-                                {product.fileSize}
-                                <br />
-                              </>
-                            )}
-                            {product.compatibility &&
-                              product.compatibility.length > 0 && (
-                                <>
-                                  <strong>
-                                    {t("productlist.details.compatibility")}:{" "}
-                                  </strong>
-                                  {product.compatibility.join(", ")}
-                                  <br />
-                                </>
-                              )}
-                            <strong>{t("productlist.details.status")}: </strong>
-                            <span
-                              className={
-                                product.status === "Available"
-                                  ? "text-primary"
-                                  : "text-danger"
-                              }
-                            >
-                              {product.status === "Available"
-                                ? t("productlist.status.available")
-                                : t("productlist.status.out_of_stock")}
-                            </span>
                           </Card.Text>
                         </Card.Body>
                       </Card>

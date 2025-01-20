@@ -50,6 +50,10 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
 
   const handleAddToCart = async () => {
     if (product) {
+      if (!isDigital && (activeColor === null || activeSize === null)) {
+        toast.error(t("product_details.selectColorAndSize"));
+        return;
+      }
       const { data } = await createcart({
         variables: {
           input: {
@@ -79,7 +83,11 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
       <h2>{product?.title}</h2>
       <h4>
         <del>
-          ${product?.price + product?.price * (product?.discount / 100)}
+          $
+          {(
+            product?.price +
+            product?.price * (product?.discount / 100)
+          ).toFixed(2)}
         </del>
         <span>
           {product?.discount}% {t("product_details.off")}
@@ -88,12 +96,21 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
       <h3>${product?.price.toFixed(2)}</h3>
 
       {!isDigital && product?.colors?.length > 0 && (
-        <ul className="color-variant">
+        <ul className="color-variant d-flex list-unstyled">
           {product.colors.map((color, index) => (
             <li
               key={index}
-              style={{ backgroundColor: color }}
-              className={`color-item ${activeColor === index ? "active" : ""}`}
+              style={{
+                backgroundColor: color,
+                width: "30px",
+                height: "30px",
+                cursor: "pointer",
+              }}
+              className={`color-item rounded-circle border ${
+                activeColor === index
+                  ? "border-primary border-3"
+                  : "border-secondary"
+              }`}
               onClick={() => setActiveColor(index)}
             ></li>
           ))}
