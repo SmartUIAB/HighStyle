@@ -69,7 +69,7 @@ const ProductList = () => {
   }
 
   const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
+    setSearchTerm(e.target.value.trim());
     setCurrentPage(1);
   };
 
@@ -109,33 +109,29 @@ const ProductList = () => {
         title={t("productlist.route_name.product_list")}
       >
         <Container className="mt-4">
-          {!loading && filteredProducts.length > 0 && (
-            <>
-              <Form className="mb-4">
-                <InputGroup>
-                  <Form.Control
-                    type="text"
-                    placeholder={t("productlist.placeholder.search_products")}
-                    value={searchTerm}
-                    onChange={handleSearch}
-                  />
-                  <Form.Select
-                    value={sortOrder}
-                    onChange={handleSortChange}
-                    className="ms-2"
-                  >
-                    <option value="">{t("productlist.sort.default")}</option>
-                    <option value="lowToHigh">
-                      {t("productlist.sort.lowtohigh")}
-                    </option>
-                    <option value="highToLow">
-                      {t("productlist.sort.hightolow")}
-                    </option>
-                  </Form.Select>
-                </InputGroup>
-              </Form>
-            </>
-          )}
+          <Form className="mb-4">
+            <InputGroup>
+              <Form.Control
+                type="text"
+                placeholder={t("productlist.placeholder.search_products")}
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+              <Form.Select
+                value={sortOrder}
+                onChange={handleSortChange}
+                className="ms-2"
+              >
+                <option value="">{t("productlist.sort.default")}</option>
+                <option value="lowToHigh">
+                  {t("productlist.sort.lowtohigh")}
+                </option>
+                <option value="highToLow">
+                  {t("productlist.sort.hightolow")}
+                </option>
+              </Form.Select>
+            </InputGroup>
+          </Form>
 
           {loading ? (
             <div

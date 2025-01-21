@@ -195,7 +195,7 @@ const CartPage = () => {
                           </LocalLink>
                         </td>
                         <td>
-                          <h2>{item.price}</h2>
+                          <h2>${item.price.toFixed(2)}</h2>
                         </td>
                         <td>
                           <div className="qty-box">
@@ -219,7 +219,9 @@ const CartPage = () => {
                           ></i>
                         </td>
                         <td>
-                          <h2 className="td-color">{item.totalAmount}</h2>
+                          <h2 className="td-color">
+                            ${item.totalAmount.toFixed(2)}
+                          </h2>
                         </td>
                       </tr>
                     </tbody>
@@ -230,7 +232,7 @@ const CartPage = () => {
                     <tr>
                       <td>{t("cart_details.total_price")} :</td>
                       <td>
-                        <h2>{cartItems?.getCart?.totalAmount}</h2>
+                        <h2>${cartItems?.getCart?.totalAmount.toFixed(2)}</h2>
                       </td>
                     </tr>
                   </tfoot>

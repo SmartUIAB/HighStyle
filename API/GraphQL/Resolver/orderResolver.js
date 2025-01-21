@@ -18,7 +18,7 @@ const orderResolvers = {
         const orders = await Order.find({ customer: customerId })
           .populate("customer", "name email")
           .populate("products.productId", "name price description");
-          
+
         return orders;
       } catch (error) {
         console.error(error);
@@ -44,17 +44,21 @@ const orderResolvers = {
 
         const physicalProducts = await PhysicalProduct.find();
 
-        const physicalProductIds = new Set(
-          physicalProducts.map((physical) => physical._id)
+        const physicalProductIds = physicalProducts.map((physical) =>
+          physical._id.toString()
         );
 
-        const products = cart?.products?.map((item) => ({
-          productType: physicalProductIds.has(item.ProductID)
-            ? "PHYSICAL"
-            : "DIGITAL",
-          productId: item?.ProductID,
-          quantity: item?.quantity,
-        }));
+        const products = cart?.products?.map((item) => {
+          const isPhysical = physicalProductIds.some(
+            (id) => id === item.ProductID.toString()
+          );
+
+          return {
+            productType: isPhysical ? "PHYSICAL" : "DIGITAL",
+            productId: item?.ProductID,
+            quantity: item?.quantity,
+          };
+        });
 
         const orderData = {
           cart: cart?.id,
@@ -91,8 +95,8 @@ const orderResolvers = {
             },
           ],
           mode: "payment",
-          success_url: `http://localhost:3000/page/account/cart`,
-          cancel_url: `http://localhost:3000/page/account`,
+          success_url: `http://localhost:3000/en/page/order-success`,
+          cancel_url: `http://localhost:3000/en/page/account/cart`,
           customer: stripeCustomer.id,
           metadata: {
             orderId: savedOrder._id.toString(),
