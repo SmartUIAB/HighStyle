@@ -119,6 +119,27 @@ const orderResolvers = {
         throw new Error(error.message);
       }
     },
+    deleteOldPendingOrders: async (_, __, { user }) => {
+      if (!user || (user.role !== "admin" && user.role !== "cron-job")) {
+        throw new Error("Unauthorized");
+      }
+
+      const now = new Date();
+      const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+
+      try {
+        // Delete orders older than 24 hours with status 'pending'
+        const deletedOrders = await Order.deleteMany({
+          orderStatus: "PENDING",
+          createdAt: { $lt: twentyFourHoursAgo },
+        });
+        // Return the count of deleted orders
+        return deletedOrders.deletedCount;
+      } catch (error) {
+        console.error("Error deleting old pending orders:", error);
+        throw new Error("Failed to delete old pending orders");
+      }
+    },
   },
 };
 

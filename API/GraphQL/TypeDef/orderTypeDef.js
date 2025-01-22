@@ -7,6 +7,7 @@ const orderTypeDefs = gql`
       cartId: ID!
       shippingAddress: ShippingAddressInput!
     ): CreateOrderResponses
+    deleteOldPendingOrders: Int
   }
 
   type Query {

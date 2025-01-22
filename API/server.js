@@ -8,6 +8,7 @@ const { createServer } = require("http");
 const { graphqlUploadExpress } = require("graphql-upload");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 const cookieParser = require("cookie-parser");
+const cron = require("node-cron");
 
 // Import your route handlers, type definitions, resolvers, and utility functions
 const paymentRoute = require("./Routes/paymentRoute");
@@ -50,6 +51,10 @@ const schema = makeExecutableSchema({
 const server = new ApolloServer({
   schema,
   context: async ({ req, res }) => {
+    if (!req) {
+      return { userId: null, user: { role: "cron-job" } };
+    }
+
     const token = req.cookies.token || process.env.TOKEN;
     const { userId, user } = await authenticateUser(token);
     return { userId, user, res };
@@ -71,10 +76,32 @@ const server = new ApolloServer({
 
 /* ------------------------ Error handling middleware ----------------------- */
 app.use((err, req, res, next) => {
-  console.error(err, "=========");
   const statusCode = err.statusCode || 500;
   const message = err.message || "Error in Server";
   res.status(statusCode).json({ message });
+});
+
+/* -------------------------------- cron jobs ------------------------------- */
+cron.schedule("0 0 */5 * *", async () => {
+  try {
+    const response = await server.executeOperation({
+      query: `
+        mutation {
+          deleteOldPendingOrders
+        }
+      `,
+    });
+
+    if (response.errors) {
+      console.error("Error during cron job execution:", response.errors);
+    } else {
+      console.log(
+        `Deleted ${response.data.deleteOldPendingOrders} old pending orders`
+      );
+    }
+  } catch (error) {
+    console.error("Cron job failed to delete orders:", error);
+  }
 });
 
 /* ------------------------------ Start server ------------------------------ */
