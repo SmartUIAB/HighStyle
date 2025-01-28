@@ -1,5 +1,5 @@
 import React from "react";
-import Link from "next/link";
+import LocalLink from "../../../components/LocalLink";
 
 const ComingSoon = () => {
   return (
@@ -13,7 +13,7 @@ const ComingSoon = () => {
                   <div className="logo mb-4">
                     <a href="#">
                       <img
-                        src="../assets/images/icon/logo.png"
+                        src="../../assets/images/icon/logo.png"
                         alt="Multikart_fashion"
                         className="img-fluid"
                       />

@@ -142,7 +142,6 @@ const CartPage = () => {
     e.preventDefault();
     toast.success("Shipping address submitted!");
     setIsModalOpen(false);
-    console.log(shippingAddress);
   };
 
   if (loading) return <div>Loading...</div>;

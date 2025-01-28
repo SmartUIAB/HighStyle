@@ -26,9 +26,15 @@ const customerTypeDef = gql`
     token: String!
   }
 
+  type MessageResponse {
+    message: String!
+  }
+
   type Mutation {
     loginCustomer(email: String!, password: String!): CustomerAuthPayload!
     createCustomer(input: CustomerInput!, password: String!): CustomerResponse!
+    forgetPassword(email: String!): MessageResponse
+    resetPassword(token: String!, newPassword: String!): MessageResponse
   }
 `;
 

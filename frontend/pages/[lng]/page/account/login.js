@@ -104,6 +104,11 @@ const Login = () => {
                       <p className="text-danger">{errors.password}</p>
                     )}
                   </div>
+                  <br />
+                  <LocalLink href="/page/account/forget-pwd">
+                    forgetPassword
+                  </LocalLink>
+                  <br />
                   <a onClick={handleSubmit} className="btn btn-solid">
                     {t("login.login_button")}
                   </a>

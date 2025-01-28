@@ -30,3 +30,19 @@ export const LOGOUT_USER = gql`
     logout
   }
 `;
+
+export const FORGET_PASSWORD = gql`
+  mutation ForgetPassword($email: String!) {
+    forgetPassword(email: $email) {
+      message
+    }
+  }
+`;
+
+export const RESET_PASSWORD = gql`
+  mutation ForgetPassword($token: String!, $newPassword: String!) {
+    resetPassword(token: $token, newPassword: $newPassword) {
+      message
+    }
+  }
+`;

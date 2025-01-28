@@ -8,8 +8,6 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("token");
   const locale = pathname.split('/')[1];
 
-
-
   if (pathname.includes("/assets/") || pathname.includes("/public/") || pathname.includes("/i18n/")) {
     return NextResponse.next();
   }
@@ -24,7 +22,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!token) {
+  if (
+    !token &&
+    pathname !== `/${locale}/page/account/forget-pwd` &&
+    !pathname.startsWith(`/${locale}/page/account/password-reset/`)
+  ) {
     return NextResponse.redirect(`${origin}/${locale}/page/account/login`);
   }
 

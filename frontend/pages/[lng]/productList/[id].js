@@ -48,8 +48,6 @@ const ProductList = () => {
     ...(allDigitalProductData?.digitalProducts?.products || []),
   ];
 
-  console.log("mergedProducts", mergedProducts);
-
   const loading = loadingPhysical || loadingDigital;
 
   if (errorPhysical || errorDigital) {
