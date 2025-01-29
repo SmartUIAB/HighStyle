@@ -58,7 +58,7 @@ const TopBar = ({ topClass }) => {
               <li className="mobile-wishlist">
                 <LocalLink href={`/page/account/orders`}>
                   <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-                  Orders
+                  {t("myOrders.myOrders")}
                 </LocalLink>
               </li>
               <li className="onhover-dropdown mobile-account">

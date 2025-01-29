@@ -15,6 +15,7 @@ const orderResolvers = require("./orderResolver");
 const notificationResolver = require("./notificationResolver");
 const favouriteResolver = require("./favouriteResolver");
 const reviewResolvers = require("./reviewResolver");
+const comingsoonResolver = require("./comingsoonResolver");
 
 const resolver = {
   Query: {
@@ -33,6 +34,7 @@ const resolver = {
     ...notificationResolver.Query,
     ...favouriteResolver.Query,
     ...reviewResolvers.Query,
+    ...comingsoonResolver.Query
   },
   Mutation: {
     ...userResolver.Mutation,
@@ -49,7 +51,8 @@ const resolver = {
     ...orderResolvers.Mutation,
     ...notificationResolver.Mutation,
     ...favouriteResolver.Mutation,
-    ...reviewResolvers.Mutation
+    ...reviewResolvers.Mutation,
+    ...comingsoonResolver.Mutation
   },
   Category: {
     ...fieldResolver.Category,

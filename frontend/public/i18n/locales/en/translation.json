@@ -269,5 +269,34 @@
     "delivered": "Delivered",
     "completed": "Completed",
     "canceled": "Canceled"
+  },
+  "forgetPassword": {
+    "forgetPassword": "Forget Password",
+    "title": "Forget Your Password",
+    "emailPlaceholder": "Enter Your Email",
+    "submitButton": "Submit",
+    "successMessage": "Password reset link sent to your email.",
+    "errorMessage": "Failed to send reset link. Please try again."
+  },
+  "passwordReset": {
+    "resetPassword": "Reset Password",
+    "resetYourPassword": "Reset Your Password",
+    "enterNewPassword": "Enter New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "resetPasswordButton": "Reset Password",
+    "passwordsDoNotMatch": "Passwords do not match!",
+    "successMessage": "Password reset successful.",
+    "errorMessage": "Failed to reset password. Please try again."
+  },
+  "comingSoon": {
+    "openingSoon": "Will be Opening Soon!",
+    "enterEmail": "Enter Your Email:",
+    "notifying": "Notifying...",
+    "notifyMe": "Notify me",
+    "storeOwner": "Are you the store owner?",
+    "loginHere": "Log in here",
+    "or": "or",
+    "changePassword": "change your password settings",
+    "poweredBy": "Powered by Multikart."
   }
 }

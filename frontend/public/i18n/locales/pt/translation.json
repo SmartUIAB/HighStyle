@@ -269,5 +269,34 @@
     "delivered": "Entregue",
     "completed": "Concluído",
     "canceled": "Cancelado"
+  },
+  "forgetPassword": {
+    "forgetPassword": "Esqueci a Senha",
+    "title": "Esqueceu Sua Senha",
+    "emailPlaceholder": "Digite Seu Email",
+    "submitButton": "Enviar",
+    "successMessage": "Link de redefinição de senha enviado para o seu email.",
+    "errorMessage": "Falha ao enviar o link de redefinição. Por favor, tente novamente."
+  },
+  "passwordReset": {
+    "resetPassword": "Redefinir Senha",
+    "resetYourPassword": "Redefina Sua Senha",
+    "enterNewPassword": "Digite a Nova Senha",
+    "confirmNewPassword": "Confirme a Nova Senha",
+    "resetPasswordButton": "Redefinir Senha",
+    "passwordsDoNotMatch": "As senhas não coincidem.",
+    "successMessage": "Senha redefinida com sucesso.",
+    "errorMessage": "Falha ao redefinir a senha. Por favor, tente novamente."
+  },
+  "comingSoon": {
+    "openingSoon": "Em breve!",
+    "enterEmail": "Digite seu e-mail:",
+    "notifying": "Notificando...",
+    "notifyMe": "Notifique-me",
+    "storeOwner": "Você é o dono da loja?",
+    "loginHere": "Faça login aqui",
+    "or": "ou",
+    "changePassword": "altere suas configurações de senha",
+    "poweredBy": "Desenvolvido por Multikart."
   }
 }

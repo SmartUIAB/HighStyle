@@ -13,7 +13,7 @@ const favouriteResolver = {
       }
     },
   },
-  
+
   Mutation: {
     addToFavourite: async (_, { userId, productId, productType }) => {
       try {

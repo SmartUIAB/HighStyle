@@ -269,5 +269,34 @@
     "delivered": "Entregado",
     "completed": "Completado",
     "canceled": "Cancelado"
+  },
+  "forgetPassword": {
+    "forgetPassword": "Olvidar Contraseña",
+    "title": "Olvidaste Tu Contraseña",
+    "emailPlaceholder": "Ingresa Tu Correo Electrónico",
+    "submitButton": "Enviar",
+    "successMessage": "Enlace de restablecimiento de contraseña enviado a tu correo electrónico.",
+    "errorMessage": "Error al enviar el enlace de restablecimiento. Por favor, inténtalo de nuevo."
+  },
+  "passwordReset": {
+    "resetPassword": "Restablecer Contraseña",
+    "resetYourPassword": "Restablece Tu Contraseña",
+    "enterNewPassword": "Ingresa Nueva Contraseña",
+    "confirmNewPassword": "Confirma Nueva Contraseña",
+    "resetPasswordButton": "Restablecer Contraseña",
+    "passwordsDoNotMatch": "Las contraseñas no coinciden.",
+    "successMessage": "Contraseña restablecida exitosamente.",
+    "errorMessage": "Error al restablecer la contraseña. Por favor, inténtalo de nuevo."
+  },
+  "comingSoon": {
+    "openingSoon": "¡Próximamente!",
+    "enterEmail": "Ingrese su correo electrónico:",
+    "notifying": "Notificando...",
+    "notifyMe": "Notifícame",
+    "storeOwner": "¿Eres el dueño de la tienda?",
+    "loginHere": "Inicia sesión aquí",
+    "or": "o",
+    "changePassword": "cambia la configuración de tu contraseña",
+    "poweredBy": "Impulsado por Multikart."
   }
 }

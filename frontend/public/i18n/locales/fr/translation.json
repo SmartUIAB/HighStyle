@@ -269,5 +269,34 @@
     "delivered": "Livré",
     "completed": "Terminé",
     "canceled": "Annulé"
+  },
+  "forgetPassword": {
+    "forgetPassword": "Mot de Passe Oublié",
+    "title": "Mot de Passe Oublié",
+    "emailPlaceholder": "Entrez Votre Email",
+    "submitButton": "Soumettre",
+    "successMessage": "Lien de réinitialisation du mot de passe envoyé à votre email.",
+    "errorMessage": "Échec de l'envoi du lien de réinitialisation. Veuillez réessayer."
+  },
+  "passwordReset": {
+    "resetPassword": "Réinitialiser le Mot de Passe",
+    "resetYourPassword": "Réinitialisez Votre Mot de Passe",
+    "enterNewPassword": "Entrez un Nouveau Mot de Passe",
+    "confirmNewPassword": "Confirmez le Nouveau Mot de Passe",
+    "resetPasswordButton": "Réinitialiser le Mot de Passe",
+    "passwordsDoNotMatch": "Les mots de passe ne correspondent pas.",
+    "successMessage": "Réinitialisation du mot de passe réussie.",
+    "errorMessage": "Échec de la réinitialisation du mot de passe. Veuillez réessayer."
+  },
+  "comingSoon": {
+    "openingSoon": "Ouverture prochaine!",
+    "enterEmail": "Entrez votre e-mail:",
+    "notifying": "Notification en cours...",
+    "notifyMe": "Notifiez-moi",
+    "storeOwner": "Êtes-vous le propriétaire du magasin?",
+    "loginHere": "Connectez-vous ici",
+    "or": "ou",
+    "changePassword": "changez vos paramètres de mot de passe",
+    "poweredBy": "Propulsé par Multikart."
   }
 }
