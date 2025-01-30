@@ -376,5 +376,6 @@
     "lastName": "Apellido",
     "email": "Correo Electrónico",
     "company": "Empresa"
-  }
+  },
+  "rowsPerPage": "Filas por página"
 }

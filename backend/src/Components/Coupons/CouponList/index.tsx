@@ -4,17 +4,19 @@ import { COUPON_LIST } from "../../../GraphQL/Queries/couponQueries";
 import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { Fragment, useState } from "react";
-import { Edit, Trash2 } from "react-feather";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, Col, Container, Modal, ModalBody, ModalFooter, ModalHeader, Row, Spinner } from "reactstrap";
 import { DELETE_COUPON } from "@/GraphQL/Mutations/couponMutations";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
+import Pagination from "@/CommonComponents/Pagination";
 
 const ListCoupons = () => {
   const [isDeleteId, setIsDeleteId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
 
   const { data: allCouponData, refetch, loading } = useQuery(COUPON_LIST);
   const [deleteCoupon] = useMutation(DELETE_COUPON);
@@ -52,6 +54,16 @@ const ListCoupons = () => {
   const toggleModal = () => setModalOpen(!modalOpen);
   const lang = localStorage.getItem("i18nextLng")
 
+  const handlePageChange = (page: any) => {
+    setPage(page)
+    refetch({ page });
+  };
+
+  const handleRowsPerPageChange = ((event: any) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  });
+
   return (
     <Fragment>
       <CommonBreadcrumb title={t("coupon.couponlist.breadcrumb_list_coupons")} parent={t("coupon.couponlist.coupons")} />
@@ -67,7 +79,7 @@ const ListCoupons = () => {
                       <Spinner style={{ color: '#ff8084' }} />
                     </div>
                   ) : (
-                    <table className="table mt-5 w-full" style={{ minWidth: '1200px' }}>
+                    <table className="table mt-3 w-full" style={{ minWidth: '1200px' }}>
                       <thead>
                         <tr>
                           <th className="text-uppercase">{t("coupon.couponlist.name")}</th>
@@ -98,17 +110,19 @@ const ListCoupons = () => {
                               <td className="align-middle">{formatedDate(parseInt(item.startDate))}</td>
                               <td className="align-middle">{formatedDate(parseInt(item.endDate))}</td>
                               <td className="align-middle">
-                                <Link href={`/${lang}/coupons/create-coupons?id=${item.id}`}>
-                                  <Button color="transparent" className="p-1">
-                                    <Edit />
-                                  </Button>
-                                </Link>
-                                <Button color="transparent" className="p-1">
-                                  <Trash2 onClick={() => {
+                                <div style={{ display: "flex", justifyContent: "start", gap: "10px" }}>
+                                  <Link href={`/${lang}/coupons/create-coupons?id=${item.id}`}>
+                                    <span style={{ cursor: "pointer" }}>
+                                      <i className="fa fa-pencil" style={{ color: "rgb(40, 167, 69)", fontSize: "18px" }} />
+                                    </span>
+                                  </Link>
+                                  <span style={{ cursor: "pointer" }} onClick={() => {
                                     setIsDeleteId(item.id);
                                     toggleModal();
-                                  }} />
-                                </Button>
+                                  }}>
+                                    <i className="fa fa-trash" style={{ color: "#e4566e", fontSize: "18px" }} />
+                                  </span>
+                                </div>
                               </td>
                             </tr>
                           ))
@@ -116,6 +130,13 @@ const ListCoupons = () => {
                       </tbody>
                     </table>
                   )}
+                  <Pagination
+                    count={allCouponData?.getAllCoupons?.coupons?.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handlePageChange}
+                    onRowsPerPageChange={handleRowsPerPageChange}
+                  />
                 </div>
               </CardBody>
             </Card>

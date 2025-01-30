@@ -180,7 +180,7 @@ const Category = () => {
                       onChangePage: handlePageChange,
                       onChangeRowsPerPage: handleLimitChange,
                       pageSize: limit,
-                      totalItem: data?.categories?.total
+                      totalItem: categoriesData.length
                     }}
                     myClass="-striped -highlight"
                   />

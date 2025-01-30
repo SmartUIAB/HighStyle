@@ -216,9 +216,9 @@ const SubCategoryDigital = () => {
                       onChangePage: handlePageChange,
                       onChangeRowsPerPage: handleLimitChange,
                       pageSize: limit,
-                      totalItem: data?.subcategories.total
+                      totalItem: subcategoriesData.length
                     }}
-                    class="-striped -highlight"
+                    myClass="-striped -highlight"
                   />
                 </div>
               </CardBody>

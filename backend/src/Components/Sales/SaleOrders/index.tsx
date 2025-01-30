@@ -1,13 +1,16 @@
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
 import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import { useQuery } from "@apollo/client";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Card, CardBody, Col, Container, Row, Spinner } from "reactstrap";
 import { GET_ORDER_LIST } from "@/GraphQL/Queries/transactionQueries";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
+import Pagination from "@/CommonComponents/Pagination";
 
 const SalesOrders = () => {
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
 
   const { data, loading, refetch } = useQuery(GET_ORDER_LIST);
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
@@ -20,6 +23,16 @@ const SalesOrders = () => {
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
   };
+
+  const handlePageChange = (page: any) => {
+    setPage(page)
+    refetch({ page });
+  };
+
+  const handleRowsPerPageChange = ((event: any) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  });
 
   return (
     <Fragment>
@@ -74,6 +87,13 @@ const SalesOrders = () => {
                     </tbody>
                   </table>
                 )}
+                <Pagination
+                  count={data?.getAllOrders.orders?.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handlePageChange}
+                  onRowsPerPageChange={handleRowsPerPageChange}
+                />
               </CardBody>
             </Card>
           </Col>

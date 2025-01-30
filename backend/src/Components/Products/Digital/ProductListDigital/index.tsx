@@ -1,6 +1,5 @@
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
 import { useMutation, useQuery } from "@apollo/client";
-import { Edit, Trash2 } from "react-feather";
 import { Button, FormGroup, Modal, ModalHeader, ModalBody, ModalFooter, Spinner } from "reactstrap";
 import { GET_DIGITAL_PRODUCT } from '../../../../GraphQL/Queries/productQueries';
 import { useState } from "react";
@@ -9,11 +8,14 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
+import Pagination from "@/CommonComponents/Pagination";
 
 const ProductListDigital = () => {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [isDeleteId, setIsDeleteId] = useState<number | undefined>(undefined);
   const [modalOpen, setModalOpen] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
 
   const { data: allProductData, refetch, loading } = useQuery(GET_DIGITAL_PRODUCT);
   const [deleteDigitalProduct] = useMutation(DELETE_DIGITAL_PRODUCT);
@@ -58,6 +60,16 @@ const ProductListDigital = () => {
 
   const toggleModal = () => setModalOpen(!modalOpen);
   const lang = localStorage.getItem("i18nextLng")
+
+  const handlePageChange = (page: any) => {
+    setPage(page)
+    refetch({ page });
+  };
+
+  const handleRowsPerPageChange = ((event: any) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  });
 
   return (
     <div className="py-5">
@@ -121,14 +133,16 @@ const ProductListDigital = () => {
                     <td className="align-middle">{item.compatibility.toString()}</td>
                     <td className="align-middle">{formatedDate(parseInt(item.createdAt))}</td>
                     <td className="align-middle">
-                      <Link href={`/${lang}/products/digital/digital-add-product?id=${item.id}`}>
-                        <Button color="transparent" className="p-1">
-                          <Edit />
-                        </Button>
-                      </Link>
-                      <Button color="transparent" className="p-1" onClick={() => { setIsDeleteId(item.id); toggleModal(); }}>
-                        <Trash2 />
-                      </Button>
+                      <div style={{ display: "flex", justifyContent: "start", gap: "10px" }}>
+                        <Link href={`/${lang}/products/digital/digital-add-product?id=${item.id}`}>
+                          <span style={{ cursor: "pointer" }}>
+                            <i className="fa fa-pencil" style={{ color: "rgb(40, 167, 69)", fontSize: "18px" }} />
+                          </span>
+                        </Link>
+                        <span style={{ cursor: "pointer" }} onClick={() => { setIsDeleteId(item.id); toggleModal(); }}>
+                          <i className="fa fa-trash" style={{ color: "#e4566e", fontSize: "18px" }} />
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -137,6 +151,14 @@ const ProductListDigital = () => {
           </table>
         </div>
       )}
+
+      <Pagination
+        count={filteredProducts?.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
+      />
 
       <Modal isOpen={modalOpen} toggle={toggleModal} className="modal-dialog-centered">
         <ModalHeader toggle={toggleModal}>Confirm Deletion</ModalHeader>

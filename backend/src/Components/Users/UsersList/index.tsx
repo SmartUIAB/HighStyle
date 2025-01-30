@@ -1,12 +1,12 @@
 import { useTranslation } from "@/app/i18n/client";
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
+import Pagination from "@/CommonComponents/Pagination";
 import { DELETE_USER } from "@/GraphQL/Mutations/userMutations";
 import { USER_LIST } from "@/GraphQL/Queries/userQueries";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { Fragment, useState } from "react";
-import { Edit, Trash2 } from "react-feather";
 import { toast } from "react-toastify";
 import { Button, Card, CardBody, CardHeader, Container, Modal, ModalBody, ModalFooter, ModalHeader, Spinner } from "reactstrap";
 
@@ -14,6 +14,8 @@ const UserList = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isDeleteId, setIsDeleteId] = useState(null);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
 
   const { data, loading, error, refetch } = useQuery(USER_LIST);
   const [deleteUser] = useMutation(DELETE_USER)
@@ -44,6 +46,16 @@ const UserList = () => {
 
   const toggleModal = () => setModalOpen(!modalOpen);
   const lang = localStorage.getItem("i18nextLng")
+
+  const handlePageChange = (page: any) => {
+    setPage(page)
+    refetch({ page });
+  };
+
+  const handleRowsPerPageChange = ((event: any) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  });
 
 
   return (
@@ -89,19 +101,19 @@ const UserList = () => {
                         <td className="align-middle">{user.lastname}</td>
                         <td className="align-middle">{user.email}</td>
                         <td className="align-middle">
-                          <Link href={`/${lang}/users/create-user?id=${user.id}`}>
-                            <Button color="transparent" className="p-1">
-                              <Edit />
-                            </Button>
-                          </Link>
-                          <Button color="transparent" className="p-1">
-                            <Trash2
-                              onClick={() => {
-                                setIsDeleteId(user.id);
-                                toggleModal();
-                              }}
-                            />
-                          </Button>
+                          <div style={{ display: "flex", justifyContent: "start", gap: "10px" }}>
+                            <Link href={`/${lang}/users/create-user?id=${user.id}`}>
+                              <span style={{ cursor: "pointer" }}>
+                                <i className="fa fa-pencil" style={{ color: "rgb(40, 167, 69)", fontSize: "18px" }} />
+                              </span>
+                            </Link>
+                            <span style={{ cursor: "pointer" }} onClick={() => {
+                              setIsDeleteId(user.id);
+                              toggleModal();
+                            }}>
+                              <i className="fa fa-trash" style={{ color: "#e4566e", fontSize: "18px" }} />
+                            </span>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -116,6 +128,13 @@ const UserList = () => {
 
               </table>
             </div>
+            <Pagination
+              count={data?.userlist?.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleRowsPerPageChange}
+            />
           </CardBody>
         </Card>
       </Container>

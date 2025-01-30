@@ -374,5 +374,6 @@
     "lastName": "Last Name",
     "email": "Email",
     "company": "Company"
-  }
+  },
+  "rowsPerPage": "Rows per page"
 }
