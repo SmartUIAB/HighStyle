@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import CartHeader from "../headers/common/cart-header";
 import { Media } from "reactstrap";
 import { useQuery } from "@apollo/client";
@@ -7,7 +7,9 @@ import LocalLink from "../LocalLink";
 import { useTranslation } from "react-i18next";
 
 const CartContainer = ({ icon }) => {
-  const userData = JSON.parse(localStorage.getItem("customerDetail"));
+  const storedUserData = localStorage.getItem("customerDetail");
+  const userData = storedUserData ? JSON.parse(storedUserData) : null;
+
   const { t } = useTranslation();
 
   const {
@@ -15,12 +17,13 @@ const CartContainer = ({ icon }) => {
     loading,
     refetch,
   } = useQuery(GET_CART, {
-    variables: { userId: userData?.id },
+    variables: userData?.id ? { userId: userData.id } : undefined,
+    skip: !userData?.id,
   });
 
-  if (cartList) {
-    refetch();
-  }
+  useEffect(() => {
+    if (cartList) refetch();
+  }, [cartList, refetch]);
 
   return (
     <Fragment>

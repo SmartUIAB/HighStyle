@@ -5355,6 +5355,134 @@ $i: 1;
     transition: 0.3s;
   }
 }
+.saleorders-btn {
+  border: none;
+  background: none;
+}
+.saleorders-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.saleorders-title {
+  font-size: 18px;
+  color: #ff8084;
+}
+.saleorders-title1 {
+  font-size: 20px;
+  margin: 20px 0px;
+  font-weight: 500;
+  color: #2e2d2d;
+}
+.saleorders-input {
+  width: 100%;
+  margin-top: 4px;
+  border-radius: 6px;
+  height: 38px !important;
+  color: black !important;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border 0.3s ease-in-out;
+  padding-left: 15px; /* Placeholder aur text dono same alignment ke liye */
+}
+
+/* Placeholder styling */
+.saleorders-input::placeholder {
+  color: #777777 !important;
+  font-size: 14px !important;
+}
+
+/* Focus pe border styling */
+.saleorders-input:focus {
+  border: 1px solid #ccc !important;
+}
+
+.saleorders-label {
+  font-size: 16px;
+  color: #1d1c1c;
+  font-weight: 500;
+}
+.saleorders-flex {
+  margin-top: 15px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  align-items: center;
+  @media (max-width: 320px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  @media (max-width: 1024px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.saleorders-dflax {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  align-items: center;
+  @media (max-width: 320px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  @media (max-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  @media (max-width: 1024px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.saleorders {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-height: 70vh;
+  overflow-y: auto;
+  @media (max-width: 1024px) {
+    width: 55%;
+  }
+  @media (max-width: 768px) {
+    width: 65%;
+  }
+  @media (max-width: 768px) {
+    width: 86%;
+  }
+}
+.tabel-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+.saleororders-button {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  margin-top: 20px;
+  gap: 10px;
+}
+.sale-button {
+  border: 1px solid #ff8084 !important;
+  color: #ff8084 !important;
+  background: none !important;
+  padding: 8px 20px !important;
+  font-size: 16px !important;
+  border-radius: 8px;
+}
+.sale-button:hover {
+  background-color: #ff8084 !important;
+  color: white !important;
+}
 /*=====================
   Responsive CSS End
 ==========================*/

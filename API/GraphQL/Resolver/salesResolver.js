@@ -126,7 +126,6 @@ const salesResolver = {
           .lean();
 
         const sanitizedTransactions = transactions.map((transaction) => {
-          console.log(transaction);
 
           const sanitizedOrder = transaction.order
             ? {

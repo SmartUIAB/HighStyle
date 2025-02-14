@@ -15,8 +15,7 @@ const vendorResolver = {
         const vendor = await Vendor.findById(vendorId);
 
         if (!vendor) {
-          console.log("Vendor not found");
-          throw new CustomError("Vendor not found", 404);
+          return "Vendor not found";
         }
 
         return {
