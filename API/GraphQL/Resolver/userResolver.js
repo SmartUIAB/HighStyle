@@ -374,7 +374,16 @@ const userResolver = {
           .exec();
 
         return {
-          user: populatedUser,
+          user: {
+            ...populatedUser.toObject(),
+            id: populatedUser._id.toString(),
+            company: populatedUser.company.toString(),
+            permissions: populatedUser.permissions.map((p) => ({
+              ...p.toObject(),
+              id: p._id.toString(),
+            })),
+          },
+          // user: populatedUser,
           token,
         };
       } catch (error) {

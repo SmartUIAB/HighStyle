@@ -12,7 +12,7 @@ const userTypeDefs = gql`
 
   type Company {
     id: ID!
-    name: String
+    name: String!
   }
 
   type User {
@@ -20,7 +20,7 @@ const userTypeDefs = gql`
     email: String!
     firstname: String
     lastname: String
-    company: Company
+    company: String
     image: String
     role: String
     permissions: [userPermission!]
