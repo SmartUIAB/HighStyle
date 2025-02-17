@@ -38,7 +38,7 @@ const Filter = () => {
             <div className="collection-brand-filter">
               <ul className="category-list">
                 {categoriesData?.categories?.categories?.map((item, i) => (
-                  <li>
+                  <li key={i}>
                     <a href={null}>{item?.name}</a>
                   </li>
                 ))}

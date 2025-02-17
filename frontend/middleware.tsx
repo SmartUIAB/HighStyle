@@ -18,17 +18,17 @@ export function middleware(request: NextRequest) {
   }
 
 
-  if (pathname === `/${locale}/page/account/login` || pathname === `/${locale}/page/account/register`) {
+  if (pathname === `/${locale}/page/account/login` || pathname === `/${locale}/page/account/register` || pathname === `/${locale}`) {
     return NextResponse.next();
   }
 
-  if (
-    !token &&
-    pathname !== `/${locale}/page/account/forget-pwd` &&
-    !pathname.startsWith(`/${locale}/page/account/password-reset/`)
-  ) {
-    return NextResponse.redirect(`${origin}/${locale}/page/account/login`);
-  }
+  // if (
+  //   !token &&
+  //   pathname !== `/${locale}/page/account/forget-pwd` &&
+  //   !pathname.startsWith(`/${locale}/page/account/password-reset/`)
+  // ) {
+  //   return NextResponse.redirect(`${origin}/${locale}/page/account/login`);
+  // }
 
   return NextResponse.next();
 }

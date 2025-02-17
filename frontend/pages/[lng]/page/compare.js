@@ -15,11 +15,15 @@ const Compare = () => {
   const [createcart] = useMutation(CREATE_ADD_TO_CART);
 
   const handleAddToCart = async (product) => {
-    const userData = JSON.parse(localStorage.getItem("customerDetail"));
+    const customerDetail = JSON.parse(localStorage.getItem("customerDetail"));
+    if (!customerDetail || customerDetail === "null") {
+      router.replace("/page/account/login");
+      return;
+    }
     const { data } = await createcart({
       variables: {
         input: {
-          userId: userData?.id,
+          userId: customerDetail?.id,
           products: {
             ProductID: product.id,
             price: product.price,

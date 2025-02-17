@@ -26,6 +26,7 @@ import {
 } from "../../../../GraphQL/Mutations/reviewMutations";
 import { toast } from "react-toastify";
 import { GET_REVIEWS } from "../../../../GraphQL/Queries/reviewQueries";
+import { useRouter } from "next/router";
 
 const ProductTab = ({ item }) => {
   const [activeTab, setActiveTab] = useState("1");
@@ -39,6 +40,9 @@ const ProductTab = ({ item }) => {
   const { t } = useTranslation();
   const [add_review] = useMutation(WRITE_REVIEW);
   const [update_review] = useMutation(UPDATE_REVIEW);
+  const router = useRouter();
+
+  const userData = JSON.parse(localStorage.getItem("customerDetail"));
   const {
     data: reviewsData,
     loading,
@@ -48,8 +52,6 @@ const ProductTab = ({ item }) => {
       productId: item?.id,
     },
   });
-
-  const userData = JSON.parse(localStorage.getItem("customerDetail"));
 
   const totalReviews = reviewsData?.getReviews?.length || 0;
   const totalPages = Math.ceil(totalReviews / reviewsPerPage);
@@ -66,6 +68,11 @@ const ProductTab = ({ item }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const customerDetail = JSON.parse(localStorage.getItem("customerDetail"));
+    if (!customerDetail || customerDetail === "null") {
+      router.replace("/page/account/login");
+      return;
+    }
 
     if (rating <= 0 || !comment.trim()) {
       alert("Please provide a rating and a comment.");
@@ -76,7 +83,7 @@ const ProductTab = ({ item }) => {
       const { data } = await update_review({
         variables: {
           productId: item?.id,
-          userId: userData?.id,
+          userId: customerDetail?.id,
           rating,
           comment,
         },
@@ -92,7 +99,7 @@ const ProductTab = ({ item }) => {
       }
     } else {
       const hasReviewed = reviewsData?.getReviews?.some(
-        (review) => review.userId.id === userData?.id
+        (review) => review.userId.id === customerDetail?.id
       );
 
       if (hasReviewed) {
@@ -105,7 +112,7 @@ const ProductTab = ({ item }) => {
       const { data } = await add_review({
         variables: {
           productId: item?.id,
-          userId: userData?.id,
+          userId: customerDetail?.id,
           rating,
           comment,
         },

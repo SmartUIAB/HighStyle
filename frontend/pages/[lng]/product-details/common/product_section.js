@@ -29,10 +29,15 @@ const ProductSection = () => {
   const userData = JSON.parse(localStorage.getItem("customerDetail"));
 
   const handleAddToCart = async (product) => {
+    const customerDetail = JSON.parse(localStorage.getItem("customerDetail"));
+    if (!customerDetail || customerDetail === "null") {
+      router.replace("/page/account/login");
+      return;
+    }
     const { data } = await createcart({
       variables: {
         input: {
-          userId: userData?.id,
+          userId: customerDetail?.id,
           products: {
             ProductID: product.id,
             price: product.price,
@@ -105,10 +110,15 @@ const ProductSection = () => {
   };
 
   const handleAddFavourite = async (product) => {
+    const customerDetail = JSON.parse(localStorage.getItem("customerDetail"));
+    if (!customerDetail || customerDetail === "null") {
+      router.replace("/page/account/login");
+      return;
+    }
     try {
       const { data } = await addtofavourite({
         variables: {
-          userId: userData?.id,
+          userId: customerDetail?.id,
           productId: product.id,
           productType: product.__typename,
         },

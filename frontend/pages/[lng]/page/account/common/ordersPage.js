@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import {
   Container,
@@ -15,9 +15,25 @@ import {
 import { GET_MY_ORDERS } from "../../../../../GraphQL/Queries/orderQueries";
 import LocalLink from "../../../../../components/LocalLink";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 
 const OrdersPage = () => {
   const { t } = useTranslation();
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 5;
+  const [searchTerm, setSearchTerm] = useState("");
+  const router = useRouter();
+  useEffect(() => {
+    // Check customerDetail in localStorage
+    const customerDetail = JSON.parse(localStorage.getItem("customerDetail"));
+    if (
+      !customerDetail ||
+      customerDetail === "null" ||
+      customerDetail === "{}"
+    ) {
+      router.replace("/page/account/login"); // Redirect to login page if empty
+    }
+  }, []);
   const userData = JSON.parse(localStorage.getItem("customerDetail"));
 
   const {
@@ -30,11 +46,6 @@ const OrdersPage = () => {
       customerId: userData?.id,
     },
   });
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 5;
-  const [searchTerm, setSearchTerm] = useState("");
-
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center py-5">

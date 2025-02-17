@@ -6,8 +6,8 @@ import MasterSocial from "./master_social";
 import { useMutation } from "@apollo/client";
 import { toast } from "react-toastify";
 import { CREATE_ADD_TO_CART } from "../../../../GraphQL/Mutations/cartMutations";
-import LocalLink from "../../../../components/LocalLink";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/router";
 
 const DetailsWithPrice = ({ item, stickyClass }) => {
   const { t } = useTranslation();
@@ -17,9 +17,9 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
   const [quantity, setQuantity] = useState(1);
 
   const toggle = () => setModal(!modal);
+  const router = useRouter();
 
   const [createcart] = useMutation(CREATE_ADD_TO_CART);
-  const userData = JSON.parse(localStorage.getItem("customerDetail"));
 
   const product = item;
   const isDigital = product?.__typename === "DigitalProduct";
@@ -49,32 +49,52 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
   };
 
   const handleAddToCart = async () => {
-    if (product) {
+    try {
+      const customerDetail = JSON.parse(localStorage.getItem("customerDetail"));
+      if (!customerDetail || customerDetail === "null") {
+        router.replace("/page/account/login");
+        return;
+      }
+
+      if (!product) return;
+
       if (!isDigital && (activeColor === null || activeSize === null)) {
         toast.error(t("product_details.selectColorAndSize"));
         return;
       }
+
+      if (!customerDetail?.id) {
+        toast.error(t("product_details.userNotFound"));
+        return;
+      }
+
       const { data } = await createcart({
         variables: {
           input: {
-            userId: userData?.id,
-            products: {
-              ProductID: product.id,
-              price: product.price,
-              quantity: quantity,
-              color: product.colors?.[activeColor] || null,
-              size: product.sizes?.[activeSize] || null,
-              totalAmount: product.price * quantity,
-              title: product.title,
-            },
+            userId: customerDetail.id,
+            products: [
+              {
+                ProductID: product.id,
+                price: product.price,
+                quantity,
+                color: product.colors?.[activeColor] || null,
+                size: product.sizes?.[activeSize] || null,
+                totalAmount: product.price * quantity,
+                title: product.title,
+              },
+            ],
           },
         },
       });
+
       if (data) {
         toast.success(t("product_details.addToCart"));
       } else {
         toast.error(t("product_details.addToCartError"));
       }
+    } catch (error) {
+      console.error("Add to cart error:", error);
+      toast.error(t("product_details.addToCartError"));
     }
   };
 
@@ -199,9 +219,12 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
         >
           {t("product_details.addToCart")}
         </button>
-        <LocalLink href="/page/account/checkout" className="btn btn-solid">
+        <button
+          onClick={() => handleAddToCart(product)}
+          className="btn btn-solid"
+        >
           {t("product_details.buyNow")}
-        </LocalLink>
+        </button>
       </div>
 
       <div className="border-product">
