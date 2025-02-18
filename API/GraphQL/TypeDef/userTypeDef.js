@@ -26,8 +26,24 @@ const userTypeDefs = gql`
     permissions: [userPermission!]
   }
 
+  type LoginUser {
+    id: ID!
+    email: String!
+    firstname: String
+    lastname: String
+    company: Company!
+    image: String
+    role: String
+    permissions: [userPermission!]
+  }
+
   type AuthPayload {
     user: User!
+    token: String!
+  }
+
+  type LoginAuthPayload {
+    user: LoginUser!
     token: String!
   }
 
@@ -89,7 +105,11 @@ const userTypeDefs = gql`
 
   type Mutation {
     register(input: RegisterInput!, image: Upload): AuthPayload!
-    login(email: String!, password: String!, rememberMe: Boolean!): AuthPayload!
+    login(
+      email: String!
+      password: String!
+      rememberMe: Boolean!
+    ): LoginAuthPayload!
     logout: Boolean!
     createUser(input: UserInput!, image: Upload): OutputUser!
     updateUser(userId: ID!, input: UpdateUserInput, image: String): OutputUser!

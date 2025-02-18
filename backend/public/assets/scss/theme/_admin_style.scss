@@ -5374,6 +5374,12 @@ $i: 1;
   font-weight: 500;
   color: #2e2d2d;
 }
+.saleorders-title12 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  color: #2e2d2d;
+}
 .saleorders-input {
   width: 100%;
   margin-top: 4px;
@@ -5399,7 +5405,7 @@ $i: 1;
 
 .saleorders-label {
   font-size: 16px;
-  color: #1d1c1c;
+  color: #4b4949;
   font-weight: 500;
 }
 .saleorders-flex {
@@ -5440,25 +5446,8 @@ $i: 1;
   }
 }
 .saleorders {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40%;
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
   max-height: 70vh;
   overflow-y: auto;
-  @media (max-width: 1024px) {
-    width: 55%;
-  }
-  @media (max-width: 768px) {
-    width: 65%;
-  }
-  @media (max-width: 768px) {
-    width: 86%;
-  }
 }
 .tabel-scroll {
   width: 100%;
