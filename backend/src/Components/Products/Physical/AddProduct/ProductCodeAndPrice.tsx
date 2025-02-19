@@ -21,9 +21,11 @@ interface FormData {
 interface ProductCodeAndPriceProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  errors: { [key: string]: string };
 }
 
-const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, setFormData }) => {
+const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, setFormData, errors }) => {
+  console.log(errors, '-==========')
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,6 +55,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               value={formData.product_name}
               onChange={handleChange}
             />
+            {errors?.product_name && <div className="errorMsg">{errors?.product_name}</div>}
           </Col>
         </Row>
         <div className="valid-feedback">Looks good!</div>
@@ -73,6 +76,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               value={formData.product_price}
               onChange={handleChange}
             />
+            {errors?.product_price && <div className="errorMsg">{errors?.product_price}</div>}
           </Col>
           <div className="valid-feedback">Looks good!</div>
         </Row>
@@ -92,6 +96,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               value={formData.product_sku}
               onChange={handleChange}
             />
+            {errors?.product_sku && <div className="errorMsg">{errors?.product_sku}</div>}
           </Col>
           <div className="invalid-feedback offset-sm-4 offset-xl-3">Please choose Valid Code.</div>
         </Row>
@@ -111,6 +116,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               value={formData.product_color}
               onChange={handleChange}
             />
+            {errors?.product_color && <div className="errorMsg">{errors?.product_color}</div>}
           </Col>
           <div className="invalid-feedback offset-sm-4 offset-xl-3">Please choose Valid Code.</div>
         </Row>
@@ -130,6 +136,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               value={formData.product_discount}
               onChange={handleChange}
             />
+            {errors?.product_discount && <div className="errorMsg">{errors?.product_discount}</div>}
           </Col>
           <div className="invalid-feedback offset-sm-4 offset-xl-3">Please choose Valid Code.</div>
         </Row>
@@ -149,6 +156,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               value={formData.product_meta_title}
               onChange={handleChange}
             />
+            {errors?.product_meta_title && <div className="errorMsg">{errors?.product_meta_title}</div>}
           </Col>
           <div className="invalid-feedback offset-sm-4 offset-xl-3">Please choose Valid Code.</div>
         </Row>
@@ -168,6 +176,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               value={formData.product_meta_description}
               onChange={handleChange}
             />
+            {errors?.product_meta_description && <div className="errorMsg">{errors?.product_meta_description}</div>}
           </Col>
           <div className="invalid-feedback offset-sm-4 offset-xl-3">Please choose Valid Code.</div>
         </Row>
@@ -187,6 +196,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               value={formData.product_tags}
               onChange={handleChange}
             />
+            {errors?.product_tags && <div className="errorMsg">{errors?.product_tags}</div>}
           </Col>
           <div className="invalid-feedback offset-sm-4 offset-xl-3">Please choose Valid Code.</div>
         </Row>
@@ -218,6 +228,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
                   </option>
                 ))}
             </Input>
+            {errors?.product_category && <div className="errorMsg">{errors?.product_category}</div>}
           </Col>
           <div className="invalid-feedback offset-sm-4 offset-xl-3">Please choose Valid Code.</div>
         </Row>
@@ -249,6 +260,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
                   </option>
                 ))}
             </Input>
+            {errors?.product_subcategory && <div className="errorMsg">{errors?.product_subcategory}</div>}
           </Col>
           <div className="invalid-feedback offset-sm-4 offset-xl-3">Please choose Valid Code.</div>
         </Row>
@@ -271,6 +283,7 @@ const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, set
               <option value="Available">Available</option>
               <option value="Unavailable">Unavailable</option>
             </Input>
+            {errors?.product_status && <div className="errorMsg">{errors?.product_status}</div>}
           </Col>
         </Row>
       </FormGroup>

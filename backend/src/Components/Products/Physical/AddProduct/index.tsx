@@ -14,6 +14,7 @@ import ProductSizeAndDescription from "./ProductSizeAndDescription";
 import TotalProducts from "./TotalProducts";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
+import { physicalproductSchema } from "@/utils/validation";
 
 const AddProduct = () => {
   const searchParams = useSearchParams();
@@ -47,6 +48,7 @@ const AddProduct = () => {
 
   const [formData, setFormData] = useState(initialFormState);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     setIsHydrated(true);
@@ -82,22 +84,39 @@ const AddProduct = () => {
   const [updatePhysicalProduct] = useMutation(UPDATE_PHYSICAL_PRODUCT);
 
   const handleValidSubmit = async () => {
+    setErrors({});
+    try {
+      await physicalproductSchema.validate(formData, { abortEarly: false });
+    } catch (error) {
+      if (error.inner) {
+        const validationErrors: { [key: string]: string } = error.inner.reduce(
+          (acc: any, error: any) => {
+            acc[error.path] = error.message;
+            return acc;
+          },
+          {}
+        );
+        console.log(validationErrors)
+        setErrors(validationErrors)
+        return;
+      }
+    }
     try {
       const input = {
-        SKU: formData.product_sku,
-        category: formData.product_category,
-        colors: formData.product_color.split(",").map((color) => color.trim()),
-        description: formData.product_description,
-        discount: parseFloat(formData.product_discount),
-        metaDescription: formData.product_meta_description,
-        metaTitle: formData.product_meta_title,
-        price: parseFloat(formData.product_price),
-        sizes: formData.product_size.split(",").map((size) => size.trim()),
-        status: formData.product_status,
-        stockQuantity: parseInt(formData.product_stockquantity),
-        subcategory: formData.product_subcategory,
-        tags: formData.product_tags.split(",").map((tag) => tag.trim()),
-        title: formData.product_name,
+        SKU: formData.product_sku?.trim() || "",
+        category: formData.product_category?.trim() || "",
+        colors: (formData.product_color || "").split(",").map(color => color.trim()).filter(Boolean),
+        description: formData.product_description?.trim() || "",
+        discount: parseFloat(formData.product_discount) || 0,
+        metaDescription: formData.product_meta_description?.trim() || "",
+        metaTitle: formData.product_meta_title?.trim() || "",
+        price: parseFloat(formData.product_price) || 0,
+        sizes: (formData.product_size || "").split(",").map(size => size.trim()).filter(Boolean),
+        status: formData.product_status?.trim() || "inactive",
+        stockQuantity: parseInt(formData.product_stockquantity) || 0,
+        subcategory: formData.product_subcategory?.trim() || "",
+        tags: (formData.product_tags || "").split(",").map(tag => tag.trim()).filter(Boolean),
+        title: formData.product_name?.trim() || "",
       };
 
       if (id) {
@@ -129,7 +148,6 @@ const AddProduct = () => {
         }
       }
     } catch (error) {
-      console.error("Error saving product:", error);
       toast.error("Failed to save product. Please try again.");
     }
   };
@@ -157,12 +175,12 @@ const AddProduct = () => {
               <CommonCardHeader title={id ? t("modalTitle.editProduct") : t("modalTitle.addProduct")} />
               <CardBody>
                 <Row className="product-adding">
-                  <ProductImages formData={formData} setFormData={setFormData} />
+                  <ProductImages formData={formData} setFormData={setFormData} errors={errors} />
                   <Col xl="7">
                     <div className="needs-validation add-product-form">
-                      <ProductCodePrice formData={formData} setFormData={setFormData} />
-                      <TotalProducts formData={formData} setFormData={setFormData} />
-                      <ProductSizeAndDescription formData={formData} setFormData={setFormData} />
+                      <ProductCodePrice formData={formData} setFormData={setFormData} errors={errors} />
+                      <TotalProducts formData={formData} setFormData={setFormData} errors={errors} />
+                      <ProductSizeAndDescription formData={formData} setFormData={setFormData} errors={errors} />
                       <div className="offset-xl-3 offset-sm-4">
                         <Button type="submit" onClick={handleValidSubmit} color="primary">
                           {id ? t("physical.addProduct.edit") : t("physical.addProduct.add")}

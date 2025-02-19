@@ -55,9 +55,8 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, 
               required
               value={formData.firstName || ""}
               onChange={handleInputChange}
-              invalid={!!errors.firstName}
             />
-            {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
+            {errors.firstName && <div className="errorMsg">{errors.firstName}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -73,9 +72,8 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, 
               required
               value={formData.lastName || ""}
               onChange={handleInputChange}
-              invalid={!!errors.lastName}
             />
-            {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
+            {errors.lastName && <div className="errorMsg">{errors.lastName}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -91,9 +89,8 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, 
               required
               value={formData.email || ""}
               onChange={handleInputChange}
-              invalid={!!errors.email}
             />
-            {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+            {errors.email && <div className="errorMsg">{errors.email}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -109,9 +106,8 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, 
               required
               value={formData.password || ""}
               onChange={handleInputChange}
-              invalid={!!errors.password}
             />
-            {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+            {errors.password && <div className="errorMsg">{errors.password}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -127,9 +123,8 @@ const AccountDetails: React.FC<AccountDetailsProps> = ({ formData, setFormData, 
               required
               value={formData.confirmPassword || ""}
               onChange={handleInputChange}
-              invalid={!!errors.confirmPassword}
             />
-            {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+            {errors.confirmPassword && <div className="errorMsg">{errors.confirmPassword}</div>}
           </Col>
         </Row>
       </FormGroup>

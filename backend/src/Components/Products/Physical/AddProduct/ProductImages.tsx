@@ -10,9 +10,10 @@ interface FormData {
 interface ProductImagesProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  errors: any
 }
 
-const ProductImages: React.FC<ProductImagesProps> = ({ formData, setFormData }) => {
+const ProductImages: React.FC<ProductImagesProps> = ({ formData, setFormData, errors }) => {
   const [dummyImages, setDummyImages] = useState<(string | null)[]>([null, null, null, null, null]);
   const [mainPreview, setMainPreview] = useState<string | null>(null);
   const maxImages = 5;
@@ -193,6 +194,11 @@ const ProductImages: React.FC<ProductImagesProps> = ({ formData, setFormData }) 
               ))}
             </ul>
           </Col>
+          {errors?.product_images && (
+            <p style={{ color: "red", marginTop: "5px" }}>
+              {errors?.product_images}
+            </p>
+          )}
         </Row>
       </div>
     </Col>

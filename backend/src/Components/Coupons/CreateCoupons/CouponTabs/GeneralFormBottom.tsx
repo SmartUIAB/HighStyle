@@ -4,7 +4,7 @@ import { useAppSelector } from "@/Redux/Hooks";
 import React from "react";
 import { Col, FormGroup, Input, Label, Row } from "reactstrap";
 
-const GeneralFormBottom = ({ formData, setFormData }) => {
+const GeneralFormBottom = ({ formData, setFormData,errors }) => {
 
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
     const { t } = useTranslation(i18LangStatus);
@@ -34,6 +34,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
                 checked={formData.allowFreeShipping}
                 onChange={handleInputChange}
               />
+              {errors?.allowFreeShipping && <div className="errorMsg">{errors?.allowFreeShipping}</div>}
               {t("coupon.addcoupon.allow_free_shipping")}
             </Label>
           </Col>
@@ -52,6 +53,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
               onChange={handleInputChange}
               required
             />
+            {errors?.quantity && <div className="errorMsg">{errors?.quantity}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -72,6 +74,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
               <option value="percentage">Percentage</option>
               <option value="fixed">Fixed</option>
             </select>
+            {errors?.discountType && <div className="errorMsg">{errors?.discountType}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -88,6 +91,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
               onChange={handleInputChange}
               required
             />
+            {errors?.discountValue && <div className="errorMsg">{errors?.discountValue}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -106,6 +110,7 @@ const GeneralFormBottom = ({ formData, setFormData }) => {
                 checked={formData.statusActive}
                 onChange={handleInputChange}
               />
+              {errors?.statusActive && <div className="errorMsg">{errors?.statusActive}</div>}
               {t("coupon.addcoupon.enable_the_coupon")}
             </Label>
           </Col>

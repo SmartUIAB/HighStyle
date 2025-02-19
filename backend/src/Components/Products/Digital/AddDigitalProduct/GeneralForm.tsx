@@ -6,7 +6,7 @@ import { GET_ALL_CATEGORY, GET_ALL_SUBCATEGORY } from "@/GraphQL/Queries/categor
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
 
-const GeneralForm = ({ formData, setFormData }) => {
+const GeneralForm = ({ formData, setFormData,errors }) => {
 
   const { data: allCategoriesData } = useQuery(GET_ALL_CATEGORY);
   const { data: allSubCategoriesData } = useQuery(GET_ALL_SUBCATEGORY);
@@ -38,6 +38,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.title && <div className="errorMsg">{errors?.title}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label pt-0">
@@ -51,6 +52,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.SKU && <div className="errorMsg">{errors?.SKU}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -72,6 +74,7 @@ const GeneralForm = ({ formData, setFormData }) => {
                   </option>
                 ))}
             </select>
+            {errors?.category && <div className="errorMsg">{errors?.category}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -93,6 +96,7 @@ const GeneralForm = ({ formData, setFormData }) => {
                   </option>
                 ))}
             </select>
+            {errors?.subcategory && <div className="errorMsg">{errors?.subcategory}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -106,6 +110,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.price && <div className="errorMsg">{errors?.price}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -119,6 +124,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.compatibility && <div className="errorMsg">{errors?.compatibility}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -132,6 +138,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.discount && <div className="errorMsg">{errors?.discount}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -145,6 +152,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.fileFormat && <div className="errorMsg">{errors?.fileFormat}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -158,6 +166,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.fileSize && <div className="errorMsg">{errors?.fileSize}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -171,6 +180,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.licenseType && <div className="errorMsg">{errors?.licenseType}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -184,6 +194,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.tags && <div className="errorMsg">{errors?.tags}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -197,6 +208,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.version && <div className="errorMsg">{errors?.version}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">
@@ -213,6 +225,7 @@ const GeneralForm = ({ formData, setFormData }) => {
               <option value="Available">Available</option>
               <option value="Unavailable">Unavailable</option>
             </select>
+            {errors?.status && <div className="errorMsg">{errors?.status}</div>}
           </FormGroup>
         </div>
       </CardBody>

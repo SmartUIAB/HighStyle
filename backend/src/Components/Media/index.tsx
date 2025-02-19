@@ -20,6 +20,7 @@ import MediaUploader from "./mediaUploader";
 import { Trash2 } from "react-feather";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
+import { mediaSchema } from "@/utils/validation";
 
 interface Media {
   id: string;
@@ -45,6 +46,8 @@ const Media: React.FC = () => {
     images: [],
     deleteImages: [],
   });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
 
   const { data: allMediaData, refetch, loading } = useQuery<GetAllImagesResponse>(GET_MEDIA_LIST, {
     variables: {

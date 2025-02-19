@@ -15,16 +15,25 @@ import {
 import SocialMediaIcons from "./SocialMediaIcons";
 import { LOGIN_USER } from "@/GraphQL/Mutations/authMutations";
 import { useMutation } from "@apollo/client";
+import { loginSchema } from "../../../utils/validation";
 
 const LoginForm = () => {
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const [login, { loading }] = useMutation(LOGIN_USER);
   const [rememberMe, setRememberMe] = useState(false);
-  const [showPassWord, setShowPassWord] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
+
+  interface Errors {
+    email?: string;
+    password?: string;
+  }
+
+  const [errors, setErrors] = useState<Errors>({});
   const [formValues, setFormValues] = useState({
     email: "",
     password: "",
   });
+
   const { email, password } = formValues;
   const router = useRouter();
 
@@ -34,49 +43,57 @@ const LoginForm = () => {
 
   const formSubmitHandle = async (event: FormEvent) => {
     event.preventDefault();
+    setErrors({}); // Reset previous errors
 
-    if (email !== "" && password !== "") {
-      try {
-        const { data } = await login({
-          variables: {
-            email,
-            password,
-            rememberMe,
-          },
-        });
+    try {
+      await loginSchema.validate(formValues, { abortEarly: false });
 
-        const moduleWisePermissions = data.login.user.permissions.reduce(
-          (acc:any, permission:any) => {
-            const { module } = permission;
-            if (!acc[module]) {
-              acc[module] = [];
-            }
-            acc[module].push(permission);
+      const { data } = await login({
+        variables: {
+          email,
+          password,
+          rememberMe,
+        },
+      });
+
+      const moduleWisePermissions = data.login.user.permissions.reduce(
+        (acc: any, permission: any) => {
+          const { module } = permission;
+          if (!acc[module]) {
+            acc[module] = [];
+          }
+          acc[module].push(permission);
+          return acc;
+        },
+        {}
+      );
+
+      const userData = {
+        ...data.login.user,
+        permissions: moduleWisePermissions,
+      };
+
+      await Promise.all([
+        localStorage.setItem("userDetail", JSON.stringify(userData)),
+        toast.success("Login successful"),
+      ]);
+
+      router.replace(`/${i18LangStatus}/dashboard`);
+    } catch (error: any) {
+      if (error.inner) {
+        const validationErrors: Errors = error.inner.reduce(
+          (acc: Errors, err: any) => {
+            acc[err.path as keyof Errors] = err.message;
             return acc;
           },
           {}
         );
-
-        const userData = {
-          ...data.login.user,
-          permissions: moduleWisePermissions,
-        };
-
-        await Promise.all([
-          localStorage.setItem("userDetail", JSON.stringify(userData)),
-          toast.success("Login successful"),
-        ]);
-
-        console.log(`/${i18LangStatus}/dashboard`);
-        router.replace(`/${i18LangStatus}/dashboard`);
-      } catch (error) {
+        setErrors(validationErrors);
+      } else {
         toast.error(error.message || "An error occurred during login");
       }
-    } else {
-      toast.error("Please enter valid email and password");
     }
   };
-
 
   return (
     <Form
@@ -95,24 +112,28 @@ const LoginForm = () => {
           placeholder="Email"
           id="exampleInputEmail1"
         />
+        {errors.email && <div className="errorMsg">{errors.email}</div>}
       </FormGroup>
+
       <FormGroup>
         <Label for="exampleInputPassword1">Password</Label>
         <InputGroup>
           <Input
             required
             onChange={handleUserValue}
-            type={showPassWord ? "text" : "password"}
+            type={showPassword ? "text" : "password"}
             name="password"
             value={password}
             placeholder="Password"
             id="exampleInputPassword1"
           />
-          <InputGroupText onClick={() => setShowPassWord(!showPassWord)}>
-            {showPassWord ? <Eye /> : <EyeOff />}
+          <InputGroupText onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <Eye /> : <EyeOff />}
           </InputGroupText>
         </InputGroup>
+        {errors.password && <div className="errorMsg">{errors.password}</div>}
       </FormGroup>
+
       <div className="form-terms">
         <div className="custom-control custom-checkbox me-sm-2">
           <Label className="d-block">
@@ -131,11 +152,13 @@ const LoginForm = () => {
           </Label>
         </div>
       </div>
+
       <div className="form-button">
         <Button color="primary" type="submit" disabled={loading}>
           {loading ? <div className="loader"></div> : "Login"}
         </Button>
       </div>
+
       <div className="form-footer">
         <span>Or log in with social platforms</span>
         <SocialMediaIcons />
@@ -145,3 +168,4 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+

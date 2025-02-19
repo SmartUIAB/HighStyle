@@ -10,19 +10,18 @@ interface FormData {
 interface TotalProductsProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  errors: any
 }
 
-const TotalProducts: React.FC<TotalProductsProps> = ({ formData, setFormData }) => {
+const TotalProducts: React.FC<TotalProductsProps> = ({ formData, setFormData, errors }) => {
   const [quantity, setQuantity] = useState<number>(formData.product_stockquantity || 1);
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
 
   const IncrementItem = () => {
-    if (quantity < 9) {
-      const newQuantity = quantity + 1;
-      setQuantity(newQuantity);
-      setFormData((prev) => ({ ...prev, product_stockquantity: newQuantity }));
-    }
+    const newQuantity = quantity + 1;
+    setQuantity(newQuantity);
+    setFormData((prev) => ({ ...prev, product_stockquantity: newQuantity }));
   };
 
   const DecreaseItem = () => {
@@ -45,7 +44,7 @@ const TotalProducts: React.FC<TotalProductsProps> = ({ formData, setFormData }) 
         <Col xl="3" sm="4">
           <Label className="fw-bold mb-0">{t("physical.addProduct.stockQuantity")} :</Label>
         </Col>
-        <fieldset className="qty-box ms-0">
+        <fieldset className="qty-box ms-0 ">
           <InputGroup className="bootstrap-touchspin">
             <div className="input-group-prepend">
               <Button
@@ -79,6 +78,15 @@ const TotalProducts: React.FC<TotalProductsProps> = ({ formData, setFormData }) 
             </div>
           </InputGroup>
         </fieldset>
+        <div className="row">
+          <div className="col-sm-4 col-xl-3">
+
+          </div>
+          <div className="col-sm-7 col-xl-8 px-4">
+
+            {errors?.product_stockquantity && <div className="errorMsg">{errors?.product_stockquantity}</div>}
+          </div>
+        </div>
       </Row>
     </FormGroup>
   );

@@ -22,7 +22,7 @@ interface RestrictionFormProps {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 }
 
-const RestrictionForm: React.FC<RestrictionFormProps> = ({ formData, setFormData }) => {
+const RestrictionForm: React.FC<RestrictionFormProps> = ({ formData, setFormData,errors }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const { data: allPhysicalProductData } = useQuery(GET_PHYSICAL_PRODUCT);
   const { data: allDigitalProductData } = useQuery(GET_DIGITAL_PRODUCT);
@@ -116,6 +116,7 @@ const RestrictionForm: React.FC<RestrictionFormProps> = ({ formData, setFormData
                 </option>
               ))}
             </Input>
+            {errors?.restrictionProducts && <div className="errorMsg">{errors?.restrictionProducts}</div>}
           </Col>
 
           <div style={{ marginTop: '10px' }}>
@@ -171,6 +172,7 @@ const RestrictionForm: React.FC<RestrictionFormProps> = ({ formData, setFormData
               value={formData.minSpend || ""}
               onChange={handleInputChange}
             />
+            {errors?.minSpend && <div className="errorMsg">{errors?.minSpend}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -188,6 +190,7 @@ const RestrictionForm: React.FC<RestrictionFormProps> = ({ formData, setFormData
               value={formData.maxSpend || ""}
               onChange={handleInputChange}
             />
+            {errors?.maxSpend && <div className="errorMsg">{errors?.maxSpend}</div>}
           </Col>
         </Row>
       </FormGroup>

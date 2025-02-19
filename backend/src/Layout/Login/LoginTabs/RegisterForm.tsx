@@ -7,60 +7,81 @@ import { useMutation } from "@apollo/client";
 import { useState } from "react";
 import { REGISTER_USER } from "../../../GraphQL/Mutations/authMutations";
 import { useAppSelector } from "@/Redux/Hooks";
+import { registerSchema } from "../../../utils/validation";
 
 const RegisterForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [company, setCompany] = useState("");
-  const [agreeTerms, setAgreeTerms] = useState(false);
   const [register] = useMutation(REGISTER_USER);
-  const [loading, setLoading] = useState(false);
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const router = useRouter();
 
+  const [formValues, setFormValues] = useState({
+    firstName: "",
+    lastName: "",
+    company: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    agreeTerms: false,
+  });
+
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormValues((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrors({});
     setLoading(true);
 
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      setLoading(false);
-      return;
-    }
-
-    if (!agreeTerms) {
-      toast.error("You must agree to the terms and conditions");
-      setLoading(false);
-      return;
-    }
-
     try {
+      await registerSchema.validate(formValues, { abortEarly: false });
+
       const { data } = await register({
         variables: {
           input: {
-            email: email,
-            password: password,
-            firstname: firstName,
-            lastname: lastName,
-            company: company,
+            email: formValues.email,
+            password: formValues.password,
+            firstname: formValues.firstName,
+            lastname: formValues.lastName,
+            company: formValues.company,
           },
         },
       });
+
       localStorage.setItem("userDetail", JSON.stringify(data.register.user));
       toast.success("Registration successful!");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
-      setFirstName("");
-      setLastName("");
-      setCompany("");
-      router.push('/auth/login')
-    } catch (err) {
-      toast.error(err.message);
-      setLoading(false);
+
+      setFormValues({
+        firstName: "",
+        lastName: "",
+        company: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        agreeTerms: false,
+      });
+
+      router.push("/auth/login");
+    } catch (err: any) {
+      if (err.inner) {
+        const validationErrors: { [key: string]: string } = err.inner.reduce(
+          (acc: any, error: any) => {
+            acc[error.path] = error.message;
+            return acc;
+          },
+          {}
+        );
+        setErrors(validationErrors);
+      } else {
+        toast.error(err.message || "An error occurred during registration");
+      }
     } finally {
       setLoading(false);
     }
@@ -75,10 +96,12 @@ const RegisterForm = () => {
           type="text"
           className="form-control"
           placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
+          value={formValues.firstName}
+          onChange={handleChange}
         />
+        {errors.firstName && <div className="errorMsg">{errors.firstName}</div>}
       </FormGroup>
+
       <FormGroup>
         <Input
           required
@@ -86,10 +109,12 @@ const RegisterForm = () => {
           type="text"
           className="form-control"
           placeholder="Last Name"
-          value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
+          value={formValues.lastName}
+          onChange={handleChange}
         />
+        {errors.lastName && <div className="errorMsg">{errors.lastName}</div>}
       </FormGroup>
+
       <FormGroup>
         <Input
           required
@@ -97,10 +122,12 @@ const RegisterForm = () => {
           type="text"
           className="form-control"
           placeholder="Company"
-          value={company}
-          onChange={(e) => setCompany(e.target.value)}
+          value={formValues.company}
+          onChange={handleChange}
         />
+        {errors.company && <div className="errorMsg">{errors.company}</div>}
       </FormGroup>
+
       <FormGroup>
         <Input
           required
@@ -108,33 +135,38 @@ const RegisterForm = () => {
           type="email"
           className="form-control"
           placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          aria-required="true"
+          value={formValues.email}
+          onChange={handleChange}
         />
+        {errors.email && <div className="errorMsg">{errors.email}</div>}
       </FormGroup>
+
       <FormGroup>
         <Input
           required
-          name="login[password]"
+          name="password"
           type="password"
           className="form-control"
           placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formValues.password}
+          onChange={handleChange}
         />
+        {errors.password && <div className="errorMsg">{errors.password}</div>}
       </FormGroup>
+
       <FormGroup>
         <Input
           required
-          name="login[password]"
+          name="confirmPassword"
           type="password"
           className="form-control"
           placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          value={formValues.confirmPassword}
+          onChange={handleChange}
         />
+        {errors.confirmPassword && <div className="errorMsg">{errors.confirmPassword}</div>}
       </FormGroup>
+
       <div className="form-terms">
         <div className="custom-control custom-checkbox me-sm-2">
           <Label className="d-block">
@@ -142,21 +174,25 @@ const RegisterForm = () => {
               className="checkbox_animated"
               id="chk-ani2"
               type="checkbox"
-              checked={agreeTerms}
-              onChange={(e) => setAgreeTerms(e.target.checked)}
+              name="agreeTerms"
+              checked={formValues.agreeTerms}
+              onChange={handleChange}
             />
-            I agree all statements in{" "}
+            I agree to the{" "}
             <span>
               <a href={Href}>Terms &amp; Conditions</a>
             </span>
           </Label>
         </div>
+        {errors.agreeTerms && <div className="errorMsg">{errors.agreeTerms}</div>}
       </div>
+
       <div className="form-button">
         <Button color="primary" type="submit" disabled={loading}>
           {loading ? <div className="loader"></div> : "Register"}
         </Button>
       </div>
+
       <div className="form-footer">
         <span>Or Sign up with social platforms</span>
         <SocialMediaIcons />

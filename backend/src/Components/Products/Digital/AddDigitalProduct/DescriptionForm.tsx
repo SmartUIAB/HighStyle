@@ -6,10 +6,10 @@ import MDEditor from "@uiw/react-md-editor";
 import { SetStateAction, useEffect, useState } from "react";
 import { Card, CardBody, FormGroup } from "reactstrap";
 
-const DescriptionForm = ({ formData, setFormData }) => {
+const DescriptionForm = ({ formData, setFormData,errors }) => {
   const [value, setValue] = useState<string | undefined>("");
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
-    const { t } = useTranslation(i18LangStatus);
+  const { t } = useTranslation(i18LangStatus);
 
   useEffect(() => {
     setValue(formData.description);
@@ -31,6 +31,7 @@ const DescriptionForm = ({ formData, setFormData }) => {
           <FormGroup className="mb-0">
             <div className="description-sm">
               <MDEditor value={value} onChange={onChange} />
+              {errors?.description && <div className="errorMsg">{errors?.description}</div>}
             </div>
           </FormGroup>
         </div>

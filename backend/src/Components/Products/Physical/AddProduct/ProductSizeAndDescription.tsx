@@ -12,11 +12,13 @@ interface FormData {
 interface ProductSizeAndDescriptionProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  errors: any
 }
 
 const ProductSizeAndDescription: React.FC<ProductSizeAndDescriptionProps> = ({
   formData,
   setFormData,
+  errors
 }) => {
   const [value, setValue] = useState<string | undefined>("");
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
@@ -57,6 +59,7 @@ const ProductSizeAndDescription: React.FC<ProductSizeAndDescriptionProps> = ({
               onChange={handleSizeChange}
               value={formData.product_size}
             />
+            {errors?.product_size && <div className="errorMsg">{errors?.product_size}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -67,6 +70,7 @@ const ProductSizeAndDescription: React.FC<ProductSizeAndDescriptionProps> = ({
           </Col>
           <Col xl="8" sm="7" className="description-sm">
             <MDEditor value={value} onChange={handleDescriptionChange} />
+            {errors?.product_description && <div className="errorMsg">{errors?.product_description}</div>}
           </Col>
         </Row>
       </FormGroup>

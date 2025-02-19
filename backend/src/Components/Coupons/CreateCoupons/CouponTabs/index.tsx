@@ -12,6 +12,7 @@ import { useSearchParams } from "next/navigation";
 import { GET_COUPON_BY_ID } from "@/GraphQL/Queries/couponQueries";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
+import { couponSchema } from "@/utils/validation";
 
 interface FormData {
   name: string;
@@ -47,6 +48,8 @@ const CouponTabs: React.FC = () => {
     perCustomerLimit: "",
     usageLimit: "",
   });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
 
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -113,6 +116,23 @@ const CouponTabs: React.FC = () => {
   };
 
   const handleSave = async () => {
+    setErrors({});
+        try {
+          await couponSchema.validate(formData, { abortEarly: false });
+        } catch (error) {
+          if (error.inner) {
+            const validationErrors: { [key: string]: string } = error.inner.reduce(
+              (acc: any, error: any) => {
+                acc[error.path] = error.message;
+                return acc;
+              },
+              {}
+            );
+            console.log(validationErrors)
+            setErrors(validationErrors)
+            return;
+          }
+        }
     setLoading(true);
     try {
       if (id) {
@@ -208,14 +228,14 @@ const CouponTabs: React.FC = () => {
         </TabList>
         <TabPanel>
           <div className="tab-pane fade active show">
-            <GeneralCouponForm formData={formData} setFormData={setFormData} />
+            <GeneralCouponForm formData={formData} setFormData={setFormData} errors={errors} />
           </div>
         </TabPanel>
         <TabPanel>
-          <RestrictionForm formData={formData} setFormData={setFormData} />
+          <RestrictionForm formData={formData} setFormData={setFormData} errors={errors} />
         </TabPanel>
         <TabPanel>
-          <UsageForm formData={formData} setFormData={setFormData} />
+          <UsageForm formData={formData} setFormData={setFormData} errors={errors} />
         </TabPanel>
       </Tabs>
       <div className="pull-right">

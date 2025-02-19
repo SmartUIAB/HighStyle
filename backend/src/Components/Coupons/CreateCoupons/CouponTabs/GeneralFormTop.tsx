@@ -15,7 +15,7 @@ interface GeneFormTopProps {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 }
 
-const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
+const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData,errors }) => {
 
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
@@ -40,6 +40,7 @@ const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
               value={formData.name}
               onChange={handleInputChange}
             />
+            {errors?.name && <div className="errorMsg">{errors?.name}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -56,6 +57,7 @@ const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
               value={formData.code}
               onChange={handleInputChange}
             />
+            {errors?.code && <div className="errorMsg">{errors?.code}</div>}
             <div className="valid-feedback">
               Please Provide a Valid Coupon Code.
             </div>
@@ -76,6 +78,7 @@ const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
               onChange={handleInputChange}
               required
             />
+            {errors?.startDate && <div className="errorMsg">{errors?.startDate}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -93,6 +96,7 @@ const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData }) => {
               onChange={handleInputChange}
               required
             />
+            {errors?.endDate && <div className="errorMsg">{errors?.endDate}</div>}
           </Col>
         </Row>
       </FormGroup>

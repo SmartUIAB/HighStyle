@@ -11,30 +11,33 @@ import { GET_CATEGORY } from "../../../../GraphQL/Queries/categoryQueries";
 import { toast } from "react-toastify";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
+import { categorySchema } from "@/utils/validation";
 
 const Category = () => {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [type, setType] = useState("");
-  const [image, setImage] = useState<File | null>(null);
+  const [formValues, setFormValues] = useState({
+    name: "",
+    description: "",
+    type: "",
+    image: null as File | null,
+  });
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
-
-  const handleSelect = (selectedType: string) => {
-    setType(selectedType);
-  };
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const [createCategory] = useMutation(CREATE_CATEGORY);
 
-  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { i18LangStatus } = useAppSelector((store: { LangReducer: { i18LangStatus: string } }) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
 
-  const handleFileChange = (e: any) => {
-    const files = e.target.files;
-    if (files && files.length > 0) {
-      setImage(files[0]);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setFormValues({ ...formValues, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFormValues({ ...formValues, image: e.target.files[0] });
     }
   };
 
@@ -50,38 +53,49 @@ const Category = () => {
   const categoriesData = data?.categories?.categories.filter((item: any) => item.type == 'Physical') || [];
 
   const handleSave = async () => {
+    setErrors({});
     try {
-      if (!name || !type) {
-        console.error("Name and Type are required fields.");
-        return;
+      await categorySchema.validate(formValues, { abortEarly: false });
+    } catch (error) {
+      if (error.inner) {
+        const validationErrors: { [key: string]: string } = error.inner.reduce(
+          (acc: any, error: any) => {
+            acc[error.path] = error.message;
+            return acc;
+          },
+          {}
+        );
+        setErrors(validationErrors)
       }
-      if (!image) {
-        console.error("Image is required.");
-        return;
-      }
+      return; // Stop execution if validation fails
+    }
 
+    try {
       const { data } = await createCategory({
         variables: {
-          name: name,
-          description: description,
-          image: image,
-          type: type,
+          name: formValues.name,
+          description: formValues.description,
+          image: formValues.image,
+          type: formValues.type,
         },
       });
 
       if (data) {
         toast.success("Category created successfully");
         setOpen(false);
-        setName('');
-        setType('');
-        setDescription('');
-        setImage(null);
+        setFormValues({
+          name: "",
+          description: "",
+          image: null,
+          type: ""
+        });
         refetch();
       }
     } catch (error) {
       toast.error(error.message);
     }
   };
+
 
 
   const handlePageChange = (newPage: number) => {
@@ -98,6 +112,7 @@ const Category = () => {
   };
   const onCloseModal = () => {
     setOpen(false);
+    setErrors({})
   };
 
   return (
@@ -125,9 +140,11 @@ const Category = () => {
                           <Label>{t("category.name")}:</Label>
                           <Input
                             type="text"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            name="name"
+                            value={formValues.name}
+                            onChange={handleInputChange}
                           />
+                          {errors.name && <div className="errorMsg">{errors.name}</div>}
                         </FormGroup>
                         <FormGroup>
                           <Label htmlFor="type" className="col-form-label">
@@ -137,8 +154,8 @@ const Category = () => {
                             id="type"
                             type="select"
                             name="type"
-                            value={type || ""}
-                            onChange={(e) => handleSelect(e.target.value)}
+                            value={formValues.type}
+                            onChange={handleInputChange}
                           >
                             <option value="" disabled>
                               Select type
@@ -146,18 +163,22 @@ const Category = () => {
                             <option value="Physical">{t("type.physical")}</option>
                             <option value="Digital">{t("type.digital")}</option>
                           </Input>
+                          {errors.type && <div className="errorMsg">{errors.type}</div>}
                         </FormGroup>
                         <FormGroup>
                           <Label>{t("category.description")}:</Label>
                           <Input
                             type="text"
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
+                            name="description"
+                            value={formValues.description}
+                            onChange={handleInputChange}
                           />
+                          {errors.description && <div className="errorMsg">{errors.description}</div>}
                         </FormGroup>
                         <FormGroup>
                           <Label>{t("table.image")}:</Label>
                           <Input type="file" onChange={handleFileChange} />
+                          {errors.image && <div className="errorMsg">{errors.image}</div>}
                         </FormGroup>
                       </Form>
                     </ModalBody>

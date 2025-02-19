@@ -13,8 +13,10 @@ import { useSearchParams } from "next/navigation";
 import { DIGITAL_PRODUCT_BY_ID } from "@/GraphQL/Queries/productQueries";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
+import { digitalproductSchema } from "@/utils/validation";
 
 const AddDigitalProduct = () => {
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
@@ -99,6 +101,23 @@ const AddDigitalProduct = () => {
 
   // Handle submission
   const handleValidSubmit = async () => {
+    setErrors({});
+    try {
+      await digitalproductSchema.validate(formData, { abortEarly: false });
+    } catch (error) {
+      if (error.inner) {
+        const validationErrors: { [key: string]: string } = error.inner.reduce(
+          (acc: any, error: any) => {
+            acc[error.path] = error.message;
+            return acc;
+          },
+          {}
+        );
+        console.log(validationErrors)
+        setErrors(validationErrors)
+        return;
+      }
+    }
     try {
       if (id) {
         const { data } = await updateDigitalProduct({
@@ -204,12 +223,12 @@ const AddDigitalProduct = () => {
       <Container fluid>
         <Row className="product-adding">
           <Col xl="6">
-            <GeneralForm formData={formData} setFormData={setFormData} />
+            <GeneralForm formData={formData} setFormData={setFormData} errors={errors} />
           </Col>
           <Col xl="6">
             <MyUploader formData={formData} setFormData={setFormData} />
-            <DescriptionForm formData={formData} setFormData={setFormData} />
-            <MetaDataForm formData={formData} setFormData={setFormData} />
+            <DescriptionForm formData={formData} setFormData={setFormData} errors={errors} />
+            <MetaDataForm formData={formData} setFormData={setFormData} errors={errors} />
             <div className="offset-xl-3 offset-sm-4 mt-3 d-flex gap-2">
               <Button type="submit" onClick={handleValidSubmit} color="primary">
                 {id ? t('digital.add_product.Update') : t('digital.add_product.Add')}

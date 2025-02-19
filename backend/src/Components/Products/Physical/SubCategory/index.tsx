@@ -9,6 +9,7 @@ import { GET_ALL_CATEGORY, GET_SUB_CATEGORY } from "@/GraphQL/Queries/categoryQu
 import { toast } from "react-toastify";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
+import { subCategorySchema } from "@/utils/validation";
 
 const SubCategory = () => {
   const [open, setOpen] = useState(false);
@@ -20,6 +21,8 @@ const SubCategory = () => {
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
 
   const handleSelect = (selectedType: string) => {
     setType(selectedType);
@@ -36,6 +39,7 @@ const SubCategory = () => {
   };
   const onCloseModal = () => {
     setOpen(false);
+    setErrors({})
   };
 
   const { data, loading, error, refetch } = useQuery(GET_SUB_CATEGORY, {
@@ -70,29 +74,13 @@ const SubCategory = () => {
 
   const handleSave = async () => {
     try {
-      if (!name || !type) {
-        console.error("Name and Type are required fields.");
-        return;
-      }
-
-      if (!category) {
-        console.error("Category is required field.");
-        return;
-      }
-
-      if (!image) {
-        console.error("Image is required.");
-        return;
-      }
+      await subCategorySchema.validate(
+        { name, description, type, category, image },
+        { abortEarly: false }
+      );
 
       const { data } = await createSubCategory({
-        variables: {
-          name: name,
-          description: description,
-          image: image,
-          type: type,
-          categoryId: category,
-        },
+        variables: { name, description, image, type, categoryId: category },
       });
 
       if (data) {
@@ -106,9 +94,22 @@ const SubCategory = () => {
         refetch();
       }
     } catch (error) {
-      toast.error(error.message);
+      if (error.inner) {
+        const validationErrors: { [key: string]: string } = error.inner.reduce(
+          (acc: any, error: any) => {
+            acc[error.path] = error.message;
+            return acc;
+          },
+          {}
+        );
+        setErrors(validationErrors)
+      }
+      else {
+        toast.error(error.message);
+      }
     }
   };
+
 
   return (
     <Fragment>
@@ -155,15 +156,17 @@ const SubCategory = () => {
                                 </option>
                               ))}
                           </Input>
+                          {errors.category && <div className="errorMsg">{errors.category}</div>}
                         </FormGroup>
 
                         <FormGroup>
-                          <Label>S{t("subCategory.name")}:</Label>
+                          <Label>{t("subCategory.name")}:</Label>
                           <Input
                             type="text"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                           />
+                          {errors.name && <div className="errorMsg">{errors.name}</div>}
                         </FormGroup>
                         <FormGroup>
                           <Label htmlFor="type" className="col-form-label">
@@ -182,6 +185,7 @@ const SubCategory = () => {
                             <option value="Physical">{t("type.physical")}</option>
                             <option value="Digital">{t("type.digital")}</option>
                           </Input>
+                          {errors.type && <div className="errorMsg">{errors.type}</div>}
                         </FormGroup>
 
                         <FormGroup>
@@ -191,10 +195,12 @@ const SubCategory = () => {
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                           />
+                          {errors.description && <div className="errorMsg">{errors.description}</div>}
                         </FormGroup>
                         <FormGroup>
                           <Label>{t("table.image")}:</Label>
                           <Input type="file" onChange={handleFileChange} />
+                          {errors.image && <div className="errorMsg">{errors.image}</div>}
                         </FormGroup>
                       </Form>
                     </ModalBody>

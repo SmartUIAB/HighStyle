@@ -13,7 +13,7 @@ interface UsageFormProps {
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
 }
 
-const UsageForm: React.FC<UsageFormProps> = ({ formData, setFormData }) => {
+const UsageForm: React.FC<UsageFormProps> = ({ formData, setFormData, errors }) => {
 
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
@@ -39,6 +39,7 @@ const UsageForm: React.FC<UsageFormProps> = ({ formData, setFormData }) => {
               value={formData.usageLimit}
               onChange={handleInputChange}
             />
+            {errors?.usageLimit && <div className="errorMsg">{errors?.usageLimit}</div>}
           </Col>
         </Row>
       </FormGroup>
@@ -55,6 +56,7 @@ const UsageForm: React.FC<UsageFormProps> = ({ formData, setFormData }) => {
               value={formData.perCustomerLimit}
               onChange={handleInputChange}
             />
+            {errors?.perCustomerLimit && <div className="errorMsg">{errors?.perCustomerLimit}</div>}
           </Col>
         </Row>
       </FormGroup>

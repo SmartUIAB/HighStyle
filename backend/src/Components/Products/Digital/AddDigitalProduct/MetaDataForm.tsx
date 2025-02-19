@@ -4,7 +4,7 @@ import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import { useAppSelector } from "@/Redux/Hooks";
 import { Button, Card, CardBody, FormGroup, Input, Label } from "reactstrap";
 
-const MetaDataForm = ({ formData, setFormData }) => {
+const MetaDataForm = ({ formData, setFormData, errors }) => {
   const handleChange = (e: any) => {
     const { id, value } = e.target;
     setFormData((prevData: any) => ({
@@ -30,6 +30,7 @@ const MetaDataForm = ({ formData, setFormData }) => {
               onChange={handleChange}
               required
             />
+            {errors?.meta_title && <div className="errorMsg">{errors?.meta_title}</div>}
           </FormGroup>
           <FormGroup>
             <Label className="col-form-label">{t('digital.add_product.Meta Description')} </Label>
@@ -40,6 +41,7 @@ const MetaDataForm = ({ formData, setFormData }) => {
               value={formData.metaDescription}
               onChange={handleChange}
             ></textarea>
+            {errors?.meta_description && <div className="errorMsg">{errors?.meta_description}</div>}
           </FormGroup>
         </div>
       </CardBody>

@@ -10,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { VENDOR_BY_ID } from "@/GraphQL/Queries/vendorQueries";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
+import { vendorSchema } from "@/utils/validation";
 
 interface FormData {
   name: string;
@@ -47,15 +48,7 @@ const CreateVendors = () => {
     allowedPermissions: [],
   });
 
-  const [errors, setErrors] = useState<ErrorData>({
-    name: "",
-    businessType: "",
-    email: "",
-    address: "",
-    contactNumber: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const { data: allPermissions, loading, error } = useQuery(GET_ALL_PERMISSIONS);
   const [createVendor] = useMutation(CREATE_VENDOR);
@@ -117,58 +110,33 @@ const CreateVendors = () => {
     }, {});
   }
 
-  const validateForm = (): boolean => {
-    const newErrors: Partial<ErrorData> = {};
-    let isValid = true;
-
-    if (!formData.name) {
-      newErrors.name = "Name is required";
-      isValid = false;
-    }
-
-    if (!formData.businessType) {
-      newErrors.businessType = "Business Type is required";
-      isValid = false;
-    }
-
-    if (!formData.email) {
-      newErrors.email = "Email is required";
-      isValid = false;
-    }
-
-    if (!formData.address) {
-      newErrors.address = "Address is required";
-      isValid = false;
-    }
-
-    if (!formData.contactNumber) {
-      newErrors.contactNumber = "Contact Number is required";
-      isValid = false;
-    }
-
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-      isValid = false;
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-      isValid = false;
-    }
-
-    setErrors(newErrors as ErrorData);
-    return isValid;
-  };
 
   const handleNext = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (validateForm() && activeTab < 1 && !id) {
+    if (activeTab < 1 && !id) {
       setActiveTab((prev) => prev + 1);
     }
   };
 
   const handleSave = async () => {
     if (id) {
+      setErrors({});
+      try {
+        await vendorSchema.validate(formData, { abortEarly: false });
+      } catch (error) {
+        if (error.inner) {
+          const validationErrors: { [key: string]: string } = error.inner.reduce(
+            (acc: any, error: any) => {
+              acc[error.path] = error.message;
+              return acc;
+            },
+            {}
+          );
+          setErrors(validationErrors)
+          return;
+        }
+        return
+      }
       const { data } = await updateVendor({
         variables: {
           updateVendorId: id,
@@ -189,6 +157,23 @@ const CreateVendors = () => {
         refetch();
       }
     } else {
+      setErrors({});
+      try {
+        await vendorSchema.validate(formData, { abortEarly: false });
+      } catch (error) {
+        if (error.inner) {
+          const validationErrors: { [key: string]: string } = error.inner.reduce(
+            (acc: any, error: any) => {
+              acc[error.path] = error.message;
+              return acc;
+            },
+            {}
+          );
+          setErrors(validationErrors)
+          return;
+        }
+        return
+      }
       const { data } = await createVendor({
         variables: {
           input: {
@@ -244,9 +229,8 @@ const CreateVendors = () => {
                       required
                       value={formData.name}
                       onChange={handleInputChange}
-                      invalid={!!errors.name}
                     />
-                    {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+                    {errors.name && <div className="errorMsg">{errors.name}</div>}
                   </Col>
                 </Row>
               </FormGroup>
@@ -263,7 +247,6 @@ const CreateVendors = () => {
                       name="businessType"
                       value={formData.businessType}
                       onChange={handleInputChange}
-                      invalid={!!errors.businessType}
                     >
                       <option value="" disabled>
                         {t("vendors.create_vendor.selectType")}
@@ -271,7 +254,7 @@ const CreateVendors = () => {
                       <option value="Physical">{t("vendors.create_vendor.physical")}</option>
                       <option value="Digital">{t("vendors.create_vendor.digital")}</option>
                     </Input>
-                    {errors.businessType && <div className="invalid-feedback">{errors.businessType}</div>}
+                    {errors.businessType && <div className="errorMsg">{errors.businessType}</div>}
                   </Col>
                 </Row>
               </FormGroup>
@@ -288,9 +271,8 @@ const CreateVendors = () => {
                       required
                       value={formData.address}
                       onChange={handleInputChange}
-                      invalid={!!errors.address}
                     />
-                    {errors.address && <div className="invalid-feedback">{errors.address}</div>}
+                    {errors.address && <div className="errorMsg">{errors.address}</div>}
                   </Col>
                 </Row>
               </FormGroup>
@@ -307,10 +289,9 @@ const CreateVendors = () => {
                       required
                       value={formData.contactNumber}
                       onChange={handleInputChange}
-                      invalid={!!errors.contactNumber}
                       max="10"
                     />
-                    {errors.contactNumber && <div className="invalid-feedback">{errors.contactNumber}</div>}
+                    {errors.contactNumber && <div className="errorMsg">{errors.contactNumber}</div>}
                   </Col>
                 </Row>
               </FormGroup>
@@ -327,9 +308,8 @@ const CreateVendors = () => {
                       required
                       value={formData.email}
                       onChange={handleInputChange}
-                      invalid={!!errors.email}
                     />
-                    {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+                    {errors.email && <div className="errorMsg">{errors.email}</div>}
                   </Col>
                 </Row>
               </FormGroup>
@@ -346,9 +326,8 @@ const CreateVendors = () => {
                       required
                       value={formData.password}
                       onChange={handleInputChange}
-                      invalid={!!errors.password}
                     />
-                    {errors.password && <div className="invalid-feedback">{errors.password}</div>}
+                    {errors.password && <div className="errorMsg">{errors.password}</div>}
                   </Col>
                 </Row>
               </FormGroup>
@@ -365,9 +344,8 @@ const CreateVendors = () => {
                       required
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      invalid={!!errors.confirmPassword}
                     />
-                    {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
+                    {errors.confirmPassword && <div className="errorMsg">{errors.confirmPassword}</div>}
                   </Col>
                 </Row>
               </FormGroup>
