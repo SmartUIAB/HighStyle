@@ -130,7 +130,7 @@ const ProductList = () => {
                         </div>
                       </Link>
                     </td>
-                    <td className="align-middle">{item.price}$</td>
+                    <td className="align-middle">{item.price.toFixed(2)}$</td>
                     <td className="align-middle">
                       <span className={`badge text-bg-${item?.status !== 'Unavailable' ? 'success' : 'danger'}`}>
                         {item?.status}

@@ -74,7 +74,7 @@ const SalesTransaction = () => {
                               <td className="align-middle">
                                 {item?.order?.user?.firstname || "N/A"}
                               </td>
-                              <td className="align-middle">{item?.order?.finalTotal}$</td>
+                              <td className="align-middle">{item?.order?.finalTotal.toFixed(2)}$</td>
                               <td className="align-middle">
                                 {item?.order?.paymentStatus || "N/A"}
                               </td>

@@ -127,7 +127,7 @@ const ProductListDigital = () => {
                         <div>{item.SKU}</div>
                       </div>
                     </td>
-                    <td className="align-middle">{item.price}</td>
+                    <td className="align-middle">{item.price.toFixed(2)}</td>
                     <td className="align-middle"><span className="badge text-bg-success">{item?.status}</span></td>
                     <td className="align-middle">{item.fileFormat}</td>
                     <td className="align-middle">{item.compatibility.toString()}</td>

@@ -330,8 +330,7 @@ const SalesOrders = () => {
                         <th className="text-uppercase">{t("sales.orders.columns.deliveryCity")}</th>
                         <th className="text-uppercase">{t("sales.orders.columns.totalProduct")}</th>
                         <th className="text-uppercase">{t("sales.orders.columns.createdAt")}</th>
-                        <th className="text-uppercase">Action</th>
-
+                        <th className="text-uppercase">{t("table.action")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -345,7 +344,7 @@ const SalesOrders = () => {
                             <td className="align-middle">
                               {item?.user?.firstname || "N/A"}
                             </td>
-                            <td className="align-middle">{item?.finalTotal}$</td>
+                            <td className="align-middle">{item?.finalTotal.toFixed(2)}$</td>
                             <td className="align-middle">
                               {item?.paymentStatus || "N/A"}
                             </td>

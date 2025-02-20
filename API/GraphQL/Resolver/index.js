@@ -16,6 +16,7 @@ const notificationResolver = require("./notificationResolver");
 const favouriteResolver = require("./favouriteResolver");
 const reviewResolvers = require("./reviewResolver");
 const comingsoonResolver = require("./comingsoonResolver");
+const emailresolvers = require("./emailResolver");
 
 const resolver = {
   Query: {
@@ -52,7 +53,8 @@ const resolver = {
     ...notificationResolver.Mutation,
     ...favouriteResolver.Mutation,
     ...reviewResolvers.Mutation,
-    ...comingsoonResolver.Mutation
+    ...comingsoonResolver.Mutation,
+    ...emailresolvers.Mutation
   },
   Category: {
     ...fieldResolver.Category,

@@ -16,6 +16,7 @@ const notificationTypeDefs = require("./notificationTypeDef");
 const favouriteTypeDef = require("./favouriteTypeDef");
 const reviewTypeDef = require("./reviewTypeDef");
 const comingsoonTypeDef = require("./comingsoonTypeDef");
+const emailTypeDef = require("./emailTypeDef");
 
 const typeDefs = gql`
   ${userTypeDefs}
@@ -35,6 +36,7 @@ const typeDefs = gql`
   ${favouriteTypeDef}
   ${reviewTypeDef}
   ${comingsoonTypeDef}
+  ${emailTypeDef}
 `;
 
 module.exports = typeDefs;
