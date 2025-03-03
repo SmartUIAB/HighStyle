@@ -1,4 +1,5 @@
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
+import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import Datatable from "@/CommonComponents/DataTable";
 import { MenuListData } from "@/Data/Menu";
 import { Fragment } from "react";
@@ -12,12 +13,12 @@ const MenuList = () => {
         <Row>
           <Col sm="12">
             <Card>
-              <CardHeader>
-                <h5>Menu Lists</h5>
-              </CardHeader>
+              <CommonCardHeader title="" />
               <CardBody>
-                <div id="batchDelete" className="category-table order-table coupon-list-delete">
-                  <Datatable multiSelectOption={true} myData={MenuListData} pageSize={6} pagination={false} class="-striped -highlight" />
+                <div className="feature-coming-soon mb-3 text-center">
+                  <p className="text-muted">
+                    This option will be enabled in the next version.
+                  </p>
                 </div>
               </CardBody>
             </Card>

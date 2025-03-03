@@ -1,4 +1,5 @@
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
+import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 // import Datatable from "@/CommonComponents/DataTable";
 import { TaxesData } from "@/Data/Localization";
 import { Fragment, useEffect, useState } from "react";
@@ -20,44 +21,13 @@ const Taxes = () => {
         <Row>
           <Col sm="12">
             <Card>
-              <CardHeader>
-                <h5>Tax Details</h5>
-              </CardHeader>
+              <CommonCardHeader title="" />
               <CardBody>
-                {loading ? (
-                  <div className="text-center">
-                    <Spinner style={{ color: '#ff8084' }} />
-                  </div>
-                ) : (
-                  <div id="basicScenario" className="product-list translation-list">
-                    <table className="table mt-5 w-full" style={{ minWidth: '1200px' }}>
-                      <thead>
-                        <tr>
-                          <th className="text-uppercase">Detail</th>
-                          <th className="text-uppercase">Schedule</th>
-                          <th className="text-uppercase">Rate</th>
-                          <th className="text-uppercase">Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {TaxesData?.length === 0 ? (
-                          <tr>
-                            <td colSpan={4} className="text-center">No Data Found</td>
-                          </tr>
-                        ) : (
-                          TaxesData?.map((item, i) => (
-                            <tr key={i}>
-                              <td className="align-middle">{item.detail}</td>
-                              <td className="align-middle">{item.schedule}</td>
-                              <td className="align-middle">{item.rate}</td>
-                              <td className="align-middle">{item.amount}</td>
-                            </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
-                  </div>
-                )}
+                <div className="feature-coming-soon mb-3 text-center">
+                  <p className="text-muted">
+                    This option will be enabled in the next version.
+                  </p>
+                </div>
               </CardBody>
             </Card>
           </Col>

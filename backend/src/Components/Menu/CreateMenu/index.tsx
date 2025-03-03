@@ -11,36 +11,13 @@ const CreateMenu = () => {
         <Row>
           <Col sm="12">
             <Card>
-              <CommonCardHeader title="Add Menu" />
+              <CommonCardHeader title="" />
               <CardBody>
-                <Form className="needs-validation">
-                  <FormGroup>
-                    <Row>
-                      <Col xl="3" md="4">
-                        <Label>
-                          <span>*</span> Menu Name
-                        </Label>
-                      </Col>
-                      <Col md="8">
-                        <Input id="validationCustom0" type="text" required />
-                      </Col>
-                    </Row>
-                  </FormGroup>
-                  <FormGroup>
-                    <Row>
-                      <Col xl="3" md="4">
-                        <Label>Status</Label>
-                      </Col>
-                      <Col xl="9" md="8">
-                        <Label className="d-block">
-                          <Input className="checkbox_animated" id="chk-ani2" type="checkbox" />
-                          Enable the Coupon
-                        </Label>
-                      </Col>
-                    </Row>
-                  </FormGroup>
-                  <Button color="primary">Save</Button>
-                </Form>
+                <div className="feature-coming-soon mb-3 text-center">
+                  <p className="text-muted">
+                    This option will be enabled in the next version.
+                  </p>
+                </div>
               </CardBody>
             </Card>
           </Col>
