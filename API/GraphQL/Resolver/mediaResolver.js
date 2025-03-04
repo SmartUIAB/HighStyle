@@ -5,6 +5,7 @@ const CustomError = require("../../Utilities/CustomError");
 const {
   deleteImageFromStorage,
 } = require("../../Utilities/miscellaneousUtils");
+const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const mediaResolvers = {
   Query: {
@@ -31,7 +32,10 @@ const mediaResolvers = {
     },
   },
   Mutation: {
-    uploadImages: async (_, { images }, context) => {
+    uploadImages: checkPermission({
+      module: "Media",
+      name: "Manage Media",
+    })(async (_, { images }, context) => {
       try {
         let company = await Company.findById(context.user.company);
 
@@ -72,9 +76,12 @@ const mediaResolvers = {
           images: [],
         };
       }
-    },
+    }),
 
-    deleteImage: async (_, { imageIds }) => {
+    deleteImage: checkPermission({
+      module: "Media",
+      name: "Manage Media",
+    })(async (_, { imageIds }) => {
       try {
         if (!imageIds || imageIds.length === 0) {
           throw new CustomError("No image IDs provided", 400);
@@ -102,7 +109,7 @@ const mediaResolvers = {
       } catch (error) {
         throw new CustomError("Failed to delete images", 500);
       }
-    },
+    }),
   },
 };
 

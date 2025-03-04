@@ -1,6 +1,7 @@
 const Company = require("../../Model/companyModel");
 const Page = require("../../Model/pageModel");
 const CustomError = require("../../Utilities/CustomError");
+const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const pageResolvers = {
   Query: {
@@ -24,7 +25,10 @@ const pageResolvers = {
     },
   },
   Mutation: {
-    createPage: async (_, { input }, context) => {
+    createPage: checkPermission({
+      module: "Pages",
+      name: "Add Pages",
+    })(async (_, { input }, context) => {
       try {
         const company = await Company.findById(context.user.company);
         if (!company) {
@@ -41,9 +45,12 @@ const pageResolvers = {
       } catch (error) {
         throw new CustomError("Error creating page: " + error.message);
       }
-    },
+    }),
 
-    updatePage: async (_, { id, input }) => {
+    updatePage: checkPermission({
+      module: "Pages",
+      name: "Edit Pages",
+    })(async (_, { id, input }) => {
       try {
         const updatedPage = await Page.findByIdAndUpdate(id, input, {
           new: true,
@@ -55,9 +62,12 @@ const pageResolvers = {
       } catch (error) {
         throw new CustomError("Error updating page: " + error.message);
       }
-    },
+    }),
 
-    deletePage: async (_, { id }) => {
+    deletePage: checkPermission({
+      module: "Pages",
+      name: "Delete Pages",
+    })(async (_, { id }) => {
       try {
         const deletedPage = await Page.findByIdAndDelete(id);
         if (!deletedPage) {
@@ -67,7 +77,7 @@ const pageResolvers = {
       } catch (error) {
         throw new CustomError("Error deleting page: " + error.message);
       }
-    },
+    }),
   },
 };
 

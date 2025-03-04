@@ -5,11 +5,13 @@ export const CREATE_ORDER = gql`
     $customerId: ID!
     $cartId: ID!
     $shippingAddress: ShippingAddressInput!
+    $locale: String
   ) {
     AddOrder(
       customerId: $customerId
       cartId: $cartId
       shippingAddress: $shippingAddress
+      locale: $locale
     ) {
       order
       paymentIntentClientSecret

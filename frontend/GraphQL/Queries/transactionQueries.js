@@ -15,6 +15,15 @@ export const GET_ALL_TRANSACTIONS = gql`
             email
             firstname
             lastname
+            company
+            image
+            role
+            permissions {
+              id
+              module
+              name
+              description
+            }
           }
           products {
             productType

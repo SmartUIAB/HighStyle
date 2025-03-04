@@ -108,9 +108,21 @@ const CategoryDigital = () => {
 
   const onOpenModal = () => {
     setOpen(true);
+    setFormValues({
+      name: "",
+      description: "",
+      image: null,
+      type: "",
+    })
   };
   const onCloseModal = () => {
     setOpen(false);
+    setFormValues({
+      name: "",
+      description: "",
+      image: null,
+      type: "",
+    })
     setErrors({})
   };
 

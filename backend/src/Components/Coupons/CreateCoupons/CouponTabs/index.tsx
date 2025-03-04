@@ -205,8 +205,7 @@ const CouponTabs: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error("Error saving coupon:", error);
-      toast.error('Failed to save coupon. Please try again later.');
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }

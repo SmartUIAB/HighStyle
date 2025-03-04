@@ -6,6 +6,7 @@ const {
   calculateOrderTotalWithCoupon,
 } = require("../../Utilities/miscellaneousUtils");
 const Coupon = require("../../Model/couponModel");
+const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const salesResolver = {
   Query: {
@@ -126,7 +127,6 @@ const salesResolver = {
           .lean();
 
         const sanitizedTransactions = transactions.map((transaction) => {
-
           const sanitizedOrder = transaction.order
             ? {
                 ...transaction.order,

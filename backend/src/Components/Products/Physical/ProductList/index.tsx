@@ -54,7 +54,7 @@ const ProductList = () => {
       }
     } catch (error) {
       console.error("Error deleting physical product:", error);
-      toast.error("Failed to delete Physical Product");
+      toast.error(error.message);
     }
   }
 

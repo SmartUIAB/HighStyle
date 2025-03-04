@@ -96,7 +96,6 @@ const AddProduct = () => {
           },
           {}
         );
-        console.log(validationErrors)
         setErrors(validationErrors)
         return;
       }
@@ -148,7 +147,7 @@ const AddProduct = () => {
         }
       }
     } catch (error) {
-      toast.error("Failed to save product. Please try again.");
+      toast.error(error.message);
     }
   };
 

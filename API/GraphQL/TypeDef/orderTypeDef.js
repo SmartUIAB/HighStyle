@@ -6,6 +6,7 @@ const orderTypeDefs = gql`
       customerId: ID!
       cartId: ID!
       shippingAddress: ShippingAddressInput!
+      locale: String
     ): CreateOrderResponses
     deleteOldPendingOrders: Int
   }

@@ -25,7 +25,6 @@ interface ProductCodeAndPriceProps {
 }
 
 const ProductCodeAndPrice: React.FC<ProductCodeAndPriceProps> = ({ formData, setFormData, errors }) => {
-  console.log(errors, '-==========')
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

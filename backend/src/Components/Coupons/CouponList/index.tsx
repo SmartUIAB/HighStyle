@@ -36,8 +36,7 @@ const ListCoupons = () => {
         refetch();
       }
     } catch (error) {
-      console.error("Error deleting Coupon:", error);
-      toast.error("Failed to delete Coupon");
+      toast.error(error.message);
     } finally {
       setIsDeleting(false);
     }

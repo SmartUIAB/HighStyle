@@ -30,7 +30,7 @@ const orderResolvers = {
     },
   },
   Mutation: {
-    AddOrder: async (_, { customerId, cartId, shippingAddress }) => {
+    AddOrder: async (_, { customerId, cartId, shippingAddress,locale }) => {
       try {
         const customer = await Customer.findById(customerId);
         if (!customer) {
@@ -95,8 +95,12 @@ const orderResolvers = {
             },
           ],
           mode: "payment",
-          success_url: `http://localhost:3000/en/page/order-success`,
-          cancel_url: `http://localhost:3000/en/page/account/cart`,
+          success_url:
+            `http://localhost:3000/${locale}/page/order-success` ||
+            `http://localhost:3001/${locale}/page/order-success`,
+          cancel_url:
+            `http://localhost:3000/${locale}/page/account/cart` ||
+            `http://localhost:3001/${locale}/page/account/cart`,
           customer: stripeCustomer.id,
           metadata: {
             orderId: savedOrder._id.toString(),

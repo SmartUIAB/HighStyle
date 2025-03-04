@@ -15,7 +15,7 @@ const salesTypeDef = gql`
 
   type Transaction {
     id: ID!
-    order: Order!
+    order: Order
     transactionAmount: Float!
     transactionStatus: TransactionStatus!
     paymentGateway: String!

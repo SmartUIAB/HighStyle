@@ -7,6 +7,7 @@ const Vendor = require("../../Model/vendorModel");
 const {
   deleteImageFromStorage,
 } = require("../../Utilities/miscellaneousUtils");
+const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const vendorResolver = {
   Query: {
@@ -85,11 +86,10 @@ const vendorResolver = {
   },
 
   Mutation: {
-    createVendor: async (
-      _,
-      { input, logo, password, permissions },
-      context
-    ) => {
+    createVendor: checkPermission({
+      module: "Vendors",
+      name: "Add Vendors",
+    })(async (_, { input, logo, password, permissions }, context) => {
       const { name, email, businessType, contactNumber, address } = input;
 
       try {
@@ -156,12 +156,11 @@ const vendorResolver = {
           500
         );
       }
-    },
-    updateVendor: async (
-      _,
-      { id, input, logo, password, permissions },
-      context
-    ) => {
+    }),
+    updateVendor: checkPermission({
+      module: "Vendors",
+      name: "Edit Vendors",
+    })(async (_, { id, input, logo, password, permissions }, context) => {
       try {
         let company = await Company.findById(context.user.company);
         if (!company) {
@@ -226,8 +225,12 @@ const vendorResolver = {
           500
         );
       }
-    },
-    deleteVendor: async (_, { id }, context) => {
+    }),
+
+    deleteVendor: checkPermission({
+      module: "Vendors",
+      name: "Delete Vendors",
+    })(async (_, { id }, context) => {
       try {
         const vendor = await Vendor.findById(id);
         if (!vendor) {
@@ -250,7 +253,7 @@ const vendorResolver = {
           500
         );
       }
-    },
+    }),
   },
 };
 

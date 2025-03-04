@@ -17,6 +17,7 @@ const favouriteTypeDef = require("./favouriteTypeDef");
 const reviewTypeDef = require("./reviewTypeDef");
 const comingsoonTypeDef = require("./comingsoonTypeDef");
 const emailTypeDef = require("./emailTypeDef");
+const dashboardTypeDef = require("./dashboardTypeDef");
 
 const typeDefs = gql`
   ${userTypeDefs}
@@ -37,6 +38,7 @@ const typeDefs = gql`
   ${reviewTypeDef}
   ${comingsoonTypeDef}
   ${emailTypeDef}
+  ${dashboardTypeDef}
 `;
 
 module.exports = typeDefs;

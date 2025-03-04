@@ -9,6 +9,7 @@ const Permission = require("../../Model/permissionModel");
 const {
   deleteImageFromStorage,
 } = require("../../Utilities/miscellaneousUtils");
+const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const userResolver = {
   Query: {
@@ -163,10 +164,22 @@ const userResolver = {
             description: "Allows the user to view the dashboard overview.",
           },
           {
-            module: "Products",
-            name: "View Products",
+            module: "Category",
+            name: "Add Category",
             description:
-              "Allows the user to view products listed on the platform.",
+              "Allows the user to add categories listed on the platform.",
+          },
+          {
+            module: "Category",
+            name: "Edit Category",
+            description:
+              "Allows the user to edit categories listed on the platform.",
+          },
+          {
+            module: "Category",
+            name: "Delete Category",
+            description:
+              "Allows the user to delete categories listed on the platform.",
           },
           {
             module: "Products",
@@ -186,36 +199,34 @@ const userResolver = {
               "Allows the user to delete products from the platform.",
           },
           {
-            module: "Sales",
-            name: "View Sales",
-            description: "Allows the user to view sales data and reports.",
-          },
-          {
-            module: "Sales",
-            name: "Manage Sales",
-            description:
-              "Allows the user to manage sales transactions and orders.",
-          },
-          {
             module: "Coupons",
-            name: "View Coupons",
-            description:
-              "Allows the user to view available coupons on the platform.",
-          },
-          {
-            module: "Coupons",
-            name: "Create Coupons",
+            name: "Add Coupons",
             description: "Allows the user to create new coupons for customers.",
           },
           {
-            module: "Pages",
-            name: "View Pages",
-            description: "Allows the user to view pages on the platform.",
+            module: "Coupons",
+            name: "Edit Coupons",
+            description: "Allows the user to edit new coupons for customers.",
+          },
+          {
+            module: "Coupons",
+            name: "Delete Coupons",
+            description: "Allows the user to delete new coupons for customers.",
           },
           {
             module: "Pages",
-            name: "Create Pages",
+            name: "Add Pages",
             description: "Allows the user to create new pages on the platform.",
+          },
+          {
+            module: "Pages",
+            name: "Edit Pages",
+            description: "Allows the user to edit pages on the platform.",
+          },
+          {
+            module: "Pages",
+            name: "Delete Pages",
+            description: "Allows the user to delete pages on the platform.",
           },
           {
             module: "Media",
@@ -225,35 +236,48 @@ const userResolver = {
           },
           {
             module: "Menus",
-            name: "View Menus",
-            description: "Allows the user to view menus on the platform.",
-          },
-          {
-            module: "Menus",
-            name: "Create Menus",
+            name: "Add Menus",
             description: "Allows the user to create new menus.",
           },
           {
-            module: "Users",
-            name: "View Users",
-            description:
-              "Allows the user to view the list of users on the platform.",
+            module: "Menus",
+            name: "Edit Menus",
+            description: "Allows the user to edit menus.",
+          },
+          {
+            module: "Menus",
+            name: "Delete Menus",
+            description: "Allows the user to delete menus.",
           },
           {
             module: "Users",
-            name: "Create Users",
+            name: "Add Users",
             description: "Allows the user to create new users on the platform.",
           },
           {
-            module: "Vendors",
-            name: "View Vendors",
-            description:
-              "Allows the user to view the list of vendors on the platform.",
+            module: "Users",
+            name: "Edit Users",
+            description: "Allows the user to edit users on the platform.",
+          },
+          {
+            module: "Users",
+            name: "Delete Users",
+            description: "Allows the user to delete users on the platform.",
           },
           {
             module: "Vendors",
-            name: "Create Vendors",
+            name: "Add Vendors",
             description: "Allows the user to add new vendors to the platform.",
+          },
+          {
+            module: "Vendors",
+            name: "Edit Vendors",
+            description: "Allows the user to edit vendors to the platform.",
+          },
+          {
+            module: "Vendors",
+            name: "Delete Vendors",
+            description: "Allows the user to delete vendors to the platform.",
           },
           {
             module: "Localization",
@@ -449,7 +473,10 @@ const userResolver = {
       }
     },
     /* ------------------------------- For create user ------------------------------- */
-    createUser: async (_, { input, image }, context) => {
+    createUser: checkPermission({
+      module: "Users",
+      name: "Add Users",
+    })(async (_, { input, image }, context) => {
       const { email, password, firstname, lastname, permissions } = input;
       try {
         // Find the company of the user creating this new user
@@ -518,10 +545,13 @@ const userResolver = {
           500
         );
       }
-    },
+    }),
 
     /* ------------------------------- For update user ------------------------------- */
-    updateUser: async (_, { userId, input, image }, context) => {
+    updateUser: checkPermission({
+      module: "Users",
+      name: "Edit Users",
+    })(async (_, { userId, input, image }, context) => {
       const { email, password, firstname, lastname, permissions } = input;
 
       try {
@@ -591,9 +621,12 @@ const userResolver = {
           500
         );
       }
-    },
+    }),
     /* ------------------------------- For delete user ------------------------------- */
-    deleteUser: async (_, { userId }, context) => {
+    deleteUser: checkPermission({
+      module: "Users",
+      name: "Add Users",
+    })(async (_, { userId }, context) => {
       try {
         const company = await Company.findById(context.user.company);
         if (!company) {
@@ -628,7 +661,7 @@ const userResolver = {
           500
         );
       }
-    },
+    }),
     updateMe: async (root, { input }, { userId }) => {
       if (!userId) {
         throw new Error("Not authenticated");

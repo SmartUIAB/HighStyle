@@ -116,6 +116,7 @@ const CartPage = () => {
           customerId: userData?.id,
           cartId: cartItems.getCart.id,
           shippingAddress: shippingAddress,
+          locale: localStorage.getItem("i18nextLng"),
         },
       });
 

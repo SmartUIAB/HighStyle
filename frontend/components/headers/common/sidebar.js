@@ -10,6 +10,8 @@ const SideBar = () => {
     refetch,
   } = useQuery(GET_CATEGORY_LIST);
 
+  console.log(categoriesData, "0000000000000000");
+
   const closeNav = () => {
     const closemyslide = document.getElementById("mySidenav");
     if (closemyslide) closemyslide.classList.remove("open-side");

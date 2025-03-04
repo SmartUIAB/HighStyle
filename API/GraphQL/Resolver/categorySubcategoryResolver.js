@@ -6,6 +6,7 @@ const {
   deleteImageFromStorage,
 } = require("../../Utilities/miscellaneousUtils");
 const Company = require("../../Model/companyModel");
+const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const categorySubcategoryResolver = {
   /* ---------------------------------- Query --------------------------------- */
@@ -26,7 +27,10 @@ const categorySubcategoryResolver = {
         throw new CustomError("Failed to fetch categories", 500);
       }
     },
-    categorieslist: async (root, args, context) => {
+    categorieslist: checkPermission({
+      module: "Category",
+      name: "View Category",
+    })(async (root, args, context) => {
       if (!context.userId) {
         throw new CustomError("Not authenticated", 401);
       }
@@ -40,15 +44,21 @@ const categorySubcategoryResolver = {
         console.error("Error fetching category:", error);
         throw new CustomError(error.message, 500);
       }
-    },
-    category: async (_, { id }) => {
+    }),
+    category: checkPermission({
+      module: "Category",
+      name: "View Category",
+    })(async (_, { id }) => {
       try {
         return await Category.findById(id);
       } catch (error) {
         throw new CustomError("Category not found", 404);
       }
-    },
-    subcategories: async (_, { pagination }) => {
+    }),
+    subcategories: checkPermission({
+      module: "Category",
+      name: "View Category",
+    })(async (_, { pagination }) => {
       const { page = 1, limit = 10 } = pagination || {};
       try {
         const subcategories = await Subcategory.find()
@@ -63,8 +73,11 @@ const categorySubcategoryResolver = {
       } catch (error) {
         throw new CustomError("Failed to fetch subcategories", 500);
       }
-    },
-    subcategorieslist: async (root, args, context) => {
+    }),
+    subcategorieslist: checkPermission({
+      module: "Category",
+      name: "View Category",
+    })(async (root, args, context) => {
       if (!context.userId) {
         throw new CustomError("Not authenticated", 401);
       }
@@ -78,18 +91,24 @@ const categorySubcategoryResolver = {
         console.error("Error fetching subcategory:", error);
         throw new CustomError(error.message, 500);
       }
-    },
-    subcategory: async (_, { id }) => {
+    }),
+    subcategory: checkPermission({
+      module: "Category",
+      name: "View Category",
+    })(async (_, { id }) => {
       try {
         return await Subcategory.findById(id);
       } catch (error) {
         throw new CustomError("Subcategory not found", 404);
       }
-    },
+    }),
   },
   /* -------------------------------- Mutation -------------------------------- */
   Mutation: {
-    createCategory: async (_, { name, type, description, image }, context) => {
+    createCategory: checkPermission({
+      module: "Category",
+      name: "Add Category",
+    })(async (_, { name, type, description, image }, context) => {
       try {
         let company = await Company.findById(context.user.company);
 
@@ -108,13 +127,12 @@ const categorySubcategoryResolver = {
       } catch (error) {
         throw new CustomError(error.message, 500);
       }
-    },
+    }),
 
-    updateCategory: async (
-      _,
-      { id, name, type, description, image },
-      context
-    ) => {
+    updateCategory: checkPermission({
+      module: "Category",
+      name: "Edit Category",
+    })(async (_, { id, name, type, description, image }, context) => {
       try {
         let company = await Company.findById(context.user.company);
 
@@ -160,9 +178,12 @@ const categorySubcategoryResolver = {
       } catch (error) {
         throw new CustomError("Failed to update category", 500);
       }
-    },
+    }),
 
-    deleteCategory: async (_, { id }) => {
+    deleteCategory: checkPermission({
+      module: "Category",
+      name: "Delete Category",
+    })(async (_, { id }) => {
       try {
         const existingCategory = await Category.findById(id);
 
@@ -178,13 +199,12 @@ const categorySubcategoryResolver = {
       } catch (error) {
         throw new CustomError("Failed to delete category", 500);
       }
-    },
+    }),
 
-    createSubcategory: async (
-      _,
-      { name, description, type, image, categoryId },
-      context
-    ) => {
+    createSubcategory: checkPermission({
+      module: "Category",
+      name: "Add Category",
+    })(async (_, { name, description, type, image, categoryId }, context) => {
       try {
         if (!name || !categoryId) {
           throw new CustomError("Name and Category ID are required", 400);
@@ -220,13 +240,12 @@ const categorySubcategoryResolver = {
           error.status || 500
         );
       }
-    },
+    }),
 
-    updateSubcategory: async (
-      _,
-      { id, name, description, type, image },
-      context
-    ) => {
+    updateSubcategory: checkPermission({
+      module: "Category",
+      name: "Edit Category",
+    })(async (_, { id, name, description, type, image }, context) => {
       try {
         let company = await Company.findById(context.user.company);
         const existingSubCategory = await Subcategory.findById(id);
@@ -258,9 +277,12 @@ const categorySubcategoryResolver = {
       } catch (error) {
         throw new Error("Failed to update subcategory");
       }
-    },
+    }),
 
-    deleteSubcategory: async (_, { id }) => {
+    deleteSubcategory: checkPermission({
+      module: "Category",
+      name: "Delete Category",
+    })(async (_, { id }) => {
       try {
         const existingCategory = await Subcategory.findById(id);
         if (!existingCategory) {
@@ -274,7 +296,7 @@ const categorySubcategoryResolver = {
       } catch (error) {
         throw new CustomError("Failed to delete subcategory", 500);
       }
-    },
+    }),
   },
 };
 

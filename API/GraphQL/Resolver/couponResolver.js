@@ -1,4 +1,5 @@
 const Coupon = require("../../Model/couponModel");
+const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const couponResolver = {
   Query: {
@@ -29,18 +30,27 @@ const couponResolver = {
   },
 
   Mutation: {
-    createCoupon: async (_, { input }) => {
+    createCoupon: checkPermission({
+      module: "Coupons",
+      name: "Add Coupons",
+    })(async (_, { input }) => {
       const newCoupon = new Coupon(input);
       await newCoupon.save();
       return newCoupon;
-    },
+    }),
 
-    deleteCoupons: async (_, { ids }) => {
+    deleteCoupons: checkPermission({
+      module: "Coupons",
+      name: "Delete Coupons",
+    })(async (_, { ids }) => {
       const result = await Coupon.deleteMany({ _id: { $in: ids } });
       return result.deletedCount > 0;
-    },
+    }),
 
-    updateCoupon: async (_, { id, input }) => {
+    updateCoupon: checkPermission({
+      module: "Coupons",
+      name: "Edit Coupons",
+    })(async (_, { id, input }) => {
       const updatedCoupon = await Coupon.findByIdAndUpdate(id, input, {
         new: true,
       });
@@ -48,7 +58,7 @@ const couponResolver = {
         throw new Error("Coupon not found");
       }
       return updatedCoupon;
-    },
+    }),
   },
 };
 

@@ -6,6 +6,7 @@ const {
   deleteImageFromStorage,
 } = require("../../Utilities/miscellaneousUtils");
 const Company = require("../../Model/companyModel");
+const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const productResolvers = {
   Query: {
@@ -63,7 +64,10 @@ const productResolvers = {
   },
 
   Mutation: {
-    createPhysicalProduct: async (_, { input, images }, context) => {
+    createPhysicalProduct: checkPermission({
+      module: "Products",
+      name: "Add Products",
+    })(async (_, { input, images }, context) => {
       try {
         let company = await Company.findById(context.user.company);
         const product = new PhysicalProduct({
@@ -90,13 +94,12 @@ const productResolvers = {
       } catch (error) {
         throw new CustomError(error.message, 500);
       }
-    },
+    }),
 
-    updatePhysicalProduct: async (
-      _,
-      { id, input, images = [], deleteImages = [] },
-      context
-    ) => {
+    updatePhysicalProduct: checkPermission({
+      module: "Products",
+      name: "Edit Products",
+    })(async (_, { id, input, images = [], deleteImages = [] }, context) => {
       try {
         let company = await Company.findById(context.user.company);
         const product = await PhysicalProduct.findById(id).populate("category");
@@ -145,9 +148,12 @@ const productResolvers = {
 
         throw new CustomError(error.message, 500);
       }
-    },
+    }),
 
-    deletePhysicalProduct: async (_, { id }) => {
+    deletePhysicalProduct: checkPermission({
+      module: "Products",
+      name: "Delete Products",
+    })(async (_, { id }) => {
       try {
         const product = await PhysicalProduct.findById(id);
         if (!product) throw new CustomError("Product not found", 404);
@@ -165,10 +171,13 @@ const productResolvers = {
         console.log(error);
         throw new CustomError(error.message, 500);
       }
-    },
+    }),
 
     /* ----------- Digital product mutations with image upload support ---------- */
-    createDigitalProduct: async (_, { input, images }, context) => {
+    createDigitalProduct: checkPermission({
+      module: "Products",
+      name: "Add Products",
+    })(async (_, { input, images }, context) => {
       try {
         let company = await Company.findById(context.user.company);
         const product = new DigitalProduct({
@@ -199,13 +208,12 @@ const productResolvers = {
 
         throw new CustomError(error.message, 500);
       }
-    },
+    }),
 
-    updateDigitalProduct: async (
-      _,
-      { id, input, images = [], deleteImages = [] },
-      context
-    ) => {
+    updateDigitalProduct: checkPermission({
+      module: "Products",
+      name: "Edit Products",
+    })(async (_, { id, input, images = [], deleteImages = [] }, context) => {
       try {
         let company = await Company.findById(context.user.company);
 
@@ -255,9 +263,12 @@ const productResolvers = {
         console.log(error);
         throw new CustomError(error.message, 500);
       }
-    },
+    }),
 
-    deleteDigitalProduct: async (_, { id }) => {
+    deleteDigitalProduct: checkPermission({
+      module: "Products",
+      name: "Delete Products",
+    })(async (_, { id }) => {
       try {
         const product = await DigitalProduct.findById(id);
         if (!product) throw new CustomError("Product not found", 404);
@@ -274,7 +285,7 @@ const productResolvers = {
       } catch (error) {
         throw new CustomError(error.message, 500);
       }
-    },
+    }),
   },
 };
 

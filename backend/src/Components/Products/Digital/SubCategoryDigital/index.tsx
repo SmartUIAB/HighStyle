@@ -35,9 +35,19 @@ const SubCategoryDigital = () => {
 
   const onOpenModal = () => {
     setOpen(true);
+    setName('');
+    setType('');
+    setDescription('');
+    setCategory('');
+    setImage(null);
   };
   const onCloseModal = () => {
     setOpen(false);
+    setName('');
+    setType('');
+    setDescription('');
+    setCategory('');
+    setImage(null);
     setErrors({})
   };
 

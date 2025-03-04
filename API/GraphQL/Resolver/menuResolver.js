@@ -1,6 +1,7 @@
 const Company = require("../../Model/companyModel");
 const Menu = require("../../Model/menuModel");
 const CustomError = require("../../Utilities/CustomError");
+const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const menuResolvers = {
   Query: {
@@ -24,7 +25,10 @@ const menuResolvers = {
     },
   },
   Mutation: {
-    createMenu: async (_, { name, isCouponEnabled }, context) => {
+    createMenu: checkPermission({
+      module: "Menus",
+      name: "Add Menus",
+    })(async (_, { name, isCouponEnabled }, context) => {
       try {
         const company = await Company.findById(context.user.company);
         if (!company) {
@@ -42,9 +46,12 @@ const menuResolvers = {
       } catch (error) {
         throw new CustomError("Error creating menu: " + error.message);
       }
-    },
+    }),
 
-    updateMenu: async (_, { id, name, isCouponEnabled }) => {
+    updateMenu: checkPermission({
+      module: "Menus",
+      name: "Edit Menus",
+    })(async (_, { id, name, isCouponEnabled }) => {
       try {
         const updates = {};
         if (name !== undefined) updates.name = name;
@@ -61,9 +68,12 @@ const menuResolvers = {
       } catch (error) {
         throw new CustomError("Error updating menu: " + error.message);
       }
-    },
+    }),
 
-    deleteMenu: async (_, { id }) => {
+    deleteMenu: checkPermission({
+      module: "Menus",
+      name: "Delete Menus",
+    })(async (_, { id }) => {
       try {
         const result = await Menu.findByIdAndDelete(id);
         if (!result) {
@@ -73,7 +83,7 @@ const menuResolvers = {
       } catch (error) {
         throw new CustomError("Error deleting menu: " + error.message);
       }
-    },
+    }),
   },
 };
 

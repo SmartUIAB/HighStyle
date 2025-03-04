@@ -17,6 +17,7 @@ const favouriteResolver = require("./favouriteResolver");
 const reviewResolvers = require("./reviewResolver");
 const comingsoonResolver = require("./comingsoonResolver");
 const emailresolvers = require("./emailResolver");
+const dashboardResolver = require("./dashboardResolver");
 
 const resolver = {
   Query: {
@@ -35,7 +36,8 @@ const resolver = {
     ...notificationResolver.Query,
     ...favouriteResolver.Query,
     ...reviewResolvers.Query,
-    ...comingsoonResolver.Query
+    ...comingsoonResolver.Query,
+    ...dashboardResolver.Query
   },
   Mutation: {
     ...userResolver.Mutation,
