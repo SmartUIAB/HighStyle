@@ -29,7 +29,7 @@ const Sidebar = () => {
   const [isChange, setIsChange] = useState(false);
   const router = useRouter();
   const [logoutMutation] = useMutation(LOGOUT_USER);
-  const userDetail = localStorage.getItem('userDetail');
+  const userDetail = localStorage.getItem('userDetail') || '{}';
 
   const { permissions } = JSON.parse(userDetail);
 

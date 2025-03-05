@@ -13,14 +13,18 @@ import TopDashboardCards from "./TopDashboardCards";
 import TotalCash from "./TotalCash";
 import TotalPurchase from "./TotalPurchase";
 import TotalSales from "./TotalSales";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 const MarketValue = dynamic(() => import("./MarketValue"), { ssr: false });
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarController, BarElement, ArcElement, Filler, RadialLinearScale);
 
 const DashboardContainer = () => {
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
   return (
     <Fragment>
-      <CommonBreadcrumb title="Dashboard" parent="Dashboard" />
+      <CommonBreadcrumb title={t("Dashboard")} parent={t("Dashboard")} />
       <Container fluid>
         <Row>
           <TopDashboardCards />

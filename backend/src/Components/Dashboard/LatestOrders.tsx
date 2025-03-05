@@ -1,56 +1,45 @@
+import { useTranslation } from "@/app/i18n/client";
 import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
+import { GET_ORDER_LIST } from "@/GraphQL/Queries/transactionQueries";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useQuery } from "@apollo/client";
+import Link from "next/link";
 import { Button, Card, CardBody, Col, Table } from "reactstrap";
 
 const LatestOrders = () => {
+  const { data, loading, refetch } = useQuery(GET_ORDER_LIST);
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
+
   return (
     <Col xl="6 xl-100">
       <Card>
-        <CommonCardHeader title="Latest Orders" />
+        <CommonCardHeader title={t("latestOrders")} />
         <CardBody>
           <div className="user-status table-responsive latest-order-table">
             <Table borderless>
               <thead>
                 <tr>
-                  <th scope="col">Order ID</th>
-                  <th scope="col">Order Total</th>
-                  <th scope="col">Payment Method</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">{t("orderId")}</th>
+                  <th scope="col">{t("sales.orders.columns.price")}</th>
+                  <th scope="col">{t("sales.orders.columns.paymentStatus")}</th>
+                  <th scope="col">{t("sales.orders.columns.orderStatus")}</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1</td>
-                  <td className="digits">$120.00</td>
-                  <td className="font-danger">Bank Transfers</td>
-                  <td className="digits">On Way</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td className="digits">$90.00</td>
-                  <td className="font-secondary">Ewallets</td>
-                  <td className="digits">Delivered</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td className="digits">$240.00</td>
-                  <td className="font-warning">Cash</td>
-                  <td className="digits">Delivered</td>
-                </tr>
-                <tr>
-                  <td>4</td>
-                  <td className="digits">$120.00</td>
-                  <td className="font-primary">Direct Deposit</td>
-                  <td className="digits">$6523</td>
-                </tr>
-                <tr>
-                  <td>5</td>
-                  <td className="digits">$50.00</td>
-                  <td className="font-primary">Bank Transfers</td>
-                  <td className="digits">Delivered</td>
-                </tr>
+                {data?.getAllOrders?.orders.slice(0, 4).map((order: any, index: any) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td className="digits">$ {order.finalTotal.toFixed(2)}</td>
+                    <td className="font-primary">{order.paymentStatus}</td>
+                    <td className="digits">{order.orderStatus}</td>
+                  </tr>
+                ))}
               </tbody>
             </Table>
-            <Button color="primary">View All Orders</Button>
+            <Link href={`/${i18LangStatus}/sales/orders`}>
+              <Button color="primary">{t("viewAllOrders")}</Button>
+            </Link>
           </div>
         </CardBody>
       </Card>

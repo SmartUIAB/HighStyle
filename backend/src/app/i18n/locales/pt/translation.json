@@ -375,5 +375,12 @@
     "email": "E-mail",
     "company": "Empresa"
   },
-  "rowsPerPage": "Linhas por página"
+  "rowsPerPage": "Linhas por página",
+  "orderId": "ID do pedido",
+  "latestOrders": "Últimos Pedidos",
+  "viewAllOrders": "Ver todos os pedidos",
+  "earnings": "Ganhos",
+  "products": "Produtos",
+  "messages": "Mensagens",
+  "newVendors": "Novos fornecedores"
 }

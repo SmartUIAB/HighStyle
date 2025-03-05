@@ -11,6 +11,7 @@ const Language = () => {
     { lang: "es", icon: "es", title: "Spanish" },
     { lang: "pt", icon: "pt", title: "Portuguese" },
     { lang: "fr", icon: "fr", title: "French" },
+    { lang: "ar", icon: "ar", title: "Arabic" },
   ];
 
   const handleChangeLanguage = (lng: string) => {

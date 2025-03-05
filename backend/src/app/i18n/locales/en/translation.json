@@ -375,5 +375,12 @@
     "email": "Email",
     "company": "Company"
   },
-  "rowsPerPage": "Rows per page"
+  "rowsPerPage": "Rows per page",
+  "orderId": "Order ID",
+  "latestOrders": "Latest Orders",
+  "viewAllOrders": "View All Orders",
+  "earnings": "Earnings",
+  "products": "Products",
+  "messages": "Messages",
+  "newVendors": "New Vendors"
 }

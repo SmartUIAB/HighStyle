@@ -1,0 +1,302 @@
+{
+  "footer": {
+    "subscribe": {
+      "title": "كن أول من يعرف!",
+      "description": "لا تفوت أي شيء من High Style عن طريق الاشتراك في النشرة الإخبارية لدينا.",
+      "placeholder": "أدخل عنوان بريدك الإلكتروني",
+      "button": "اشتراك"
+    },
+    "about": {
+      "title": "معلومات عنا",
+      "description": "High Style هي شركة سويدية تعمل في مجال الأناقة وتقدم لزبائنها الإكسسوارات العصرية والأنيقة. نسعى جاهدين لتوفير تجربة تسوق فريدة وشخصية لكل فرد، بغض النظر عن أسلوبه وتفضيلاته. من خلال مجموعتنا المختارة بعناية والتزامنا بالجودة والتصميم، نهدف إلى إلهام وإتاحة الفرصة لزبائننا للتعبير عن أسلوبهم الشخصي بأفضل طريقة ممكنة. قم بزيارة موقعنا لاكتشاف أحدث مجموعاتنا."
+    },
+    "account": {
+      "title": "حسابي",
+      "links": {
+        "women": "نسائي",
+        "clothes": "ملابس",
+        "accessories": "إكسسوارات",
+        "presents": "هدايا"
+      }
+    },
+    "whyChooseUs": {
+      "title": "لماذا نختار",
+      "links": {
+        "shippingReturns": "الشحن والإرجاع",
+        "secureShopping": "تسوق آمن",
+        "gallery": "معرض الصور",
+        "affiliates": "الشركاء",
+        "contacts": "اتصل بنا"
+      }
+    },
+    "storeInfo": {
+      "title": "معلومات المتجر",
+      "address": "High Style AB Market",
+      "phone": "اتصل بنا: 0735 50 20 62",
+      "email": "البريد الإلكتروني: Support@highstyle.se",
+      "whatsapp": "واتساب: 0735 50 20 62"
+    }
+  },
+  "header": {
+    "search": {
+      "title": "ابحث عن الأفضل لرغبتك"
+    }
+  },
+  "top_header": {
+    "welcome": "مرحبًا بكم في متجر High Style",
+    "call_us": "اتصل بنا: 073 - 550 - 2062",
+    "compare": "مقارنة",
+    "wishlist": "قائمة الرغبات",
+    "my_account": "حسابي",
+    "login": "تسجيل الدخول",
+    "register": "تسجيل"
+  },
+  "cart_details": {
+    "image": "الصورة",
+    "product_name": "اسم المنتج",
+    "price": "السعر",
+    "quantity": "الكمية",
+    "action": "إجراء",
+    "total": "الإجمالي",
+    "total_price": "السعر الإجمالي",
+    "subTotal": "المجموع الفرعي",
+    "continue_shopping": "مواصلة التسوق",
+    "check_out": "الدفع",
+    "cart_empty": "سلة التسوق فارغة",
+    "explore_more": "اكتشف المزيد واختر بعض العناصر.",
+    "cart_empty_message": "سلة التسوق الخاصة بك فارغة حاليًا."
+  },
+  "shipping_address": {
+    "modal_title": "أدخل عنوان الشحن",
+    "street": "الشارع",
+    "city": "المدينة",
+    "state": "الولاية",
+    "postal_code": "الرمز البريدي",
+    "country": "البلد",
+    "submit": "إرسال",
+    "cancel": "إلغاء",
+    "btn_title": "إضافة عنوان"
+  },
+  "route_name": {
+    "product_list": "قائمة المنتجات",
+    "product": "المنتج",
+    "home": "الرئيسية"
+  },
+  "services": {
+    "freeShipping": "شحن مجاني",
+    "freeShippingWorldwide": "شحن مجاني عالميًا",
+    "service247": "خدمة 24 ساعة",
+    "onlineService247": "خدمة عبر الإنترنت 24 ساعة",
+    "festivalOffer": "عروض المهرجانات",
+    "newOnlineSpecialFestivalOffer": "عروض خاصة جديدة عبر الإنترنت للمهرجانات",
+    "onlinePayment": "الدفع عبر الإنترنت"
+  },
+  "product_details": {
+    "brand": "العلامة التجارية",
+    "homeAndFurniture": "المنزل والأثاث",
+    "selectSize": "اختر المقاس",
+    "sizeChart": "جدول المقاسات",
+    "quantity": "الكمية",
+    "addToCart": "أضف إلى السلة",
+    "buyNow": "اشتري الآن",
+    "productDetails": "تفاصيل المنتج",
+    "shareIt": "شاركها",
+    "timeReminder": "تذكير الوقت",
+    "days": "أيام",
+    "hours": "ساعات",
+    "minutes": "دقائق",
+    "seconds": "ثواني",
+    "newProduct": "منتج جديد",
+    "description": "الوصف",
+    "details": "التفاصيل",
+    "video": "فيديو",
+    "writeReview": "اكتب مراجعة",
+    "format": "التنسيق",
+    "size": "الحجم",
+    "version": "الإصدار",
+    "compatibility": "التوافق",
+    "off": "خصم",
+    "relatedProduct": "منتجات ذات صلة",
+    "selectColorAndSize": "الرجاء اختيار اللون والمقاس قبل الإضافة إلى السلة.",
+    "fileDetails": "تفاصيل الملف"
+  },
+  "landing_page": {
+    "welcome": "مرحبًا بكم في عالم الموضة",
+    "men_fashion": "موضة الرجال",
+    "women_fashion": "موضة النساء",
+    "shop_now": "تسوق الآن",
+    "men": "رجال",
+    "women": "نساء",
+    "special_offer": "عروض خاصة",
+    "top_collection": "المجموعة الرائدة",
+    "discover_offer": "اكتشف عروضنا الخاصة على مجموعتنا الرائدة! لفترة محدودة، خصومات حصرية على منتجات مختارة. لا تفوت الفرصة لتجديد أسلوبك مع منتجاتنا المميزة. تسوق الآن ووفر الكثير!",
+    "fashion_trends": "اتجاهات الموضة",
+    "special_offer_section": "عروض خاصة",
+    "trending_products": "المنتجات الرائجة",
+    "winter": "شتاء",
+    "greens": "أخضر",
+    "various": "متنوع",
+    "our_collection": "مجموعتنا",
+    "special_products": "منتجات خاصة",
+    "instagram": "إنستغرام"
+  },
+  "productlist": {
+    "route_name": {
+      "product_list": "قائمة المنتجات"
+    },
+    "error": {
+      "loading_products": "حدث خطأ أثناء تحميل المنتجات!",
+      "issue_loading": "حدثت مشكلة أثناء تحميل بيانات المنتج. يرجى المحاولة مرة أخرى لاحقًا."
+    },
+    "placeholder": {
+      "search_products": "ابحث عن المنتجات..."
+    },
+    "info": {
+      "no_products_found": "لم يتم العثور على منتجات",
+      "adjust_filters": "حاول تعديل الفلاتر أو استعلام البحث."
+    },
+    "pagination": {
+      "prev": "السابق",
+      "next": "التالي"
+    },
+    "status": {
+      "available": "متوفر",
+      "out_of_stock": "غير متوفر"
+    },
+    "details": {
+      "price": "السعر",
+      "colors": "الألوان",
+      "sizes": "المقاسات",
+      "file_format": "تنسيق الملف",
+      "file_size": "حجم الملف",
+      "compatibility": "التوافق",
+      "status": "الحالة"
+    },
+    "sort": {
+      "hightolow": "من الأعلى إلى الأدنى",
+      "lowtohigh": "من الأدنى إلى الأعلى",
+      "default": "افتراضي"
+    }
+  },
+  "compare": {
+    "home": "الرئيسية",
+    "title": "مقارنة",
+    "empty": {
+      "title": "سلة التسوق فارغة",
+      "message": "اكتشف المزيد واختر بعض العناصر."
+    },
+    "product_name": "اسم المنتج",
+    "product_image": "صورة المنتج",
+    "product_description": "وصف المنتج",
+    "availability": "التوفر",
+    "remove": "إزالة",
+    "on_sale": "في العرض",
+    "add_to_cart": "أضف إلى السلة",
+    "not_available": "غير متوفر",
+    "available": "متوفر",
+    "action": "إجراء"
+  },
+  "wishlist": {
+    "image": "الصورة",
+    "product_name": "اسم المنتج",
+    "price": "السعر",
+    "availability": "التوفر",
+    "action": "إجراء",
+    "out_of_stock": "غير متوفر",
+    "continue_shopping": "مواصلة التسوق",
+    "check_out": "الدفع",
+    "remove_from_wishlist": "إزالة من قائمة الرغبات",
+    "add_to_cart": "أضف إلى السلة",
+    "home": "الرئيسية",
+    "wishlist": "قائمة الرغبات",
+    "removeFromFavourite": "تمت إزالة المنتج المفضل بنجاح",
+    "notAvailableFavouriteProduct": "المنتج المفضل غير متوفر"
+  },
+  "quickview": {
+    "product_details": "تفاصيل المنتج",
+    "quantity": "الكمية",
+    "add_to_cart": "أضف إلى السلة",
+    "view_detail": "عرض التفاصيل",
+    "product_description": "وصف المنتج"
+  },
+  "logout": "تسجيل الخروج",
+  "login": {
+    "welcome": "مرحبًا بعودتك",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "new_customer": "عميل جديد",
+    "create_account": "إنشاء حساب",
+    "create_account_description": "سجل للحصول على حساب مجاني في متجرنا. التسجيل سريع وسهل. يتيح لك إمكانية الطلب من متجرنا. لبدء التسوق، انقر فوق تسجيل.",
+    "login_button": "تسجيل الدخول",
+    "register_button": "إنشاء حساب"
+  },
+  "register": {
+    "title": "إنشاء حساب",
+    "firstName": "الاسم الأول",
+    "lastName": "الاسم الأخير",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "createAccount": "إنشاء حساب",
+    "errors": {
+      "firstName": "الاسم الأول مطلوب",
+      "lastName": "الاسم الأخير مطلوب",
+      "email": "البريد الإلكتروني مطلوب",
+      "emailInvalid": "البريد الإلكتروني غير صالح",
+      "password": "كلمة المرور مطلوبة",
+      "passwordLength": "يجب أن تكون كلمة المرور على الأقل 6 أحرف"
+    },
+    "successMessage": "تم إنشاء العميل بنجاح",
+    "errorMessage": "حدث خطأ أثناء إنشاء الحساب"
+  },
+  "myOrders": {
+    "myOrders": "طلباتي",
+    "searchPlaceholder": "ابحث باستخدام معرف الطلب أو الحالة...",
+    "noOrdersFound": "لم يتم العثور على طلبات.",
+    "orderId": "معرف الطلب",
+    "date": "التاريخ",
+    "total": "الإجمالي",
+    "status": "الحالة",
+    "items": "العناصر",
+    "actions": "الإجراءات",
+    "trackOrder": "تتبع الطلب",
+    "viewProduct": "عرض المنتج",
+    "refreshing": "جاري التحديث...",
+    "number": "رقم"
+  },
+  "orderStatus": {
+    "pending": "قيد الانتظار",
+    "shipped": "تم الشحن",
+    "delivered": "تم التوصيل",
+    "completed": "مكتمل",
+    "canceled": "ملغى"
+  },
+  "forgetPassword": {
+    "forgetPassword": "نسيت كلمة المرور",
+    "title": "نسيت كلمة المرور",
+    "emailPlaceholder": "أدخل بريدك الإلكتروني",
+    "submitButton": "إرسال",
+    "successMessage": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.",
+    "errorMessage": "فشل إرسال رابط الإعادة. يرجى المحاولة مرة أخرى."
+  },
+  "passwordReset": {
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "resetYourPassword": "إعادة تعيين كلمة المرور الخاصة بك",
+    "enterNewPassword": "أدخل كلمة المرور الجديدة",
+    "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
+    "resetPasswordButton": "إعادة تعيين كلمة المرور",
+    "passwordsDoNotMatch": "كلمات المرور غير متطابقة!",
+    "successMessage": "تم إعادة تعيين كلمة المرور بنجاح.",
+    "errorMessage": "فشل إعادة تعيين كلمة المرور. يرجى المحاولة مرة أخرى."
+  },
+  "comingSoon": {
+    "openingSoon": "سيتم الافتتاح قريبًا!",
+    "enterEmail": "أدخل بريدك الإلكتروني:",
+    "notifying": "جاري الإشعار...",
+    "notifyMe": "أخبرني",
+    "storeOwner": "هل أنت مالك المتجر؟",
+    "loginHere": "سجل الدخول هنا",
+    "or": "أو",
+    "changePassword": "قم بتغيير إعدادات كلمة المرور",
+    "poweredBy": "مدعوم من Multikart."
+  }
+}

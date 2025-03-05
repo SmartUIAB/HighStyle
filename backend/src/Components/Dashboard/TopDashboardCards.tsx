@@ -4,10 +4,14 @@ import { Card, CardBody, Col, Media } from "reactstrap";
 import { GET_DASHBOARD_CARDS } from "../../GraphQL/Queries/dashboardQueries";
 import { Box, MessageSquare, Navigation, Users } from "react-feather";
 import { useEffect } from "react";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const TopDashboardCards = () => {
 
   const { data: cardData, refetch } = useQuery(GET_DASHBOARD_CARDS)
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   useEffect(() => {
     refetch();
@@ -16,28 +20,28 @@ const TopDashboardCards = () => {
   const TopDashboardCardsData = [
     {
       id: 1,
-      type: "Earnings",
+      type: t("earnings"),
       bgColor: "bg-warning",
       count: cardData?.getAllCardDashboard?.earning,
       icon: <Navigation className="font-warning" />,
     },
     {
       id: 2,
-      type: "Products",
+      type: t("products"),
       bgColor: "bg-secondary",
       icon: <Box className="font-secondary" />,
       count: cardData?.getAllCardDashboard?.products,
     },
     {
       id: 3,
-      type: "Messages",
+      type: t("messages"),
       bgColor: "bg-primary",
       icon: <MessageSquare className="font-primary" />,
       count: cardData?.getAllCardDashboard?.message,
     },
     {
       id: 4,
-      type: "New Vendors",
+      type: t("newVendors"),
       bgColor: "bg-danger",
       icon: <Users className="font-danger" />,
       count: cardData?.getAllCardDashboard?.vendors,
@@ -57,7 +61,7 @@ const TopDashboardCards = () => {
                 <Media body className="col-8">
                   <span className="m-0">{item.type}</span>
                   <h3 className="mb-0">
-                    {item.type === "Earnings" && "$"}<CountUp className="counter" end={item.count} />
+                    {item.type === t("earnings") && "$ "}<CountUp className="counter" end={item.count} />
                   </h3>
                 </Media>
               </Media>

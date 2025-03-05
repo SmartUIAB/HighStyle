@@ -377,5 +377,12 @@
     "email": "Correo Electrónico",
     "company": "Empresa"
   },
-  "rowsPerPage": "Filas por página"
+  "rowsPerPage": "Filas por página",
+  "orderId": "ID de pedido",
+  "latestOrders": "Últimos Pedidos",
+  "viewAllOrders": "Ver todos los pedidos",
+  "earnings": "Ganancias",
+  "products": "Productos",
+  "messages": "Mensajes",
+  "newVendors": "Nuevos vendedores"
 }
