@@ -78,7 +78,7 @@ const LoginForm = () => {
         toast.success("Login successful"),
       ]);
 
-      router.replace(`/${i18LangStatus}/dashboard`);
+      router.push(`/${i18LangStatus}/dashboard`);
     } catch (error: any) {
       if (error.inner) {
         const validationErrors: Errors = error.inner.reduce(
