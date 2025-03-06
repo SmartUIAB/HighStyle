@@ -1,5 +1,5 @@
 import React from 'react';
-import CommonLayout from '../../components/shop/common-layout';
+import CommonLayout from '../../../components/shop/common-layout';
 import LeftImagePage from './product/leftImagePage';
 // import { withApollo } from '../../helpers/apollo/apollo';
 import ProductTab from './common/product-tab';
@@ -15,4 +15,4 @@ const ThumbnailLeft = () => {
     )
 }
 
-export default ThumbnailLeft; 
+export default ThumbnailLeft;

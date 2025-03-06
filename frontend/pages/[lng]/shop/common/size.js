@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { Collapse, Input } from "reactstrap";
-import FilterContext from "../../../helpers/filter/FilterContext";
+import FilterContext from "../../../../helpers/filter/FilterContext";
 
 const GET_SIZE = gql`
   query getSize($type: String) {
@@ -37,7 +37,8 @@ const Size = () => {
               ? "loading"
               : data &&
                 data.getSize.size.map((size, index) => (
-                  <div key={index}
+                  <div
+                    key={index}
                     className="form-check custom-checkbox collection-filter-checkbox"
                     key={index}
                   >

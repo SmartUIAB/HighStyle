@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
 import { useQuery } from "@apollo/client";
 import { Collapse } from "reactstrap";
-import FilterContext from "../../../helpers/filter/FilterContext";
-import { GET_PHYSICAL_PRODUCT } from "../../../GraphQL/Queries/productQueries";
+import FilterContext from "../../../../helpers/filter/FilterContext";
+import { GET_PHYSICAL_PRODUCT } from "../../../../GraphQL/Queries/productQueries";
 
 const Color = () => {
   const context = useContext(FilterContext);

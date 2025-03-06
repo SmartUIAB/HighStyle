@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CommonLayout from '../../../components/shop/common-layout';
+import CommonLayout from '../../../../components/shop/common-layout';
 import { Container, Row ,Col} from 'reactstrap';
 
 const Dashboard = () => {
@@ -13,7 +13,7 @@ const Dashboard = () => {
                             {window.innerWidth <= 991 ?
                             <div className="account-sidebar" onClick={() => setAccountInfo(!accountInfo)}><a className="popup-btn">my account</a></div>
                             :""}
-                            <div className="dashboard-left" style={accountInfo ? {left:"0px"} : {}}> 
+                            <div className="dashboard-left" style={accountInfo ? {left:"0px"} : {}}>
                                 <div className="collection-mobile-back" onClick={() => setAccountInfo(!accountInfo)}>
                                     <span className="filter-back">
                                         <i className="fa fa-angle-left" aria-hidden="true"></i> back

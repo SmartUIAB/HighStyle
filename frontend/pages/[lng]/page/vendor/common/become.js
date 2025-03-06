@@ -1,12 +1,12 @@
 import React from "react";
-import vendor from "../../../../public/assets/images/about/vendor.jpg";
+import vendor from "../../../../../public/assets/images/about/vendor.jpg";
 import { Container, Row, Col, Input, Form } from "reactstrap";
 import {
   svgLowCost,
   svgHighGrowth,
   svgPickUp,
   svgApproach,
-} from "../../../../services/script";
+} from "../../../../../services/script";
 
 const FeatureData = [
   {

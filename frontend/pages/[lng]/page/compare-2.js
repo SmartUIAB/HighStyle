@@ -1,6 +1,6 @@
 import React from "react";
-import CommonLayout from "../../components/shop/common-layout";
-import { Slider4 } from "../../services/script";
+import CommonLayout from "../../../components/shop/common-layout";
+import { Slider4 } from "../../../services/script";
 import { Container, Row, Col } from "reactstrap";
 import Slider from "react-slick";
 import LocalLink from "../../../components/LocalLink";

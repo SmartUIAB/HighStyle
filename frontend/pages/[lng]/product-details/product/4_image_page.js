@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import imageOne from "../../../public/assets/images/fashion/pro/001.jpg";
-import imageTwo from "../../../public/assets/images/fashion/pro/002.jpg";
-import imageThree from "../../../public/assets/images/fashion/pro/003.jpg";
-import imageFour from "../../../public/assets/images/fashion/pro/004.jpg";
+import imageOne from "../../../../public/assets/images/icon-empty-cart.png";
+import imageTwo from "../../../../public/assets/images/icon-empty-cart.png";
+import imageThree from "../../../../public/assets/images/icon-empty-cart.png";
+import imageFour from "../../../../public/assets/images/icon-empty-cart.png";
+
 import DetailsWithPrice from "../common/detail-price";
 import { Col, Container, Row } from "reactstrap";
-import { gql ,useQuery } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
 
 const GET_SINGLE_PRODUCTS = gql`
   query product($id: Int!) {

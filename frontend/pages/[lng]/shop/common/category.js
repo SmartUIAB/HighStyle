@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Collapse } from "reactstrap";
-import FilterContext from "../../../helpers/filter/FilterContext";
-import { GET_CATEGORY_LIST } from "../../../GraphQL/Queries/categoriesQueries";
+import FilterContext from "../../../../helpers/filter/FilterContext";
+import { GET_CATEGORY_LIST } from "../../../../GraphQL/Queries/categoriesQueries";
 import { useQuery } from "@apollo/client";
 
 const Category = () => {

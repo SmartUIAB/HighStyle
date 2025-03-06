@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import CommonLayout from '../../../../components/shop/common-layout';
+import CommonLayout from '../../../../../components/shop/common-layout';
 import { Container, Row, Form, Label, Input, Col } from 'reactstrap';
 import { useRouter } from 'next/router';
 

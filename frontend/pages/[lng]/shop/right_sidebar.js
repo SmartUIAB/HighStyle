@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CommonLayout from "../../components/shop/common-layout";
+import CommonLayout from "../../../components/shop/common-layout";
 // import { withApollo } from "../../helpers/apollo/apollo";
 import { Container, Row } from "reactstrap";
 import ProductList from "./common/productList";

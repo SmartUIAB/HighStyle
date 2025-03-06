@@ -1,12 +1,12 @@
 import React from "react";
 import { Container, Row, Media, Col } from "reactstrap";
-import lookbook from "../../public/assets/images/lookbook.jpg";
-import two from "../../public/assets/images/pro3/2.jpg";
-import one from "../../public/assets/images/pro3/1.jpg";
-import lookbook2 from "../../public/assets/images/lookbook2.jpg";
-import twentyseven from "../../public/assets/images/pro3/27.jpg";
-import twentyeight from "../../public/assets/images/pro3/28.jpg";
-import CommonLayout from "../../components/shop/common-layout";
+// import lookbook from "../../public/assets/images/lookbook.jpg";
+// import two from "../../public/assets/images/pro3/2.jpg";
+// import one from "../../public/assets/images/pro3/1.jpg";
+// import lookbook2 from "../../public/assets/images/lookbook2.jpg";
+// import twentyseven from "../../public/assets/images/pro3/27.jpg";
+// import twentyeight from "../../public/assets/images/pro3/28.jpg";
+import CommonLayout from "../../../components/shop/common-layout";
 import LocalLink from "../../../components/LocalLink";
 
 const LookBookDot = ({ img, title, price, num, details, classes, link }) => {

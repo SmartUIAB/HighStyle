@@ -1,9 +1,9 @@
 import React from "react";
-import visa from "../../../public/assets/images/icon/visa.png";
-import mastercard from "../../../public/assets/images/icon/mastercard.png";
-import paypal from "../../../public/assets/images/icon/paypal.png";
-import express from "../../../public/assets/images/icon/american-express.png";
-import discover from "../../../public/assets/images/icon/discover.png";
+import visa from "../../../../public/assets/images/icon/visa.png";
+import mastercard from "../../../../public/assets/images/icon/mastercard.png";
+import paypal from "../../../../public/assets/images/icon/paypal.png";
+import express from "../../../../public/assets/images/icon/american-express.png";
+import discover from "../../../../public/assets/images/icon/discover.png";
 import { Media } from "reactstrap";
 import MasterSocial from "./master_social";
 

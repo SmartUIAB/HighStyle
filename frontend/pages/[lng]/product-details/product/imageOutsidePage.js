@@ -11,13 +11,13 @@ import {
 } from "reactstrap";
 import Link from "next/link";
 import Slider from "react-slick";
-import sizeChart from "../../../public/assets/images/size-chart.jpg";
+import sizeChart from "../../../../public/assets/images/size-chart.jpg";
 import { gql } from "@apollo/client";
 import { useQuery } from "@apollo/client";
-import { CurrencyContext } from "../../../helpers/Currency/CurrencyContext";
-import CountdownComponent from "../../../components/common/widgets/countdownComponent";
+import { CurrencyContext } from "../../../../helpers/Currency/CurrencyContext";
+import CountdownComponent from "../../../../components/common/widgets/countdownComponent";
 import ImageZoom from "../common/image-zoom";
-import CartContext from "../../../helpers/cart";
+import CartContext from "../../../../helpers/cart";
 
 const GET_SINGLE_PRODUCTS = gql`
   query product($id: Int!) {

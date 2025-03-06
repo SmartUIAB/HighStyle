@@ -1,14 +1,15 @@
 import React, { useState, useContext } from "react";
 import Link from "next/link";
-import sizeChart from "../../../public/assets/images/size-chart.jpg";
+import sizeChart from "../../../../public/assets/images/size-chart.jpg";
 import { Modal, ModalBody, ModalHeader, Media, Input } from "reactstrap";
-import CountdownComponent from "../../../components/common/widgets/countdownComponent";
-import { CurrencyContext } from "../../../helpers/Currency/CurrencyContext";
-import CartContext from "../../../helpers/cart";
+import CountdownComponent from "../../../../components/common/widgets/countdownComponent";
+import { CurrencyContext } from "../../../../helpers/Currency/CurrencyContext";
+import CartContext from "../../../../helpers/cart";
 import MasterSocial from "./master_social";
-import img1 from "../../../public/assets/images/fashion/pro/001.jpg";
-import img2 from "../../../public/assets/images/fashion/pro/002.jpg";
-import img3 from "../../../public/assets/images/fashion/pro/02.jpg";
+// import img1 from "../../../../../public/assets/images/fashion/pro/001.jpg";
+// import img2 from "../../../../../public/assets/images/fashion/pro/002.jpg";
+// import img3 from "../../../../../public/assets/images/fashion/pro/02.jpg";
+import image from "../../../../public/assets/images/icon-empty-cart.png";
 
 const SwatchDetailsWithPrice = (params) => {
   const [modal, setModal] = useState(false);
@@ -70,7 +71,7 @@ const SwatchDetailsWithPrice = (params) => {
           <li className="active">
             <a href="#">
               <img
-                src={img1.src}
+                src={image}
                 alt=""
                 className="img-fluid blur-up lazyloaded"
               />
@@ -79,7 +80,7 @@ const SwatchDetailsWithPrice = (params) => {
           <li>
             <a href="#">
               <img
-                src={img2.src}
+                src={image}
                 alt=""
                 className="img-fluid blur-up lazyloaded"
               />
@@ -88,7 +89,7 @@ const SwatchDetailsWithPrice = (params) => {
           <li>
             <a href="#">
               <img
-                src={img3.src}
+                src={image}
                 alt=""
                 className="img-fluid blur-up lazyloaded"
               />

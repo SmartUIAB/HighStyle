@@ -1,16 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Col, Row, Media, Button, Spinner } from "reactstrap";
-import Menu2 from "../../../public/assets/images/mega-menu/2.jpg";
+import Menu2 from "../../../../public/assets/images/mega-menu/2.jpg";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
-import FilterContext from "../../../helpers/filter/FilterContext";
-import ProductItem from "../../../components/common/product-box/ProductBox1";
-import { CurrencyContext } from "../../../helpers/Currency/CurrencyContext";
+import FilterContext from "../../../../helpers/filter/FilterContext";
+import ProductItem from "../../../../components/common/product-box/ProductBox1";
+import { CurrencyContext } from "../../../../helpers/Currency/CurrencyContext";
 import { useRouter } from "next/router";
-import PostLoader from "../../../components/common/PostLoader";
-import CartContext from "../../../helpers/cart";
-import { WishlistContext } from "../../../helpers/wishlist/WishlistContext";
-import { CompareContext } from "../../../helpers/Compare/CompareContext";
+import PostLoader from "../../../../components/common/PostLoader";
+import CartContext from "../../../../helpers/cart";
+import { WishlistContext } from "../../../../helpers/wishlist/WishlistContext";
+import { CompareContext } from "../../../../helpers/Compare/CompareContext";
 import FilterPage from "./filter";
 
 const GET_PRODUCTS = gql`
@@ -416,7 +416,10 @@ const Popupsidebar = ({ colClass, layoutList }) => {
                   <Row>
                     <Col xl="12" md="12" sm="12">
                       {data && data.products && data.products.hasMore && (
-                        <Button className="load-more" onClick={() => handlePagination()}>
+                        <Button
+                          className="load-more"
+                          onClick={() => handlePagination()}
+                        >
                           {isLoading && (
                             <Spinner animation="border" variant="light" />
                           )}

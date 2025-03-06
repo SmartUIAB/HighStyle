@@ -4,9 +4,11 @@ import Slider from "react-slick";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 import ImageZoom from "../common/image-zoom";
-import shoes from "../../../public/assets/images/fashion/pro/shoes.jpg";
-import skirt from "../../../public/assets/images/fashion/pro/skirt.jpg";
-import one from "../../../public/assets/images/fashion/pro/001.jpg";
+// import shoes from "../../../public/assets/images/fashion/pro/shoes.jpg";
+// import skirt from "../../../public/assets/images/fashion/pro/skirt.jpg";
+// import one from "../../../public/assets/images/fashion/pro/001.jpg";
+import image from "../../../../public/assets/images/icon-empty-cart.png";
+
 import SwatchDetailsWithPrice from "../common/swatch-detail-price";
 import DetailsWithPrice from "../common/detail-price";
 
@@ -134,7 +136,7 @@ const ImageSwatchPage = () => {
                       <div className="img-box">
                         <a href="#">
                           <Media
-                            src={one.src}
+                            src={image}
                             alt=""
                             className="img-fluid blur-up lazyload"
                           />
@@ -144,7 +146,7 @@ const ImageSwatchPage = () => {
                       <div className="img-box">
                         <a href="#">
                           <Media
-                            src={skirt.src}
+                            src={image}
                             alt=""
                             className="img-fluid blur-up lazyload"
                           />
@@ -154,7 +156,7 @@ const ImageSwatchPage = () => {
                       <div className="img-box">
                         <a href="#">
                           <Media
-                            src={shoes.src}
+                            src={image}
                             alt=""
                             className="img-fluid blur-up lazyload"
                           />
