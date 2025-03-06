@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/Redux/Hooks";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Eye, EyeOff } from "react-feather";
 import { toast } from "react-toastify";
@@ -78,7 +78,7 @@ const LoginForm = () => {
         toast.success("Login successful"),
       ]);
 
-      router.push(`/${i18LangStatus}/dashboard`);
+      router.replace(`/${i18LangStatus}/dashboard`);
     } catch (error: any) {
       if (error.inner) {
         const validationErrors: Errors = error.inner.reduce(
