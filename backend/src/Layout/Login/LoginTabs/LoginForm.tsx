@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/Redux/Hooks";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Eye, EyeOff } from "react-feather";
 import { toast } from "react-toastify";
