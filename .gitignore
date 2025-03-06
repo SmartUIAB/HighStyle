@@ -5,3 +5,8 @@
 **/.next/
 
 **/uploads/
+
+**/.env/
+
+
+
