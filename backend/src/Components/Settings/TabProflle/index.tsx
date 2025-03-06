@@ -7,7 +7,7 @@ import TabTable from "./TabTable";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
 
-const TabProfile = ({ getUser }) => {
+const TabProfile = ({ getUser }:any) => {
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
   return (

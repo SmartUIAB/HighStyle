@@ -4,10 +4,10 @@ import GeneFormTop from "./GeneralFormTop";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
 
-const GeneralCouponForm = ({formData,setFormData,errors}) => {
+const GeneralCouponForm = ({ formData, setFormData, errors }: any) => {
 
-    const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
-    const { t } = useTranslation(i18LangStatus);
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
 
   return (
     <Form className="needs-validation" noValidate>

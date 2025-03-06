@@ -11,6 +11,7 @@ interface FormData {
 interface UsageFormProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  errors:any
 }
 
 const UsageForm: React.FC<UsageFormProps> = ({ formData, setFormData, errors }) => {

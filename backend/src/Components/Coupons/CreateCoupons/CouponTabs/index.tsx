@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { Fragment, useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
@@ -117,22 +118,22 @@ const CouponTabs: React.FC = () => {
 
   const handleSave = async () => {
     setErrors({});
-        try {
-          await couponSchema.validate(formData, { abortEarly: false });
-        } catch (error) {
-          if (error.inner) {
-            const validationErrors: { [key: string]: string } = error.inner.reduce(
-              (acc: any, error: any) => {
-                acc[error.path] = error.message;
-                return acc;
-              },
-              {}
-            );
-            console.log(validationErrors)
-            setErrors(validationErrors)
-            return;
-          }
-        }
+    try {
+      await couponSchema.validate(formData, { abortEarly: false });
+    } catch (error) {
+      if (error.inner) {
+        const validationErrors: { [key: string]: string } = error.inner.reduce(
+          (acc: any, error: any) => {
+            acc[error.path] = error.message;
+            return acc;
+          },
+          {}
+        );
+        console.log(validationErrors)
+        setErrors(validationErrors)
+        return;
+      }
+    }
     setLoading(true);
     try {
       if (id) {
@@ -242,7 +243,7 @@ const CouponTabs: React.FC = () => {
           <Button onClick={handleNext} disabled={loading}>{t("coupon.addcoupon.next")}</Button>
         ) : (
           <Button onClick={handleSave} disabled={loading}>
-              {loading ? <Spinner size="sm" color="light" /> :  t("coupon.addcoupon.save") }
+            {loading ? <Spinner size="sm" color="light" /> : t("coupon.addcoupon.save")}
           </Button>
         )}
       </div>

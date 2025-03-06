@@ -2,7 +2,7 @@ import { Table } from "reactstrap";
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
 
-const TabTable = ({ userData }) => {
+const TabTable = ({ userData }: any) => {
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
   return (

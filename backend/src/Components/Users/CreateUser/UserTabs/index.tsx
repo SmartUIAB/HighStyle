@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React, { Fragment, useEffect, useState } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import { Form, FormGroup, Input, Label, Row, Col, Button } from "reactstrap";

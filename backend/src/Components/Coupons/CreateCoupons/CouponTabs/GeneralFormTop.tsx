@@ -13,9 +13,10 @@ interface FormData {
 interface GeneFormTopProps {
   formData: FormData;
   setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  errors:any
 }
 
-const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData,errors }) => {
+const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData,errors }:any) => {
 
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);

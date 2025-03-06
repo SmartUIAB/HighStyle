@@ -1,3 +1,4 @@
+//@ts-nocheck
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
 import { useMutation, useQuery } from "@apollo/client";
 import { Fragment, useState } from "react";

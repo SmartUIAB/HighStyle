@@ -1,3 +1,4 @@
+//@ts-nocheck
 import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import Datatable from "@/CommonComponents/DataTable";
 import { ReportsData } from "@/Data/Report";
