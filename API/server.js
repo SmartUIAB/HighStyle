@@ -1,91 +1,130 @@
-const dotenv = require("dotenv");
-dotenv.config({ path: "./.env" });
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+require("dotenv").config();
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const { ApolloServer } = require("apollo-server-express");
+const { createServer } = require("http");
+const { graphqlUploadExpress } = require("graphql-upload");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+const cookieParser = require("cookie-parser");
+const cron = require("node-cron");
 
-const typeDefs = require("./src/product/schema");
-const resolvers = require("./src/product/resolver");
+// Import your route handlers, type definitions, resolvers, and utility functions
+const paymentRoute = require("./Routes/paymentRoute");
+const resolvers = require("./GraphQL/Resolver/index");
+const typeDefs = require("./GraphQL/TypeDef/index");
+const DatabaseConnection = require("./Config/DataBase");
+const { authenticateUser } = require("./Utilities/authUtils");
 
 const app = express();
 
-app.use(cors());
+/* ---------------------------- Middleware setup ---------------------------- */
+const allowedOrigins = ["http://localhost:3001", "http://localhost:3000"]; // List of allowed origins
+
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || true) {
+        //remove true from if condition in production mode
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
+app.use("/", paymentRoute);
 app.use(bodyParser.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 
-app.get("/", (req, res) => {
-  res.send("Hello from API");
-});
-
-app.get("/public-key", (req, res) => {
-  res.send({ publicKey: process.env.STRIPE_PUBLISHABLE_KEY });
-});
-
-app.post("/create-payment-intent", async (req, res) => {
-  const { cartTotal, currency } = req.body;
-  const amount = cartTotal * 100; // Convert to cents
-
-  const options = {
-    amount,
-    currency,
-  };
-
-  try {
-    const paymentIntent = await stripe.paymentIntents.create(options);
-    res.json({ client_secret: paymentIntent.client_secret });
-  } catch (err) {
-    console.error("Error creating payment intent:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post('/webhook', bodyParser.raw({ type: 'application/json' }), (req, res) => {
-  let data;
-  let eventType;
-
-  if (process.env.STRIPE_WEBHOOK_SECRET) {
-    const signature = req.headers["stripe-signature"];
-    let event;
-
-    try {
-      event = stripe.webhooks.constructEvent(req.body, signature, process.env.STRIPE_WEBHOOK_SECRET);
-    } catch (err) {
-      console.log(`⚠️ Webhook signature verification failed.`, err.message);
-      return res.sendStatus(400);
-    }
-
-    data = event.data;
-    eventType = event.type;
-  } else {
-    data = req.body.data;
-    eventType = req.body.type;
-  }
-
-  if (eventType === "payment_intent.succeeded") {
-    console.log("💰 Payment received!");
-  } else if (eventType === "payment_intent.payment_failed") {
-    console.log("❌ Payment failed.");
-  }
-
-  res.sendStatus(200);
+/* -------------------------- GraphQL schema setup -------------------------- */
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers,
 });
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+  schema,
+  context: async ({ req, res }) => {
+    if (!req) {
+      return { userId: null, user: { role: "cron-job" } };
+    }
+
+    const token = req.cookies.token || process.env.TOKEN;
+    const { userId, user } = await authenticateUser(token);
+    return { userId, user, res };
+  },
+  formatError: (err) => {
+    console.error(err);
+    return {
+      success: false,
+      message: err.message || "Internal Server Error",
+    };
+  },
   introspection: true,
-  playground: true,
+  uploads: {
+    maxFileSize: 10000000,
+    maxFiles: 10,
+    csrfPrevention: true,
+  },
 });
 
-async function startApolloServer() {
-  await server.start();
-  server.applyMiddleware({ app });
+/* ------------------------ Error handling middleware ----------------------- */
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Error in Server";
+  res.status(statusCode).json({ message });
+});
 
-  const PORT = process.env.PORT || 4000;
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}${server.graphqlPath}`);
-  });
-}
+/* -------------------------------- cron jobs ------------------------------- */
+cron.schedule("0 0 */5 * *", async () => {
+  try {
+    const response = await server.executeOperation({
+      query: `
+        mutation {
+          deleteOldPendingOrders
+        }
+      `,
+    });
 
-startApolloServer();
+    if (response.errors) {
+      console.error("Error during cron job execution:", response.errors);
+    } else {
+      console.log(
+        `Deleted ${response.data.deleteOldPendingOrders} old pending orders`
+      );
+    }
+  } catch (error) {
+    console.error("Cron job failed to delete orders:", error);
+  }
+});
+
+/* ------------------------------ Start server ------------------------------ */
+const startServer = async () => {
+  try {
+    await server.start();
+    server.applyMiddleware({
+      app,
+      cors: false, //Disable Apollo Server CORS configuration to use Express CORS configuration
+    });
+
+    const httpServer = createServer(app);
+    const PORT = process.env.PORT || 2024;
+
+    httpServer.listen(PORT, () => {
+      DatabaseConnection();
+      console.log(
+        `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+      );
+    });
+  } catch (error) {
+    console.error("Failed to start the server:", error);
+  }
+};
+
+startServer();

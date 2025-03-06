@@ -1,20 +1,41 @@
 import { Href, ImagePath } from "@/Constants";
+import { LOGOUT_USER } from "@/GraphQL/Mutations/authMutations";
+import { useMutation } from "@apollo/client";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
+import { toast } from "react-toastify";
 
 const UserMenu = () => {
   const router = useRouter();
-  const handleLogOut = () => {
-    Cookies.remove("token");
-    router.push("/auth/login");
+  const [logoutMutation] = useMutation(LOGOUT_USER);
+
+  const handleLogOut = async () => {
+    try {
+      const { data } = await logoutMutation();
+
+      if (data.logout) {
+        Cookies.remove("token");
+        router.replace("/auth/login");
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error(error.message);
+    }
   };
+
+  const lang = localStorage.getItem("i18nextLng")
+
   return (
     <Fragment>
       <li className="onhover-dropdown">
         <div className="media align-items-center">
-          <img className="align-self-center pull-right img-50 rounded-circle blur-up lazyloaded" src={`${ImagePath}/dashboard/man.png`} alt="header-user" />
+          <img
+            className="align-self-center pull-right img-50 rounded-circle blur-up lazyloaded"
+            src={`${ImagePath}/dashboard/man.png`}
+            alt="header-user"
+          />
           <div className="dotted-animation">
             <span className="animate-circle"></span>
             <span className="main-circle"></span>
@@ -22,7 +43,7 @@ const UserMenu = () => {
         </div>
         <ul className="profile-dropdown onhover-show-div p-20 profile-dropdown-hover">
           <li>
-            <Link href={`/settings/profile`}>
+            <Link href={`/${lang}/settings/profile`}>
               <i data-feather="user"></i>Edit Profile
             </Link>
           </li>

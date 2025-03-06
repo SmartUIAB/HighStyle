@@ -1,0 +1,302 @@
+{
+  "footer": {
+    "subscribe": {
+      "title": "BE THE FIRST TO KNOW!",
+      "description": "Never miss anything from High Style by subscribing to our newsletter.",
+      "placeholder": "Enter your email address",
+      "button": "Subscribe"
+    },
+    "about": {
+      "title": "about",
+      "description": "High Style is a Swedish lifestyle company that focuses on offering stylish and trendy accessories to its customers. We strive to create a unique and personal shopping experience for each individual, regardless of their style and preferences. With our carefully curated selection and commitment to quality and design, we aim to inspire and give our customers the opportunity to express their personal style in the best possible way. Visit our website to discover our latest collection."
+    },
+    "account": {
+      "title": "my account",
+      "links": {
+        "women": "Women's",
+        "clothes": "Clothing",
+        "accessories": "Accessories",
+        "presents": "Presents"
+      }
+    },
+    "whyChooseUs": {
+      "title": "why we choose",
+      "links": {
+        "shippingReturns": "Shipping & Returns",
+        "secureShopping": "Secure Shopping",
+        "gallery": "Gallery",
+        "affiliates": "Affiliates",
+        "contacts": "Contacts"
+      }
+    },
+    "storeInfo": {
+      "title": "store information",
+      "address": "High Style AB Market",
+      "phone": "Call us: 0735 50 20 62",
+      "email": "Email Us: Support@highstyle.se",
+      "whatsapp": "Whatsapp: 0735 50 20 62"
+    }
+  },
+  "header": {
+    "search": {
+      "title": "Find the best for your desire"
+    }
+  },
+  "top_header": {
+    "welcome": "Welcome to our High Style store",
+    "call_us": "Call us: 073 - 550 - 2062",
+    "compare": "Compare",
+    "wishlist": "Wishlist",
+    "my_account": "My account",
+    "login": "Login",
+    "register": "Register"
+  },
+  "cart_details": {
+    "image": "Image",
+    "product_name": "Product Name",
+    "price": "Price",
+    "quantity": "Quantity",
+    "action": "Action",
+    "total": "Total",
+    "total_price": "Total Price",
+    "subTotal": "Sub Total",
+    "continue_shopping": "Continue Shopping",
+    "check_out": "Check Out",
+    "cart_empty": "Your Cart is Empty",
+    "explore_more": "Explore more and shortlist some items.",
+    "cart_empty_message": "Your shopping cart is currently empty."
+  },
+  "shipping_address": {
+    "modal_title": "Enter Shipping Address",
+    "street": "Street",
+    "city": "City",
+    "state": "State",
+    "postal_code": "Postal Code",
+    "country": "Country",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "btn_title": "Add Address"
+  },
+  "route_name": {
+    "product_list": "Product List",
+    "product": "Product",
+    "home": "Home"
+  },
+  "services": {
+    "freeShipping": "Free Shipping",
+    "freeShippingWorldwide": "Free Shipping World Wide",
+    "service247": "24 X 7 Service",
+    "onlineService247": "Online Service For 24 X 7",
+    "festivalOffer": "Festival Offer",
+    "newOnlineSpecialFestivalOffer": "New Online Special Festival Offer",
+    "onlinePayment": "Online Payment"
+  },
+  "product_details": {
+    "brand": "Brand",
+    "homeAndFurniture": "Home & Furniture",
+    "selectSize": "Select Size",
+    "sizeChart": "Size Chart",
+    "quantity": "Quantity",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "productDetails": "Product Details",
+    "shareIt": "Share It",
+    "timeReminder": "Time Reminder",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "newProduct": "New Product",
+    "description": "Description",
+    "details": "Details",
+    "video": "Video",
+    "writeReview": "Write Review",
+    "format": "Format",
+    "size": "Size",
+    "version": "Version",
+    "compatibility": "Compatibility",
+    "off": "Off",
+    "relatedProduct": "Related Product",
+    "selectColorAndSize": "Please select both color and size before adding to the cart.",
+    "fileDetails": "File Details"
+  },
+  "landing_page": {
+    "welcome": "Welcome to Fashion",
+    "men_fashion": "Men Fashion",
+    "women_fashion": "Women Fashion",
+    "shop_now": "Shop Now",
+    "men": "Men",
+    "women": "Women",
+    "special_offer": "Special Offer",
+    "top_collection": "Top Collection",
+    "discover_offer": "Discover our special offer on our Top Collection! Limited time, exclusive discounts on selected products. Don't miss the chance to renew your style with our premium items. Shop now and save big!",
+    "fashion_trends": "Fashion Trends",
+    "special_offer_section": "Special Offer",
+    "trending_products": "Trending Products",
+    "winter": "Winter",
+    "greens": "Greens",
+    "various": "Various",
+    "our_collection": "Our Collection",
+    "special_products": "Special Products",
+    "instagram": "Instagram"
+  },
+  "productlist": {
+    "route_name": {
+      "product_list": "Product List"
+    },
+    "error": {
+      "loading_products": "Error loading products!",
+      "issue_loading": "There was an issue loading the product data. Please try again later."
+    },
+    "placeholder": {
+      "search_products": "Search for products..."
+    },
+    "info": {
+      "no_products_found": "No Products Found",
+      "adjust_filters": "Try adjusting your filters or search query."
+    },
+    "pagination": {
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "status": {
+      "available": "Available",
+      "out_of_stock": "Out of Stock"
+    },
+    "details": {
+      "price": "Price",
+      "colors": "Colors",
+      "sizes": "Sizes",
+      "file_format": "File Format",
+      "file_size": "File Size",
+      "compatibility": "Compatibility",
+      "status": "Status"
+    },
+    "sort": {
+      "hightolow": "High to Low",
+      "lowtohigh": "Low to High",
+      "default": "Default"
+    }
+  },
+  "compare": {
+    "home": "Home",
+    "title": "Compare",
+    "empty": {
+      "title": "Your Cart is Empty",
+      "message": "Explore more shortlist some items."
+    },
+    "product_name": "Product Name",
+    "product_image": "Product Image",
+    "product_description": "Product Description",
+    "availability": "Availability",
+    "remove": "Remove",
+    "on_sale": "On Sale",
+    "add_to_cart": "Add to Cart",
+    "not_available": "Not Available",
+    "available": "Available",
+    "action": "Action"
+  },
+  "wishlist": {
+    "image": "Image",
+    "product_name": "Product Name",
+    "price": "Price",
+    "availability": "Availability",
+    "action": "Action",
+    "out_of_stock": "Out of stock",
+    "continue_shopping": "Continue Shopping",
+    "check_out": "Check Out",
+    "remove_from_wishlist": "Remove from Wishlist",
+    "add_to_cart": "Add to Cart",
+    "home": "Home",
+    "wishlist": "Wishlist",
+    "removeFromFavourite": "Remove Favourite Product Successfully",
+    "notAvailableFavouriteProduct": "Favourite product not available"
+  },
+  "quickview": {
+    "product_details": "Product Details",
+    "quantity": "Quantity",
+    "add_to_cart": "Add to Cart",
+    "view_detail": "View Detail",
+    "product_description": "Product Description"
+  },
+  "logout": "Logout",
+  "login": {
+    "welcome": "Welcome Back",
+    "email": "Email",
+    "password": "Password",
+    "new_customer": "New Customer",
+    "create_account": "Create An Account",
+    "create_account_description": "Sign up for a free account at our store. Registration is quick and easy. It allows you to be able to order from our shop. To start shopping click register.",
+    "login_button": "Login",
+    "register_button": "Create an Account"
+  },
+  "register": {
+    "title": "Create Account",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "createAccount": "Create Account",
+    "errors": {
+      "firstName": "First Name is required",
+      "lastName": "Last Name is required",
+      "email": "Email is required",
+      "emailInvalid": "Email is not valid",
+      "password": "Password is required",
+      "passwordLength": "Password must be at least 6 characters long"
+    },
+    "successMessage": "Customer Created Successfully",
+    "errorMessage": "An error occurred while creating the account"
+  },
+  "myOrders": {
+    "myOrders": "My Orders",
+    "searchPlaceholder": "Search by Order ID or Status...",
+    "noOrdersFound": "No orders found.",
+    "orderId": "Order ID",
+    "date": "Date",
+    "total": "Total",
+    "status": "Status",
+    "items": "Items",
+    "actions": "Actions",
+    "trackOrder": "Track Order",
+    "viewProduct": "View Product",
+    "refreshing": "Refreshing...",
+    "number": "No."
+  },
+  "orderStatus": {
+    "pending": "Pending",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "completed": "Completed",
+    "canceled": "Canceled"
+  },
+  "forgetPassword": {
+    "forgetPassword": "Forget Password",
+    "title": "Forget Your Password",
+    "emailPlaceholder": "Enter Your Email",
+    "submitButton": "Submit",
+    "successMessage": "Password reset link sent to your email.",
+    "errorMessage": "Failed to send reset link. Please try again."
+  },
+  "passwordReset": {
+    "resetPassword": "Reset Password",
+    "resetYourPassword": "Reset Your Password",
+    "enterNewPassword": "Enter New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "resetPasswordButton": "Reset Password",
+    "passwordsDoNotMatch": "Passwords do not match!",
+    "successMessage": "Password reset successful.",
+    "errorMessage": "Failed to reset password. Please try again."
+  },
+  "comingSoon": {
+    "openingSoon": "Will be Opening Soon!",
+    "enterEmail": "Enter Your Email:",
+    "notifying": "Notifying...",
+    "notifyMe": "Notify me",
+    "storeOwner": "Are you the store owner?",
+    "loginHere": "Log in here",
+    "or": "or",
+    "changePassword": "change your password settings",
+    "poweredBy": "Powered by Multikart."
+  }
+}

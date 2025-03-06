@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
-import NavBar from "./common/navbar";
 import SideBar from "./common/sidebar";
 import TopBar from "./common/topbar-dark";
 import cart from "../../public/assets/images/icon/cart.png";
+
 import CartContainer from "../containers/CartContainer";
 import LogoImage from "./common/logo";
+import Language from "./Language";
 import { Container, Col, Row, Media, Input } from "reactstrap";
-import Currency from "./common/currency";
-import settings from "../../public/assets/images/icon/setting.png";
 import SearchOverlay from "./common/search-overlay";
-import search from "../../public/assets/images/icon/search.png";
+import { useTranslation } from "react-i18next";
 
 const HeaderFour = ({ logoName, topClass, fluid, hfluid }) => {
   //   const isLoading = false;
@@ -17,6 +16,8 @@ const HeaderFour = ({ logoName, topClass, fluid, hfluid }) => {
   /*=====================
          Pre loader
 		 ==========================*/
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     setTimeout(function () {
@@ -75,7 +76,7 @@ const HeaderFour = ({ logoName, topClass, fluid, hfluid }) => {
                             <Input
                               id="query search-autocomplete"
                               type="search"
-                              placeholder="Hitta det bästa för ditt önskning..."
+                              placeholder={t("header.search.title") + "..."}
                               className="nav-search nav-search-field"
                               aria-expanded="true"
                             />
@@ -89,7 +90,8 @@ const HeaderFour = ({ logoName, topClass, fluid, hfluid }) => {
                           </form>
                         </div>
 
-                        <Currency icon={settings.src} />
+                        <Language />
+                        {/* <Currency icon={settings.src} /> */}
                         {/*Header Cart Component */}
                         <CartContainer icon={cart.src} />
                       </ul>

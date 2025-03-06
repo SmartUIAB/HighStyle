@@ -1,11 +1,7 @@
-# Node modules
-node_modules/
+# Ignore all node_modules folders
 **/node_modules/
 
-# Next.js build folders
-.next/
+# Ignore all .next folders
 **/.next/
 
-# Uploads or temporary folders
-uploads/
 **/uploads/

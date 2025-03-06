@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
+import { useTranslation } from "react-i18next";
 import {
   Container,
   Row,
@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import LogoImage from "../../headers/common/logo";
 import CopyRight from "./copyright";
+import LocalLink from "../../LocalLink";
 
 const MasterFooter = ({
   containerFluid,
@@ -28,6 +29,10 @@ const MasterFooter = ({
   const [isOpen, setIsOpen] = useState();
   const [collapse, setCollapse] = useState(0);
   const width = window.innerWidth <= 767;
+
+  // Initialize the translation hook
+  const { t } = useTranslation();
+
   useEffect(() => {
     const changeCollapse = () => {
       if (window.innerWidth <= 767) {
@@ -42,6 +47,7 @@ const MasterFooter = ({
       window.removeEventListener("resize", changeCollapse);
     };
   }, []);
+
   return (
     <div>
       <footer className={footerClass}>
@@ -53,10 +59,10 @@ const MasterFooter = ({
                   <Col lg="6">
                     <div className="subscribe">
                       <div>
-                        <h4>VETA ALLT FÖRST!</h4>
-                        <p>
-                        Missa aldrig något från High Style genom att prenumerera på vårt nyhetsbrev.
-                        </p>
+                        <h4>{t("footer.subscribe.title")}</h4>{" "}
+                        {/* Localization for title */}
+                        <p>{t("footer.subscribe.description")}</p>{" "}
+                        {/* Localization for description */}
                       </div>
                     </div>
                   </Col>
@@ -67,11 +73,12 @@ const MasterFooter = ({
                           type="text"
                           className="form-control"
                           id="exampleFormControlInput1"
-                          placeholder="Ange din e-postadress"
+                          placeholder={t("footer.subscribe.placeholder")}
                         />
                       </div>
                       <Button type="submit" className="btn btn-solid">
-                        Prenumerera
+                        {t("footer.subscribe.button")}{" "}
+                        {/* Localization for button */}
                       </Button>
                     </Form>
                   </Col>
@@ -90,39 +97,43 @@ const MasterFooter = ({
                 <div
                   className={`footer-title ${
                     isOpen && collapse == 1 ? "active" : ""
-                  } footer-mobile-title`}>
+                  } footer-mobile-title`}
+                >
                   <h4
                     onClick={() => {
                       setCollapse(1);
                       setIsOpen(!isOpen);
-                    }}>
-                    about
+                    }}
+                  >
+                    {t("footer.about.title")} {/* Localization for about */}
                     <span className="according-menu"></span>
                   </h4>
                 </div>
                 <Collapse
-                  isOpen={width ? (collapse === 1 ? isOpen : false) : true}>
+                  isOpen={width ? (collapse === 1 ? isOpen : false) : true}
+                >
                   <div className="footer-contant">
                     <div className="footer-logo">
                       <LogoImage logo={logoName} />
                     </div>
-                    <p>
-                    High Style är ett svenskt livsstil företag som fokuserar på att erbjuda stilfulla och trendiga accessoarer till sina kunder. Vi strävar efter att skapa en unik och personlig shoppingupplevelse för varje individ, oavsett deras stil och preferenser. Med vårt noggrant kuraterade sortiment och engagemang för kvalitet och design, strävar vi efter att inspirera och ge våra kunder möjligheten att uttrycka sin personliga stil på bästa sätt. Besök vår webbplats för att upptäcka vårt senaste sortiment.
-                    </p>
+                    <p>{t("footer.about.description")}</p>{" "}
+                    {/* Localization for about description */}
                     <div className="footer-social">
                       <ul>
                         <li>
                           <a href="https://www.facebook.com" target="_blank">
                             <i
                               className="fa fa-facebook"
-                              aria-hidden="true"></i>
+                              aria-hidden="true"
+                            ></i>
                           </a>
                         </li>
                         <li>
                           <a href="https://plus.google.com" target="_blank">
                             <i
                               className="fa fa-google-plus"
-                              aria-hidden="true"></i>
+                              aria-hidden="true"
+                            ></i>
                           </a>
                         </li>
                         <li>
@@ -134,7 +145,8 @@ const MasterFooter = ({
                           <a href="https://www.instagram.com" target="_blank">
                             <i
                               className="fa fa-instagram"
-                              aria-hidden="true"></i>
+                              aria-hidden="true"
+                            ></i>
                           </a>
                         </li>
                         <li>
@@ -152,49 +164,49 @@ const MasterFooter = ({
                   <div
                     className={`footer-title ${
                       isOpen && collapse == 2 ? "active" : ""
-                    } `}>
+                    } `}
+                  >
                     <h4
                       onClick={() => {
                         if (width) {
                           setIsOpen(!isOpen);
                           setCollapse(2);
                         } else setIsOpen(true);
-                      }}>
-                      mitt konto
+                      }}
+                    >
+                      {t("footer.account.title")}{" "}
+                      {/* Localization for account */}
                       <span className="according-menu"></span>
                     </h4>
                   </div>
                   <Collapse
-                    isOpen={width ? (collapse === 2 ? isOpen : false) : true}>
+                    isOpen={width ? (collapse === 2 ? isOpen : false) : true}
+                  >
                     <div className="footer-contant">
                       <ul>
                         <li>
-                          <Link href={`/shop/left_sidebar`}>
-                            {/* <a> */}
-                            kvinnors
-                            {/* </a> */}
-                          </Link>
+                          <LocalLink href={`/shop/left_sidebar`}>
+                            {t("footer.account.links.women")}{" "}
+                            {/* Localization for women */}
+                          </LocalLink>
                         </li>
                         <li>
-                          <Link href={`/shop/left_sidebar`}>
-                            {/* <a>  */}
-                            Kläder
-                            {/* </a> */}
-                          </Link>
+                          <LocalLink href={`/shop/left_sidebar`}>
+                            {t("footer.account.links.clothes")}{" "}
+                            {/* Localization for clothes */}
+                          </LocalLink>
                         </li>
                         <li>
-                          <Link href={`/shop/left_sidebar`}>
-                            {/* <a> */}
-                            Tillbehör
-                            {/* </a> */}
-                          </Link>
+                          <LocalLink href={`/shop/left_sidebar`}>
+                            {t("footer.account.links.accessories")}{" "}
+                            {/* Localization for accessories */}
+                          </LocalLink>
                         </li>
                         <li>
-                          <Link href={`/shop/left_sidebar`}>
-                            {/* <a> */}
-                            presenteras
-                            {/* </a> */}
-                          </Link>
+                          <LocalLink href={`/shop/left_sidebar`}>
+                            {t("footer.account.links.presents")}{" "}
+                            {/* Localization for presents */}
+                          </LocalLink>
                         </li>
                       </ul>
                     </div>
@@ -206,36 +218,55 @@ const MasterFooter = ({
                   <div
                     className={`footer-title ${
                       isOpen && collapse == 3 ? "active" : ""
-                    } `}>
+                    } `}
+                  >
                     <h4
                       onClick={() => {
                         if (width) {
                           setIsOpen(!isOpen);
                           setCollapse(3);
                         } else setIsOpen(true);
-                      }}>
-                      varför vi väljer
+                      }}
+                    >
+                      {t("footer.whyChooseUs.title")}{" "}
+                      {/* Localization for why choose us */}
                       <span className="according-menu"></span>
                     </h4>
                   </div>
                   <Collapse
-                    isOpen={width ? (collapse === 3 ? isOpen : false) : true}>
+                    isOpen={width ? (collapse === 3 ? isOpen : false) : true}
+                  >
                     <div className="footer-contant">
                       <ul>
                         <li>
-                          <a href="#">frakt & retur</a>
+                          <a href="#">
+                            {t("footer.whyChooseUs.links.shippingReturns")}
+                          </a>{" "}
+                          {/* Localization for shipping returns */}
                         </li>
                         <li>
-                          <a href="#">säker shopping</a>
+                          <a href="#">
+                            {t("footer.whyChooseUs.links.secureShopping")}
+                          </a>{" "}
+                          {/* Localization for secure shopping */}
                         </li>
                         <li>
-                          <a href="#">galleri</a>
+                          <a href="#">
+                            {t("footer.whyChooseUs.links.gallery")}
+                          </a>{" "}
+                          {/* Localization for gallery */}
                         </li>
                         <li>
-                          <a href="#">affiliates</a>
+                          <a href="#">
+                            {t("footer.whyChooseUs.links.affiliates")}
+                          </a>{" "}
+                          {/* Localization for affiliates */}
                         </li>
                         <li>
-                          <a href="#">kontakter</a>
+                          <a href="#">
+                            {t("footer.whyChooseUs.links.contacts")}
+                          </a>{" "}
+                          {/* Localization for contacts */}
                         </li>
                       </ul>
                     </div>
@@ -247,34 +278,45 @@ const MasterFooter = ({
                   <div
                     className={`footer-title ${
                       isOpen && collapse == 4 ? "active" : ""
-                    } `}>
+                    } `}
+                  >
                     <h4
                       onClick={() => {
                         if (width) {
                           setIsOpen(!isOpen);
                           setCollapse(4);
                         } else setIsOpen(true);
-                      }}>
-                      store information
+                      }}
+                    >
+                      {t("footer.storeInfo.title")}{" "}
+                      {/* Localization for store info */}
                       <span className="according-menu"></span>
                     </h4>
                   </div>
                   <Collapse
-                    isOpen={width ? (collapse === 4 ? isOpen : false) : true}>
+                    isOpen={width ? (collapse === 4 ? isOpen : false) : true}
+                  >
                     <div className="footer-contant">
                       <ul className="contact-list">
                         <li>
-                          <i className="fa fa-map-marker"></i>High Style AB Market
+                          <i className="fa fa-map-marker"></i>
+                          {t("footer.storeInfo.address")}{" "}
+                          {/* Localization for store address */}
                         </li>
                         <li>
-                          <i className="fa fa-phone"></i>Ring oss: 0735 50 20 62
+                          <i className="fa fa-phone"></i>
+                          {t("footer.storeInfo.phone")}{" "}
+                          {/* Localization for phone */}
                         </li>
                         <li>
-                          <i className="fa fa-envelope-o"></i>Email Us:{" "}
-                          <a href="#">Support@highstyle.se</a>
+                          <i className="fa fa-envelope-o"></i>
+                          {t("footer.storeInfo.email")}{" "}
+                          {/* Localization for email */}
                         </li>
                         <li>
-                          <i className="fa fa-fax"></i>Whatsapp: 0735 50 20 62
+                          <i className="fa fa-fax"></i>
+                          {t("footer.storeInfo.whatsapp")}{" "}
+                          {/* Localization for whatsapp */}
                         </li>
                       </ul>
                     </div>
@@ -293,4 +335,5 @@ const MasterFooter = ({
     </div>
   );
 };
+
 export default MasterFooter;

@@ -4,23 +4,27 @@ import DeactivateAccount from "./DeactivateAccount";
 import DeleteAccount from "./DeleteAccount";
 import Notifications from "./Notifications";
 import TabTable from "./TabTable";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
-const TabProfile = () => {
+const TabProfile = ({ getUser }:any) => {
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
   return (
     <div>
       <Tabs>
         <TabList className="nav nav-tabs tab-coupon">
           <Tab className="nav-link">
             <User className="me-2" />
-            Profile
+            {t("settings.profile")}
           </Tab>
           <Tab className="nav-link">
             <Settings className="me-2" />
-            Contact
+            {t("settings.contact")}
           </Tab>
         </TabList>
         <TabPanel>
-          <TabTable />
+          <TabTable userData={getUser} />
         </TabPanel>
         <TabPanel>
           <Notifications />

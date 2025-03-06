@@ -3,6 +3,7 @@ import Link from "next/link";
 import CartContext from "../../helpers/cart";
 import { Media } from "reactstrap";
 import { CurrencyContext } from "../../helpers/Currency/CurrencyContext";
+import LocalLink from "../LocalLink";
 
 const CartComponent = ({ icon, layout }) => {
   const context = useContext(CartContext);
@@ -18,7 +19,8 @@ const CartComponent = ({ icon, layout }) => {
       {
         <li
           className="onhover-div mobile-cart"
-          onClick={() => setOpenSide(true)}>
+          onClick={() => setOpenSide(true)}
+        >
           <div className="cart-qty-cls">{cartList.length}</div>
           <div href={null}>
             <Media
@@ -33,7 +35,8 @@ const CartComponent = ({ icon, layout }) => {
 
       <div
         id="cart_side"
-        className={`add_to_cart ${layout} ${openSide ? "open-side" : ""} `}>
+        className={`add_to_cart ${layout} ${openSide ? "open-side" : ""} `}
+      >
         <a href={null} className="overlay"></a>
         <div className="cart-inner">
           <div className="cart_top">
@@ -54,7 +57,10 @@ const CartComponent = ({ icon, layout }) => {
                         <Media
                           alt=""
                           className="me-3"
-                          src={`${item.images[0].src}`}
+                          src={
+                            process.env.NEXT_PUBLIC_API_KEY +
+                            `${item.images[0]}`
+                          }
                         />
                       </a>
                       <div className="media-body">
@@ -63,7 +69,7 @@ const CartComponent = ({ icon, layout }) => {
                         </a>
                         <h4>
                           <span>
-                            {item.qty} x {symbol} {item.price}
+                            {item.qty} x {item.price}
                           </span>
                         </h4>
                       </div>
@@ -80,24 +86,28 @@ const CartComponent = ({ icon, layout }) => {
               <li>
                 <div className="total">
                   <h5>
-                  delsumma : <span>SEK{total}</span>
+                    delsumma : <span>{total}</span>
                   </h5>
                 </div>
               </li>
               <li>
                 <div className="buttons">
-                  <Link
+                  <LocalLink
                     href="/page/account/cart"
-                    className="btn btn-solid btn-xs view-cart">
+                    className="btn btn-solid btn-xs view-cart"
+                  >
                     {/* <a > */}
                     visa varukorg
                     {/* </a> */}
-                  </Link>
-                  <Link href="/page/account/checkout" className="btn btn-solid btn-xs checkout">
+                  </LocalLink>
+                  <LocalLink
+                    href="/page/account/checkout"
+                    className="btn btn-solid btn-xs checkout"
+                  >
                     {/* <a > */}
                     kolla upp
-                      {/* </a> */}
-                  </Link>
+                    {/* </a> */}
+                  </LocalLink>
                 </div>
               </li>
             </ul>

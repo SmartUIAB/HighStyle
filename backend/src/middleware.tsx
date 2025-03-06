@@ -3,14 +3,25 @@ import { NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  if (path.split("/")[1] !== "auth" && !request.cookies.has("token")) {
+  const token = request.cookies.get("token");
+
+  if (path === "/auth/login") {
+    return NextResponse.next();
+  }
+
+  if (!token && !path.startsWith("/auth")) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
-  if (path.split("/")[1] === "auth" && request.cookies.has("token")) {
-    return NextResponse.redirect(new URL(`/en/dashboard`, request.url));
+
+  if (token && path.startsWith("/auth")) {
+    return NextResponse.redirect(new URL("/en/dashboard", request.url));
   }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };

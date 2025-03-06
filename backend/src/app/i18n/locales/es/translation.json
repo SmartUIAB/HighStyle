@@ -12,6 +12,377 @@
   "Localization": "Localización",
   "Reports": "Informes",
   "Settings": "Configuraciones",
-  "Invoice": "Factura"
+  "Invoice": "Factura",
+  "Footer": "Copyright 2022 © Multikart Todos los derechos reservados.",
+  "createdBy": "Hecho a mano y con",
+  "search": "Buscar",
+  "no_data_found": "No se Encontraron Datos",
+  "table": {
+    "image": "Imagen",
+    "name": "Nombre",
+    "description": "Descripción",
+    "type": "Tipo",
+    "action": "Acción"
+  },
+  "category": {
+    "title": "Categoría de Productos",
+    "name": "Nombre de la categoría",
+    "description": "Descripción de la categoría",
+    "type": "Tipo de categoría",
+    "image": "Imagen de la categoría",
+    "edit": "Editar categoría",
+    "add": "Agregar categoría",
+    "update": "Actualizar",
+    "close": "Cerrar",
+    "delete": "Eliminar categoría"
+  },
+  "subCategory": {
+    "title": "Subcategoría de producto",
+    "name": "Nombre de la subcategoría",
+    "description": "Descripción de la subcategoría",
+    "type": "Tipo de subcategoría",
+    "image": "Imagen de la subcategoría",
+    "category": "Categoría",
+    "add": "Agregar subcategoría",
+    "save": "Guardar"
+  },
+  "modalTitle": {
+    "editCategory": "Editar categoría",
+    "addCategory": "Agregar categoría",
+    "editProduct": "Editar Producto",
+    "addProduct": "Añadir Producto",
+    "addSubCategory": "Agregar subcategoría"
+  },
+  "toast": {
+    "success": {
+      "category": "Categoría actualizada con éxito",
+      "subCategory": "Subcategoría actualizada con éxito",
+      "deleteCategory": "Categoría eliminada con éxito",
+      "deleteSubCategory": "Subcategoría eliminada con éxito",
+      "userCreated": "Usuario creado con éxito",
+      "userUpdated": "Usuario actualizado con éxito",
+      "userDeleted": "Usuario eliminado con éxito",
+      "userDeleteError": "Error al eliminar el usuario",
+      "fetchError": "Error al obtener la lista de usuarios"
+    },
+    "error": {
+      "category": "Error al actualizar la categoría. Por favor, inténtelo de nuevo.",
+      "subCategory": "Error al actualizar la subcategoría. Por favor, inténtelo de nuevo.",
+      "delete": "Error al eliminar. Por favor, inténtelo de nuevo.",
+      "userCreateError": "Error al crear el usuario. Por favor, inténtelo de nuevo más tarde.",
+      "userDeleteError": "Error al eliminar el usuario"
+    }
+  },
+  "validateForm": {
+    "firstNameRequired": "El nombre es obligatorio",
+    "lastNameRequired": "El apellido es obligatorio",
+    "emailRequired": "El correo electrónico es obligatorio",
+    "emailInvalid": "El correo electrónico no es válido",
+    "passwordRequired": "La contraseña es obligatoria",
+    "confirmPasswordRequired": "Confirmar contraseña es obligatorio",
+    "passwordMismatch": "Las contraseñas no coinciden"
+  },
+  "alert": {
+    "formSubmitted": "¡Formulario enviado con éxito!"
+  },
+  "type": {
+    "physical": "Físico",
+    "digital": "Digital"
+  },
+  "digital": {
+    "add_product": {
+      "General": "General",
+      "Title": "Título",
+      "SKU": "SKU",
+      "Categories": "Categorías",
+      "Subcategory": "Subcategoría",
+      "Product Price": "Precio del Producto",
+      "Compatibility": "Compatibilidad",
+      "Discount": "Descuento",
+      "File Format": "Formato de Archivo",
+      "File Size": "Tamaño del Archivo",
+      "License Type": "Tipo de Licencia",
+      "Tags": "Etiquetas",
+      "Version": "Versión",
+      "Status": "Estado",
+      "Drag Files or Click to Browse": "Arrastra archivos o haz clic para buscar",
+      "Add Description": "Agregar Descripción",
+      "Meta Data": "Metadatos",
+      "Meta Title": "Título Meta",
+      "Meta Description": "Descripción Meta",
+      "Add": "Agregar",
+      "Discard": "Descartar",
+      "Add Products": "Agregar productos",
+      "Multikart Admin panel": "Panel de administración de Multikart",
+      "Update": "Actualizar",
+      "Digital": "Digital",
+      "Edit Products": "Editar productos"
+    },
+    "product_list": {
+      "product_list": "Lista de productos",
+      "product": "Producto",
+      "price": "Precio",
+      "status": "Estado",
+      "file_format": "Formato de archivo",
+      "compatibility": "Compatibilidad",
+      "created_at": "Creado en",
+      "action": "Acción"
+    }
+  },
+  "physical": {
+    "product_list": {
+      "title": "Lista de Productos",
+      "statusFilter": "Estado",
+      "statusAvailable": "Disponible",
+      "statusUnavailable": "No Disponible",
+      "noDataFound": "No se encontraron datos",
+      "product": "Producto",
+      "price": "Precio",
+      "status": "Estado",
+      "colors": "Colores",
+      "sizes": "Tamaños",
+      "category": "Categoría",
+      "createdAt": "Creado en",
+      "action": "Acción",
+      "confirmDeletion": "Confirmar Eliminación",
+      "deleteConfirmationMessage": "¿Está seguro de que desea eliminar este producto?",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "noImage": "Sin Imagen"
+    },
+    "addProduct": {
+      "productName": "Nombre del Producto",
+      "price": "Precio",
+      "sku": "SKU",
+      "color": "Color",
+      "discount": "Descuento",
+      "metaTitle": "Título Meta",
+      "metaDescription": "Descripción Meta",
+      "productTags": "Etiquetas del Producto",
+      "category": "Categoría",
+      "subCategory": "Subcategoría",
+      "selectCategory": "Seleccionar Categoría",
+      "selectSubCategory": "Seleccionar Subcategoría",
+      "selectStatus": "Seleccionar Estado",
+      "stockQuantity": "Cantidad en Stock",
+      "selectSize": "Seleccionar Tamaño",
+      "addDescription": "Añadir Descripción",
+      "add": "Añadir",
+      "edit": "Editar",
+      "discard": "Descartar"
+    }
+  },
+  "sales": {
+    "type": "Ventas",
+    "orders": {
+      "title": "Pedidos",
+      "manageOrder": "Gestionar Pedido",
+      "columns": {
+        "customer": "Cliente",
+        "price": "Precio",
+        "paymentStatus": "Estado de Pago",
+        "orderStatus": "Estado del Pedido",
+        "deliveryCity": "Ciudad de Entrega",
+        "totalProduct": "Total de Productos",
+        "createdAt": "Creado en"
+      },
+      "noOrderFound": "No se encontró ninguna orden"
+    },
+    "transactions": {
+      "title": "Transacciones",
+      "subtitle": "Panel de Administración Multikart",
+      "details": "Detalles de Transacciones",
+      "columns": {
+        "customer": "Cliente",
+        "price": "Precio",
+        "paymentStatus": "Estado de Pago",
+        "orderStatus": "Estado del Pedido",
+        "deliveryCity": "Ciudad de Entrega",
+        "transactionId": "ID de Transacción",
+        "createdAt": "Creado en"
+      },
+      "noTransactionFound": "No se encontró ninguna transacción"
+    }
+  },
+  "coupon": {
+    "couponlist": {
+      "title": "Lista de Cupones",
+      "name": "Nombre",
+      "code": "Código",
+      "status": "Estado",
+      "discount_type": "Tipo de Descuento",
+      "discount_value": "Valor del Descuento",
+      "start_date": "Fecha de Inicio",
+      "end_date": "Fecha de Finalización",
+      "action": "Acción",
+      "list_coupons_title": "Lista de Cupones",
+      "coupons": "Cupones",
+      "breadcrumb_list_coupons": "Lista de Cupones",
+      "no_coupon_found": "No se encontraron cupones",
+      "confirmDeletionTitle": "Confirmar eliminación",
+      "confirmDeletionMessage": "¿Está seguro de que desea eliminar este cupón?",
+      "cancel": "Cancelar",
+      "delete": "Eliminar"
+    },
+    "addcoupon": {
+      "name": "Nombre",
+      "code": "Código",
+      "start_date": "Fecha de Inicio",
+      "end_date": "Fecha de Finalización",
+      "free_shipping": "Envío Gratis",
+      "allow_free_shipping": "Permitir Envío Gratis",
+      "quantity": "Cantidad",
+      "discount_type": "Tipo de Descuento",
+      "discount_value": "Valor del Descuento",
+      "status": "Estado",
+      "general": "General",
+      "restriction": "Restricción",
+      "usage": "Uso",
+      "discount_coupon_details": "Detalles del Cupón de Descuento",
+      "coupon": "Cupón",
+      "create_coupon": "Crear Cupón",
+      "products": "Productos",
+      "minimum_spend": "Gasto Mínimo",
+      "maximum_spend": "Gasto Máximo",
+      "per_limit": "Límite por Persona",
+      "per_customer": "Por Cliente",
+      "usage_limits": "Límites de Uso",
+      "save": "Guardar",
+      "enable_the_coupon": "Habilitar el Cupón",
+      "next": "Siguiente",
+      "selected_products": "Productos Seleccionados"
+    }
+  },
+  "media": {
+    "title": "Medios",
+    "dropzone_media": "Zona de Carga de Medios",
+    "upload": "Subir",
+    "file_name": "Nombre del Archivo",
+    "media_file_list": "Lista de Archivos de Medios",
+    "action": "Acción",
+    "no_data_found": "No se encontraron datos"
+  },
+  "user": {
+    "userlist": {
+      "title": "Lista de Usuarios",
+      "users": "Usuarios",
+      "create_user": "Crear Usuario",
+      "profile_image": "Imagen de Perfil",
+      "first_name": "Primer Nombre",
+      "last_name": "Apellido",
+      "email": "Correo Electrónico",
+      "action": "Acción",
+      "no_users_found": "No se encontraron usuarios",
+      "confirm_deletion": "Confirmar Eliminación",
+      "confirm_message": "¿Estás seguro de que quieres eliminar este usuario?",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "fetchError": "Error al obtener la lista de usuarios"
+    },
+    "create_user": {
+      "title": "Agregar Usuario",
+      "accountTab": "Cuenta",
+      "permissionTab": "Permiso",
+      "account": {
+        "accountDetails": "Detalles de la Cuenta",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "email": "Correo Electrónico",
+        "password": "Contraseña",
+        "confirmPassword": "Confirmar Contraseña"
+      },
+      "permission": {
+        "allow": "Permitir",
+        "deny": "Denegar",
+        "next": "Siguiente",
+        "save": "Guardar"
+      }
+    }
+  },
+  "vendors": {
+    "vendorList": {
+      "title": "Lista de Proveedores",
+      "vendors": "Proveedores",
+      "createVendor": "Crear Proveedor",
+      "vendorDetails": "Detalles del Proveedor",
+      "name": "Nombre",
+      "businessType": "Tipo de Negocio",
+      "contactNumber": "Número de Contacto",
+      "email": "Correo Electrónico",
+      "address": "Dirección",
+      "status": "Estado",
+      "action": "Acción",
+      "noVendorsFound": "No se encontraron proveedores.",
+      "confirmDeletion": "Confirmar Eliminación",
+      "deleteConfirmationMessage": "¿Está seguro de que desea eliminar este proveedor?",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "deletedVendorSuccessfully": "Proveedor eliminado con éxito",
+      "failedToDeleteVendor": "Error al eliminar el proveedor"
+    },
+    "create_vendor": {
+      "addVendor": "Agregar proveedor",
+      "vendors": "Proveedores",
+      "accountDetails": "Detalles de la cuenta",
+      "name": "Nombre",
+      "businessType": "Tipo de negocio",
+      "selectType": "Seleccionar tipo",
+      "physical": "Físico",
+      "digital": "Digital",
+      "address": "Dirección",
+      "contactNumber": "Número de contacto",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "account": "Cuenta",
+      "permission": "Permiso",
+      "allow": "Permitir",
+      "deny": "Denegar",
+      "saveVendor": "Guardar proveedor",
+      "updateVendor": "Actualizar proveedor",
+      "requiredField": "Este campo es obligatorio",
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "loadingPermissions": "Cargando permisos",
+      "errorLoadingPermissions": "Error al cargar permisos"
+    }
+  },
+  "settings": {
+    "profile": "Perfil",
+    "settings": "Configuraciones",
+    "contact": "Contacto",
+    "employeeStatus": "Estado del Empleado",
+    "performance": "Desempeño",
+    "overtime": "Horas Extras",
+    "leavesTaken": "Días de Licencia",
+    "deactivateAccount": "Desactivar Cuenta",
+    "deactivateReasons": {
+      "privacyConcern": "Tengo una preocupación de privacidad",
+      "temporary": "Esto es temporal",
+      "other": "Otro"
+    },
+    "deleteAccount": "Eliminar Cuenta",
+    "deleteReasons": {
+      "noLongerUsable": "Ya no usable",
+      "switchAccount": "Quiero cambiar a otra cuenta",
+      "other": "Otro"
+    },
+    "notifications": "Notificaciones",
+    "desktopNotifications": "Permitir Notificaciones de Escritorio",
+    "enableNotifications": "Habilitar Notificaciones",
+    "ownActivityNotifications": "Recibir notificaciones por mi propia actividad",
+    "dnd": "DND",
+    "firstName": "Nombre",
+    "lastName": "Apellido",
+    "email": "Correo Electrónico",
+    "company": "Empresa"
+  },
+  "rowsPerPage": "Filas por página",
+  "orderId": "ID de pedido",
+  "latestOrders": "Últimos Pedidos",
+  "viewAllOrders": "Ver todos los pedidos",
+  "earnings": "Ganancias",
+  "products": "Productos",
+  "messages": "Mensajes",
+  "newVendors": "Nuevos vendedores"
 }
- 

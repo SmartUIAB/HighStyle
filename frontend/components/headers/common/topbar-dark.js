@@ -1,8 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col } from "reactstrap";
-import Link from "next/link";
+import LocalLink from "../../LocalLink";
+import { useTranslation } from "react-i18next";
+import { useMutation } from "@apollo/client";
+import { LOGOUT_USER } from "../../../GraphQL/Mutations/authMutations";
 
 const TopBar = ({ topClass }) => {
+  const { t } = useTranslation();
+  const [localstorage, setLocalStorage] = useState(null);
+
+  const [logoutUser] = useMutation(LOGOUT_USER);
+
+  useEffect(() => {
+    const customerDetail = localStorage.getItem("customerDetail");
+    setLocalStorage(customerDetail);
+  }, []);
+
+  const handleLogout = async () => {
+    const { data } = await logoutUser();
+    if (data.logout) {
+      localStorage.removeItem("customerDetail");
+      window.location.reload();
+    } else {
+      return;
+    }
+  };
+
   return (
     <div id="topHeader" className={`top-header ${topClass ? topClass : ""}`}>
       <Container>
@@ -10,10 +33,10 @@ const TopBar = ({ topClass }) => {
           <Col lg="6">
             <div className="header-contact">
               <ul>
-                <li>Välkommen till vår butik High Style</li>
+                <li>{t("top_header.welcome")}</li>
                 <li>
                   <i className="fa fa-phone" aria-hidden="true"></i>
-                  {"Ring Oss"}: 073 - 550 - 2062
+                  {t("top_header.call_us")}
                 </li>
               </ul>
             </div>
@@ -21,26 +44,47 @@ const TopBar = ({ topClass }) => {
           <Col lg="6" className="text-end">
             <ul className="header-dropdown">
               <li className="mobile-wishlist compare-mobile">
-                <Link href={`/page/compare`}>
+                <LocalLink href={`/page/compare`}>
                   <i className="fa fa-random" aria-hidden="true"></i>
-                  {"compare"}
-                </Link>
+                  {t("top_header.compare")}
+                </LocalLink>
               </li>
               <li className="mobile-wishlist">
-                <Link href={`/page/account/wishlist`}>
+                <LocalLink href={`/page/account/wishlist`}>
                   <i className="fa fa-heart" aria-hidden="true"></i>
-                  {"wishlist"}
-                </Link>
+                  {t("top_header.wishlist")}
+                </LocalLink>
+              </li>
+              <li className="mobile-wishlist">
+                <LocalLink href={`/page/account/orders`}>
+                  <i className="fa fa-shopping-bag" aria-hidden="true"></i>
+                  {t("myOrders.myOrders")}
+                </LocalLink>
               </li>
               <li className="onhover-dropdown mobile-account">
-                <i className="fa fa-user" aria-hidden="true"></i> {"My account"}
+                <i className="fa fa-user" aria-hidden="true"></i>{" "}
+                {t("top_header.my_account")}
                 <ul className="onhover-show-div">
-                  <li>
-                    <Link href={`/page/account/login`}>Logga in</Link>
-                  </li>
-                  <li>
-                    <Link href={`/page/account/register`}>Registrera</Link>
-                  </li>
+                  {!localstorage ? (
+                    <>
+                      <li>
+                        <LocalLink href={`/page/account/login`}>
+                          {t("top_header.login")}
+                        </LocalLink>
+                      </li>
+                      <li>
+                        <LocalLink href={`/page/account/register`}>
+                          {t("top_header.register")}
+                        </LocalLink>
+                      </li>
+                    </>
+                  ) : (
+                    <li>
+                      <LocalLink onClick={handleLogout}>
+                        {t("logout")}
+                      </LocalLink>
+                    </li>
+                  )}
                 </ul>
               </li>
             </ul>

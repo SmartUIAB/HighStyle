@@ -1,39 +1,31 @@
 import { Table } from "reactstrap";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
-const TabTable = () => {
+const TabTable = ({ userData }: any) => {
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
   return (
     <div className="tab-pane fade show active">
-      <h5 className="f-w-600 f-16">Profile</h5>
+      <h5 className="f-w-600 f-16">{t("settings.profile")}</h5>
       <div className="table-responsive profile-table">
         <Table className="table-responsive">
           <tbody>
             <tr>
-              <td>First Name:</td>
-              <td>John</td>
+              <td>{t("settings.firstName")}:</td>
+              <td>{userData?.me.firstname}</td>
             </tr>
             <tr>
-              <td>Last Name:</td>
-              <td>Deo</td>
+              <td>{t("settings.lastName")}:</td>
+              <td>{userData?.me.lastname}</td>
             </tr>
             <tr>
-              <td>Email:</td>
-              <td>johndeo@gmail.com</td>
+              <td>{t("settings.email")}:</td>
+              <td>{userData?.me.email}</td>
             </tr>
             <tr>
-              <td>Gender:</td>
-              <td>Male</td>
-            </tr>
-            <tr>
-              <td>Mobile Number:</td>
-              <td>2124821463</td>
-            </tr>
-            <tr>
-              <td>DOB:</td>
-              <td>Dec, 15 1993</td>
-            </tr>
-            <tr>
-              <td>Location:</td>
-              <td>USA</td>
+              <td>{t("settings.company")}:</td>
+              <td>{userData?.me?.company?.name}</td>
             </tr>
           </tbody>
         </Table>

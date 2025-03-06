@@ -1,8 +1,22 @@
 export const fallbackLng = "en";
-export const languages = [fallbackLng, "es", "en", "fr", "ae", "pt", "du", "cn", "hi"];
+export const languages = [
+  fallbackLng,
+  "es",
+  "en",
+  "fr",
+  "ae",
+  "pt",
+  "du",
+  "cn",
+  "hi",
+  "ar",
+];
 export const defaultNS = "translation";
 
-export function getOptions(lng = fallbackLng, ns: string | string[] = defaultNS) {
+export function getOptions(
+  lng = fallbackLng,
+  ns: string | string[] = defaultNS
+) {
   return {
     // debug: true,
     supportedLngs: languages,

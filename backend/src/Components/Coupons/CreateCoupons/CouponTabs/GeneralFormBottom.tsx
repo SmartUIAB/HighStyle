@@ -1,17 +1,41 @@
+//@ts-nocheck
+import { useTranslation } from "@/app/i18n/client";
+import { useAppSelector } from "@/Redux/Hooks";
+import React from "react";
 import { Col, FormGroup, Input, Label, Row } from "reactstrap";
 
-const GeneralFormBottom = () => {
+const GeneralFormBottom = ({ formData, setFormData,errors }) => {
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+    const { t } = useTranslation(i18LangStatus);
+
+  const handleInputChange = (e: any) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData: any) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
   return (
     <>
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Free Shipping</Label>
+            <Label>{t("coupon.addcoupon.free_shipping")}</Label>
           </Col>
           <Col md="7">
             <Label className="d-block">
-              <Input className="checkbox_animated" id="chk-ani2" type="checkbox" />
-              Allow Free Shipping
+              <Input
+                className="checkbox_animated"
+                id="chk-ani2"
+                type="checkbox"
+                name="allowFreeShipping"
+                checked={formData.allowFreeShipping}
+                onChange={handleInputChange}
+              />
+              {errors?.allowFreeShipping && <div className="errorMsg">{errors?.allowFreeShipping}</div>}
+              {t("coupon.addcoupon.allow_free_shipping")}
             </Label>
           </Col>
         </Row>
@@ -19,36 +43,75 @@ const GeneralFormBottom = () => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Quantity</Label>
+            <Label>{t("coupon.addcoupon.quantity")}</Label>
           </Col>
           <Col md="7">
-            <Input type="number" required />
+            <Input
+              type="number"
+              name="quantity"
+              value={formData.quantity}
+              onChange={handleInputChange}
+              required
+            />
+            {errors?.quantity && <div className="errorMsg">{errors?.quantity}</div>}
           </Col>
         </Row>
       </FormGroup>
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Discount Type</Label>
+            <Label>{t("coupon.addcoupon.discount_type")}</Label>
           </Col>
           <Col md="7">
-            <select className="form-select" required>
+            <select
+              className="form-select"
+              name="discountType"
+              value={formData.discountType}
+              onChange={handleInputChange}
+              required
+            >
               <option value="">--Select--</option>
-              <option value="1">Percent</option>
-              <option value="2">Fixed</option>
+              <option value="percentage">Percentage</option>
+              <option value="fixed">Fixed</option>
             </select>
+            {errors?.discountType && <div className="errorMsg">{errors?.discountType}</div>}
           </Col>
         </Row>
       </FormGroup>
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Status</Label>
+            <Label>{t("coupon.addcoupon.discount_value")}</Label>
+          </Col>
+          <Col md="7">
+            <Input
+              type="number"
+              name="discountValue"
+              value={formData.discountValue}
+              onChange={handleInputChange}
+              required
+            />
+            {errors?.discountValue && <div className="errorMsg">{errors?.discountValue}</div>}
+          </Col>
+        </Row>
+      </FormGroup>
+      <FormGroup>
+        <Row>
+          <Col xl="3" md="4">
+            <Label>{t("coupon.addcoupon.status")}</Label>
           </Col>
           <Col md="7">
             <Label className="d-block">
-              <Input className="checkbox_animated" id="chk-ani2" type="checkbox" />
-              Enable the Coupon
+              <Input
+                className="checkbox_animated"
+                id="chk-ani2"
+                type="checkbox"
+                name="statusActive"
+                checked={formData.statusActive}
+                onChange={handleInputChange}
+              />
+              {errors?.statusActive && <div className="errorMsg">{errors?.statusActive}</div>}
+              {t("coupon.addcoupon.enable_the_coupon")}
             </Label>
           </Col>
         </Row>

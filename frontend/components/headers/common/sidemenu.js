@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import Link from "next/link";
 import { MENUITEMS } from "../../constant/menu";
 import { Container, Row } from "reactstrap";
+import LocalLink from "../../LocalLink";
 
 const SideMenu = (props) => {
   const [navClose, setNavClose] = useState({ right: "0px" });
@@ -137,11 +138,13 @@ const SideMenu = (props) => {
                         key={index}
                         className={`${
                           childrenItem.children ? "sub-menu " : ""
-                        }`}>
+                        }`}
+                      >
                         {childrenItem.type === "sub" ? (
                           <a
                             href="#javascript"
-                            onClick={() => toggletNavActive(childrenItem)}>
+                            onClick={() => toggletNavActive(childrenItem)}
+                          >
                             {childrenItem.title}{" "}
                             <i className="fa fa-angle-right ps-2"></i>
                           </a>
@@ -149,11 +152,9 @@ const SideMenu = (props) => {
                           ""
                         )}
                         {childrenItem.type === "link" ? (
-                          <Link href={`${childrenItem.path}`}>
-                            {/* <a> */}
+                          <LocalLink href={`${childrenItem.path}`}>
                             {childrenItem.title}
-                            {/* </a> */}
-                          </Link>
+                          </LocalLink>
                         ) : (
                           ""
                         )}
@@ -161,18 +162,18 @@ const SideMenu = (props) => {
                           <ul
                             className={`nav-sub-childmenu ${
                               childrenItem.active ? "menu-open " : "active"
-                            }`}>
+                            }`}
+                          >
                             {childrenItem.children.map(
                               (childrenSubItem, key) => (
                                 <li key={key}>
                                   {childrenSubItem.type === "link" ? (
-                                    <Link
+                                    <LocalLink
                                       href={childrenSubItem.path}
-                                      className="sub-menu-title">
-                                      {/* <a > */}
+                                      className="sub-menu-title"
+                                    >
                                       {childrenSubItem.title}
-                                      {/* </a> */}
-                                    </Link>
+                                    </LocalLink>
                                   ) : (
                                     ""
                                   )}
@@ -191,7 +192,8 @@ const SideMenu = (props) => {
                 <div
                   className={`mega-menu-container  ${
                     menuItem.active ? "opensubmenu" : ""
-                  }`}>
+                  }`}
+                >
                   {menuItem.megaMenu === true ? (
                     <Container>
                       <Row>
@@ -207,7 +209,8 @@ const SideMenu = (props) => {
                                   : menuItem.megaMenuType == "large"
                                   ? "col"
                                   : ""
-                              } `}>
+                              } `}
+                            >
                               <div className="link-section">
                                 <div className="menu-title">
                                   <h5 onClick={(e) => handleMegaSubmenu(e)}>
@@ -221,11 +224,14 @@ const SideMenu = (props) => {
                                           (subMegaMenuItem, i) => {
                                             return (
                                               <li key={i}>
-                                                <a href={subMegaMenuItem.path}>
+                                                <LocalLink
+                                                  href={subMegaMenuItem.path}
+                                                >
                                                   <i
-                                                    className={`icon-${subMegaMenuItem.icon}`}></i>
+                                                    className={`icon-${subMegaMenuItem.icon}`}
+                                                  ></i>
                                                   {subMegaMenuItem.title}
-                                                </a>
+                                                </LocalLink>
                                               </li>
                                             );
                                           }
@@ -234,9 +240,11 @@ const SideMenu = (props) => {
                                           (subMegaMenuItem, i) => {
                                             return (
                                               <li key={i}>
-                                                <a href={subMegaMenuItem.path}>
+                                                <LocalLink
+                                                  href={subMegaMenuItem.path}
+                                                >
                                                   {subMegaMenuItem.title}
-                                                </a>
+                                                </LocalLink>
                                               </li>
                                             );
                                           }

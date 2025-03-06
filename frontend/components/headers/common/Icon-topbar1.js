@@ -11,6 +11,7 @@ import cart from "../../../public/assets/images/icon/shopping-cart.png";
 import Currency from "./currency";
 import CartContainer from "../../containers/CartContainer";
 import SearchOverlay from "./search-overlay";
+import LocalLink from "../../LocalLink";
 const IconTopbar = () => {
   const context = useContext(CartContext);
   const openNav = () => {
@@ -52,7 +53,8 @@ const IconTopbar = () => {
                     <div className="bar-style">
                       <i
                         className="fa fa-bars sidebar-bar"
-                        aria-hidden="true"></i>
+                        aria-hidden="true"
+                      ></i>
                     </div>
                   </a>
                 </div>
@@ -71,26 +73,26 @@ const IconTopbar = () => {
               <div className="menu-right pull-right">
                 <ul className="header-dropdown">
                   <li className="mobile-wishlist">
-                    <Link href="/page/account/wishlist">
+                    <LocalLink href="/page/account/wishlist">
                       {/* <a> */}
                       <i className="fa fa-heart" aria-hidden="true"></i>
                       <Media src={like.src} alt="" />
                       {/* </a> */}
-                    </Link>
+                    </LocalLink>
                   </li>
                   <li className="onhover-dropdown mobile-account">
                     <Media src={user.src} alt="" />
                     <i className="fa fa-user" aria-hidden="true"></i>
                     <ul className="onhover-show-div">
                       <li>
-                        <Link href="/page/account/login" data-lng="en">
-                        Logga in
-                        </Link>
+                        <LocalLink href="/page/account/login" data-lng="en">
+                          Logga in
+                        </LocalLink>
                       </li>
                       <li>
-                        <Link href="/" data-lng="es">
-                        Logga ut
-                        </Link>
+                        <LocalLink href="/" data-lng="es">
+                          Logga ut
+                        </LocalLink>
                       </li>
                     </ul>
                   </li>

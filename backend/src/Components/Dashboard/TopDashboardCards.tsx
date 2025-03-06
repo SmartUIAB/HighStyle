@@ -1,8 +1,53 @@
-import { TopDashboardCardsData } from "@/Data/Dashboard";
+import { useQuery } from "@apollo/client";
 import CountUp from "react-countup";
 import { Card, CardBody, Col, Media } from "reactstrap";
+import { GET_DASHBOARD_CARDS } from "../../GraphQL/Queries/dashboardQueries";
+import { Box, MessageSquare, Navigation, Users } from "react-feather";
+import { useEffect } from "react";
+import { useAppSelector } from "@/Redux/Hooks";
+import { useTranslation } from "@/app/i18n/client";
 
 const TopDashboardCards = () => {
+
+  const { data: cardData, refetch } = useQuery(GET_DASHBOARD_CARDS)
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
+
+  useEffect(() => {
+    refetch();
+  }, [])
+
+  const TopDashboardCardsData = [
+    {
+      id: 1,
+      type: t("earnings"),
+      bgColor: "bg-warning",
+      count: cardData?.getAllCardDashboard?.earning,
+      icon: <Navigation className="font-warning" />,
+    },
+    {
+      id: 2,
+      type: t("products"),
+      bgColor: "bg-secondary",
+      icon: <Box className="font-secondary" />,
+      count: cardData?.getAllCardDashboard?.products,
+    },
+    {
+      id: 3,
+      type: t("messages"),
+      bgColor: "bg-primary",
+      icon: <MessageSquare className="font-primary" />,
+      count: cardData?.getAllCardDashboard?.message,
+    },
+    {
+      id: 4,
+      type: t("newVendors"),
+      bgColor: "bg-danger",
+      icon: <Users className="font-danger" />,
+      count: cardData?.getAllCardDashboard?.vendors,
+    },
+  ];
+
   return (
     <>
       {TopDashboardCardsData.map((item, i) => (
@@ -16,8 +61,7 @@ const TopDashboardCards = () => {
                 <Media body className="col-8">
                   <span className="m-0">{item.type}</span>
                   <h3 className="mb-0">
-                    $ <CountUp className="counter" end={item.count} />
-                    <small> {item.label}</small>
+                    {item.type === t("earnings") && "$ "}<CountUp className="counter" end={item.count} />
                   </h3>
                 </Media>
               </Media>

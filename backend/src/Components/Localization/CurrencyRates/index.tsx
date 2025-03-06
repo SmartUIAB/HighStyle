@@ -1,23 +1,31 @@
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
-import Datatable from "@/CommonComponents/DataTable";
+import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
 import { CurrencyRatesData } from "@/Data/Localization";
-import React, { Fragment } from "react";
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import React, { Fragment, useState, useEffect } from "react";
+import { Card, CardBody, CardHeader, Col, Container, Row, Spinner } from "reactstrap";
 
 const CurrencyRates = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+
   return (
     <Fragment>
-      <CommonBreadcrumb title=" Currency Rates" parent="Localization" />
+      <CommonBreadcrumb title="Currency Rates" parent="Localization" />
       <Container fluid>
         <Row>
           <Col sm="12">
             <Card>
-              <CardHeader>
-                <h5>Currency Details</h5>
-              </CardHeader>
+              <CommonCardHeader title="" />
               <CardBody>
-                <div id="basicScenario" className="product-list translation-list">
-                  <Datatable multiSelectOption={false} myData={CurrencyRatesData} pageSize={6} pagination={false} class="-striped -highlight" />
+                <div className="feature-coming-soon mb-3 text-center">
+                  <p className="text-muted">
+                    This option will be enabled in the next version.
+                  </p>
                 </div>
               </CardBody>
             </Card>
@@ -28,5 +36,4 @@ const CurrencyRates = () => {
   );
 };
 
-export default CurrencyRates
-
+export default CurrencyRates;

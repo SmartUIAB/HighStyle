@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { Media } from "reactstrap";
 import language from "../../constant/langConfig.json";
-import i18next from "../../constant/i18n";
+import i18next from "../../../i18n";
 import { CurrencyContext } from "../../../helpers/Currency/CurrencyContext";
 
 const GET_CURRENCY = gql`
@@ -43,7 +43,8 @@ const Currency = ({ icon }) => {
                 href={null}
                 onClick={() => {
                   changeLanguage(item.val);
-                }}>
+                }}
+              >
                 {item.lang}
               </a>
             </li>

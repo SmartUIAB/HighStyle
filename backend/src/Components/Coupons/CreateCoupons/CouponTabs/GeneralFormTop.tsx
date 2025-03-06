@@ -1,18 +1,29 @@
+import { useTranslation } from "@/app/i18n/client";
+import { useAppSelector } from "@/Redux/Hooks";
 import { useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { Col, FormGroup, Input, Label, Row } from "reactstrap";
 
-const GeneFormTop = () => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+interface FormData {
+  name: string;
+  code: string;
+  startDate: string;
+  endDate: string;
+}
 
-  const handleStartDate = (date: Date) => {
-    setStartDate(date);
-  };
+interface GeneFormTopProps {
+  formData: FormData;
+  setFormData: React.Dispatch<React.SetStateAction<FormData>>;
+  errors:any
+}
 
-  const handleEndDate = (date: Date) => {
-    setEndDate(date);
+const GeneFormTop: React.FC<GeneFormTopProps> = ({ formData, setFormData,errors }:any) => {
+
+  const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
+  const { t } = useTranslation(i18LangStatus);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData({ ...formData, [id]: value });
   };
 
   return (
@@ -20,41 +31,73 @@ const GeneFormTop = () => {
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>* Name</Label>
+            <Label>* {t("coupon.addcoupon.name")}</Label>
           </Col>
           <Col md="7">
-            <Input id="validationCustom0" type="text" required />
+            <Input
+              id="name"
+              type="text"
+              required
+              value={formData.name}
+              onChange={handleInputChange}
+            />
+            {errors?.name && <div className="errorMsg">{errors?.name}</div>}
           </Col>
         </Row>
       </FormGroup>
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>* Code</Label>
+            <Label>* {t("coupon.addcoupon.code")}</Label>
           </Col>
           <Col md="7">
-            <Input id="validationCustom1" type="text" required />
+            <Input
+              id="code"
+              type="text"
+              required
+              value={formData.code}
+              onChange={handleInputChange}
+            />
+            {errors?.code && <div className="errorMsg">{errors?.code}</div>}
+            <div className="valid-feedback">
+              Please Provide a Valid Coupon Code.
+            </div>
           </Col>
-          <div className="valid-feedback">Please Provide a Valid Coupon Code.</div>
         </Row>
       </FormGroup>
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>Start Date</Label>
+            <Label>{t("coupon.addcoupon.start_date")}</Label>
           </Col>
           <Col md="7">
-            <DatePicker selected={startDate} onChange={handleStartDate} />
+            <Input
+              id="startDate"
+              type="date"
+              name="startDate"
+              value={formData.startDate}
+              onChange={handleInputChange}
+              required
+            />
+            {errors?.startDate && <div className="errorMsg">{errors?.startDate}</div>}
           </Col>
         </Row>
       </FormGroup>
       <FormGroup>
         <Row>
           <Col xl="3" md="4">
-            <Label>End Date</Label>
+            <Label>{t("coupon.addcoupon.end_date")}</Label>
           </Col>
           <Col md="7">
-            <DatePicker selected={endDate} onChange={handleEndDate} />
+            <Input
+              id="endDate"
+              type="date"
+              name="endDate"
+              value={formData.endDate}
+              onChange={handleInputChange}
+              required
+            />
+            {errors?.endDate && <div className="errorMsg">{errors?.endDate}</div>}
           </Col>
         </Row>
       </FormGroup>

@@ -1,7 +1,5 @@
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
 import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
-import Datatable from "@/CommonComponents/DataTable";
-import { ListData } from "@/Data/Lists";
 import { Fragment } from "react";
 import { Card, CardBody, Col, Container, Row } from "reactstrap";
 
@@ -15,8 +13,10 @@ const ListPages = () => {
             <Card>
               <CommonCardHeader title="" />
               <CardBody>
-                <div id="batchDelete" className="category-table order-table coupon-list-delete">
-                  <Datatable multiSelectOption={true} myData={ListData} pageSize={7} pagination={false} class="-striped -highlight" />
+                <div className="feature-coming-soon mb-3 text-center">
+                  <p className="text-muted">
+                    This option will be enabled in the next version.
+                  </p>
                 </div>
               </CardBody>
             </Card>

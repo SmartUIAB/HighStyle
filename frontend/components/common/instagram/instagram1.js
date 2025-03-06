@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import { Row, Col, Media, Container } from "reactstrap";
 import { useQuery } from "@apollo/client";
 import { gql } from "@apollo/client";
+import { useTranslation } from "react-i18next";
 
 const GET_PRODUCTS = gql`
   query instagram($type: String!) {
@@ -58,25 +59,50 @@ const Instagram = ({ type }) => {
     },
   });
 
+  const { t } = useTranslation();
+
   return (
     <section className="instagram ratio_square">
-      <Container className={`${type == "nursery" || type == "bags" || type == "fashion" || type == "kids" || type == "christmas" || type == "fashion" || type == "marketplace" ? "p-0" : ""}`} fluid={true}>
+      <Container
+        className={`${
+          type == "nursery" ||
+          type == "bags" ||
+          type == "fashion" ||
+          type == "kids" ||
+          type == "christmas" ||
+          type == "fashion" ||
+          type == "marketplace"
+            ? "p-0"
+            : ""
+        }`}
+        fluid={true}
+      >
         <Row>
           <Col className="pt-0">
-            <h2 className="title-borderless"># instagram</h2>
+            <h2 className="title-borderless">
+              # {t("landing_page.instagram")}
+            </h2>
             <div className="slide-7 no-arrow slick-instagram">
               <Slider {...settings}>
                 {data &&
                   data.instagram.map((data, i) => (
                     <div key={i}>
-                      <a href={null}>
+                      <div href={null}>
                         <div className="instagram-box">
-                          <Media alt="" src={data.img} className="bg-img" style={{ width: "100%" }} />
+                          <Media
+                            alt=""
+                            src={data.img}
+                            className="bg-img"
+                            style={{ width: "100%" }}
+                          />
                           <div className="overlay">
-                            <i className="fa fa-instagram" aria-hidden="true"></i>
+                            <i
+                              className="fa fa-instagram"
+                              aria-hidden="true"
+                            ></i>
                           </div>
                         </div>
-                      </a>
+                      </div>
                     </div>
                   ))}
               </Slider>

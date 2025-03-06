@@ -1,4 +1,19 @@
-import { AlignLeft, Archive, BarChart, Box, Camera, Chrome, Clipboard, DollarSign, Home, LogIn, Settings, Tag, UserPlus, Users } from "react-feather";
+import {
+  AlignLeft,
+  Archive,
+  BarChart,
+  Box,
+  Camera,
+  Chrome,
+  Clipboard,
+  DollarSign,
+  Home,
+  LogIn,
+  Settings,
+  Tag,
+  UserPlus,
+  Users,
+} from "react-feather";
 
 export const MENUITEMS: any = [
   {
@@ -20,11 +35,26 @@ export const MENUITEMS: any = [
         type: "sub",
         active: false,
         children: [
-          { path: "/products/physical/category", title: "Category", type: "link" },
-          { path: "/products/physical/sub-category", title: "Sub Category", type: "link" },
-          { path: "/products/physical/product-list", title: "Product List", type: "link" },
-          { path: "/products/physical/product-detail", title: "Product Detail", type: "link" },
-          { path: "/products/physical/add-product", title: "Add Product", type: "link" },
+          {
+            path: "/products/physical/category",
+            title: "Category",
+            type: "link",
+          },
+          {
+            path: "/products/physical/sub-category",
+            title: "Sub Category",
+            type: "link",
+          },
+          {
+            path: "/products/physical/product-list",
+            title: "Product List",
+            type: "link",
+          },
+          {
+            path: "/products/physical/add-product",
+            title: "Add Product",
+            type: "link",
+          },
         ],
       },
       {
@@ -32,10 +62,26 @@ export const MENUITEMS: any = [
         type: "sub",
         active: false,
         children: [
-          { path: "/products/digital/digital-category", title: "Category", type: "link" },
-          { path: "/products/digital/digital-sub-category", title: "Sub Category", type: "link" },
-          { path: "/products/digital/digital-product-list", title: "Product List", type: "link" },
-          { path: "/products/digital/digital-add-product", title: "Add Product", type: "link" },
+          {
+            path: "/products/digital/digital-category",
+            title: "Category",
+            type: "link",
+          },
+          {
+            path: "/products/digital/digital-sub-category",
+            title: "Sub Category",
+            type: "link",
+          },
+          {
+            path: "/products/digital/digital-product-list",
+            title: "Product List",
+            type: "link",
+          },
+          {
+            path: "/products/digital/digital-add-product",
+            title: "Add Product",
+            type: "link",
+          },
         ],
       },
     ],
@@ -57,7 +103,11 @@ export const MENUITEMS: any = [
     active: false,
     children: [
       { path: "/coupons/list-coupons", title: "List Coupons", type: "link" },
-      { path: "/coupons/create-coupons", title: "Create Coupons", type: "link" },
+      {
+        path: "/coupons/create-coupons",
+        title: "Create Coupons",
+        type: "link",
+      },
     ],
   },
   {
@@ -112,8 +162,16 @@ export const MENUITEMS: any = [
     icon: Chrome,
     type: "sub",
     children: [
-      { path: "/localization/translations", title: "Translations", type: "link" },
-      { path: "/localization/currency-rates", title: "Currency Rates", type: "link" },
+      {
+        path: "/localization/translations",
+        title: "Translations",
+        type: "link",
+      },
+      {
+        path: "/localization/currency-rates",
+        title: "Currency Rates",
+        type: "link",
+      },
       { path: "/localization/taxes", title: "Taxes", type: "link" },
     ],
   },
@@ -138,7 +196,7 @@ export const MENUITEMS: any = [
     active: false,
   },
   {
-    title: "Login",
+    title: "Log Out",
     path: "/auth/login",
     icon: LogIn,
     type: "link",

@@ -1,23 +1,32 @@
 import CommonBreadcrumb from "@/CommonComponents/CommonBreadcrumb";
-import Datatable from "@/CommonComponents/DataTable";
+import CommonCardHeader from "@/CommonComponents/CommonCardHeader";
+// import Datatable from "@/CommonComponents/DataTable";
 import { TaxesData } from "@/Data/Localization";
-import { Fragment } from "react";
-import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
+import { Fragment, useEffect, useState } from "react";
+import { Card, CardBody, CardHeader, Col, Container, Row, Spinner } from "reactstrap";
 
 const Taxes = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+
   return (
     <Fragment>
-      <CommonBreadcrumb title="Taxes" parent="Localization" />
+      <CommonBreadcrumb title="Taxes Rates" parent="Localization" />
       <Container fluid>
         <Row>
           <Col sm="12">
             <Card>
-              <CardHeader>
-                <h5>Tax Details</h5>
-              </CardHeader>
+              <CommonCardHeader title="" />
               <CardBody>
-                <div id="basicScenario" className="product-list translation-list">
-                  <Datatable multiSelectOption={false} myData={TaxesData} pageSize={6} pagination={false} class="-striped -highlight" />
+                <div className="feature-coming-soon mb-3 text-center">
+                  <p className="text-muted">
+                    This option will be enabled in the next version.
+                  </p>
                 </div>
               </CardBody>
             </Card>
