@@ -1,12 +1,31 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { Media } from "reactstrap";
 import { DELETE_CART_ITEM } from "../../../GraphQL/Mutations/cartMutations";
 import { useMutation } from "@apollo/client";
 import LocalLink from "../../LocalLink";
+import axios from "axios";
 
 const CartHeader = ({ item, symbol }) => {
   const [deleteCart] = useMutation(DELETE_CART_ITEM);
+  const lang = localStorage.getItem("i18nextLng");
+
+  const [rates, setRates] = useState({});
+
+  const fetchRates = async () => {
+    try {
+      const response = await axios.get(
+        "https://v6.exchangerate-api.com/v6/8c6fe5d5c563341bd11be392/latest/USD"
+      );
+      setRates(response.data);
+    } catch (err) {
+      setError("Failed to fetch exchange rates");
+    }
+  };
+
+  useEffect(() => {
+    fetchRates();
+  }, []);
 
   const removeFromCart = async (item) => {
     const { data } = await deleteCart({
@@ -39,7 +58,17 @@ const CartHeader = ({ item, symbol }) => {
 
             <h4>
               <span>
-                {item.qty} x{item.price.toFixed(2)}
+                {item.qty} x
+                {(
+                  item?.price.toFixed(2) *
+                  ((lang === "en" && rates?.conversion_rates?.USD) ||
+                    (lang === "es" && rates?.conversion_rates?.EUR) ||
+                    (lang === "pt" && rates?.conversion_rates?.EUR) ||
+                    (lang === "fr" && rates?.conversion_rates?.EUR) ||
+                    (lang === "ar" && rates?.conversion_rates?.SRD) ||
+                    (lang === "sv" && rates?.conversion_rates?.SEK) ||
+                    1)
+                ).toFixed(2)}
               </span>
             </h4>
           </div>

@@ -1,14 +1,33 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import CartHeader from "../headers/common/cart-header";
 import { Media } from "reactstrap";
 import { useQuery } from "@apollo/client";
 import { GET_CART } from "../../GraphQL/Queries/cartQueries";
 import LocalLink from "../LocalLink";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 const CartContainer = ({ icon }) => {
   const storedUserData = localStorage.getItem("customerDetail");
   const userData = storedUserData ? JSON.parse(storedUserData) : null;
+  const lang = localStorage.getItem("i18nextLng");
+
+  const [rates, setRates] = useState({});
+
+  const fetchRates = async () => {
+    try {
+      const response = await axios.get(
+        "https://v6.exchangerate-api.com/v6/8c6fe5d5c563341bd11be392/latest/USD"
+      );
+      setRates(response.data);
+    } catch (err) {
+      setError("Failed to fetch exchange rates");
+    }
+  };
+
+  useEffect(() => {
+    fetchRates();
+  }, []);
 
   const { t } = useTranslation();
 
@@ -51,7 +70,18 @@ const CartContainer = ({ icon }) => {
                 <div className="total">
                   <h5>
                     {t("cart_details.subTotal")} :{" "}
-                    <span>{cartList?.getCart?.totalAmount}</span>
+                    <span>
+                      {(
+                        cartList?.getCart?.totalAmount.toFixed(2) *
+                        ((lang === "en" && rates?.conversion_rates?.USD) ||
+                          (lang === "es" && rates?.conversion_rates?.EUR) ||
+                          (lang === "pt" && rates?.conversion_rates?.EUR) ||
+                          (lang === "fr" && rates?.conversion_rates?.EUR) ||
+                          (lang === "ar" && rates?.conversion_rates?.SRD) ||
+                          (lang === "sv" && rates?.conversion_rates?.SEK) ||
+                          1)
+                      ).toFixed(2)}
+                    </span>
                   </h5>
                 </div>
               </li>

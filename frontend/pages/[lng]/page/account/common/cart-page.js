@@ -29,6 +29,7 @@ import { CREATE_ORDER } from "../../../../../GraphQL/Mutations/orderMutations";
 import { loadStripe } from "@stripe/stripe-js";
 import LocalLink from "../../../../../components/LocalLink";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_SECRET_KEY);
 
@@ -46,6 +47,7 @@ const CartPage = () => {
     country: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const lang = localStorage.getItem("i18nextLng");
 
   const { t } = useTranslation();
 
@@ -66,6 +68,23 @@ const CartPage = () => {
       setCartId(cartItems.getCart.id);
     }
   }, [cartItems]);
+
+  const [rates, setRates] = useState({});
+
+  const fetchRates = async () => {
+    try {
+      const response = await axios.get(
+        "https://v6.exchangerate-api.com/v6/8c6fe5d5c563341bd11be392/latest/USD"
+      );
+      setRates(response.data);
+    } catch (err) {
+      console.log("Failed to fetch exchange rates");
+    }
+  };
+
+  useEffect(() => {
+    fetchRates();
+  }, []);
 
   const handleQtyUpdate = async (item, quantity) => {
     const { data } = await updateCart({
@@ -195,7 +214,25 @@ const CartPage = () => {
                           </LocalLink>
                         </td>
                         <td>
-                          <h2>${item.price.toFixed(2)}</h2>
+                          <h2>
+                            $
+                            {(
+                              item?.price.toFixed(2) *
+                              ((lang === "en" &&
+                                rates?.conversion_rates?.USD) ||
+                                (lang === "es" &&
+                                  rates?.conversion_rates?.EUR) ||
+                                (lang === "pt" &&
+                                  rates?.conversion_rates?.EUR) ||
+                                (lang === "fr" &&
+                                  rates?.conversion_rates?.EUR) ||
+                                (lang === "ar" &&
+                                  rates?.conversion_rates?.SRD) ||
+                                (lang === "sv" &&
+                                  rates?.conversion_rates?.SEK) ||
+                                1)
+                            ).toFixed(2)}
+                          </h2>
                         </td>
                         <td>
                           <div className="qty-box">
@@ -220,7 +257,23 @@ const CartPage = () => {
                         </td>
                         <td>
                           <h2 className="td-color">
-                            ${item.totalAmount.toFixed(2)}
+                            $
+                            {(
+                              item.totalAmount.toFixed(2) *
+                              ((lang === "en" &&
+                                rates?.conversion_rates?.USD) ||
+                                (lang === "es" &&
+                                  rates?.conversion_rates?.EUR) ||
+                                (lang === "pt" &&
+                                  rates?.conversion_rates?.EUR) ||
+                                (lang === "fr" &&
+                                  rates?.conversion_rates?.EUR) ||
+                                (lang === "ar" &&
+                                  rates?.conversion_rates?.SRD) ||
+                                (lang === "sv" &&
+                                  rates?.conversion_rates?.SEK) ||
+                                1)
+                            ).toFixed(2)}
                           </h2>
                         </td>
                       </tr>
@@ -232,7 +285,20 @@ const CartPage = () => {
                     <tr>
                       <td>{t("cart_details.total_price")} :</td>
                       <td>
-                        <h2>${cartItems?.getCart?.totalAmount.toFixed(2)}</h2>
+                        {/* <h2>${cartItems?.getCart?.totalAmount.toFixed(2)}</h2> */}
+                        <h2>
+                          $
+                          {(
+                            cartItems?.getCart?.totalAmount.toFixed(2) *
+                            ((lang === "en" && rates?.conversion_rates?.USD) ||
+                              (lang === "es" && rates?.conversion_rates?.EUR) ||
+                              (lang === "pt" && rates?.conversion_rates?.EUR) ||
+                              (lang === "fr" && rates?.conversion_rates?.EUR) ||
+                              (lang === "ar" && rates?.conversion_rates?.SRD) ||
+                              (lang === "sv" && rates?.conversion_rates?.SEK) ||
+                              1)
+                          ).toFixed(2)}
+                        </h2>
                       </td>
                     </tr>
                   </tfoot>
