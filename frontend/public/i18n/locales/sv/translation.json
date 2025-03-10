@@ -1,0 +1,302 @@
+{
+  "footer": {
+    "subscribe": {
+      "title": "VAR FÖRST ATT VETA!",
+      "description": "Missa aldrig något från High Style genom att prenumerera på vårt nyhetsbrev.",
+      "placeholder": "Ange din e-postadress",
+      "button": "Prenumerera"
+    },
+    "about": {
+      "title": "om",
+      "description": "High Style är ett svenskt livsstilsföretag som fokuserar på att erbjuda stilfulla och trendiga accessoarer till sina kunder. Vi strävar efter att skapa en unik och personlig shoppingupplevelse för varje individ, oavsett deras stil och preferenser. Med vår noggrant utvalda sortiment och engagemang för kvalitet och design vill vi inspirera och ge våra kunder möjlighet att uttrycka sin personliga stil på bästa möjliga sätt. Besök vår hemsida för att upptäcka vår senaste kollektion."
+    },
+    "account": {
+      "title": "mitt konto",
+      "links": {
+        "women": "Dam",
+        "clothes": "Kläder",
+        "accessories": "Accessoarer",
+        "presents": "Presenter"
+      }
+    },
+    "whyChooseUs": {
+      "title": "varför välja oss",
+      "links": {
+        "shippingReturns": "Frakt & Returer",
+        "secureShopping": "Säker Shopping",
+        "gallery": "Galleri",
+        "affiliates": "Affiliates",
+        "contacts": "Kontakter"
+      }
+    },
+    "storeInfo": {
+      "title": "butiksinformation",
+      "address": "High Style AB Market",
+      "phone": "Ring oss: 0735 50 20 62",
+      "email": "Maila oss: Support@highstyle.se",
+      "whatsapp": "Whatsapp: 0735 50 20 62"
+    }
+  },
+  "header": {
+    "search": {
+      "title": "Hitta det bästa för ditt önskemål"
+    }
+  },
+  "top_header": {
+    "welcome": "Välkommen till vår High Style-butik",
+    "call_us": "Ring oss: 073 - 550 - 2062",
+    "compare": "Jämför",
+    "wishlist": "Önskelista",
+    "my_account": "Mitt konto",
+    "login": "Logga in",
+    "register": "Registrera"
+  },
+  "cart_details": {
+    "image": "Bild",
+    "product_name": "Produktnamn",
+    "price": "Pris",
+    "quantity": "Kvantitet",
+    "action": "Åtgärd",
+    "total": "Totalt",
+    "total_price": "Totalt pris",
+    "subTotal": "Delsumma",
+    "continue_shopping": "Fortsätt handla",
+    "check_out": "Kassa",
+    "cart_empty": "Din varukorg är tom",
+    "explore_more": "Utforska mer och spara några artiklar.",
+    "cart_empty_message": "Din varukorg är för närvarande tom."
+  },
+  "shipping_address": {
+    "modal_title": "Ange leveransadress",
+    "street": "Gata",
+    "city": "Stad",
+    "state": "Stat",
+    "postal_code": "Postnummer",
+    "country": "Land",
+    "submit": "Skicka",
+    "cancel": "Avbryt",
+    "btn_title": "Lägg till adress"
+  },
+  "route_name": {
+    "product_list": "Produktlista",
+    "product": "Produkt",
+    "home": "Hem"
+  },
+  "services": {
+    "freeShipping": "Gratis frakt",
+    "freeShippingWorldwide": "Gratis frakt världen över",
+    "service247": "24 X 7 Service",
+    "onlineService247": "Online Service För 24 X 7",
+    "festivalOffer": "Festivalerbjudande",
+    "newOnlineSpecialFestivalOffer": "Nytt Online Special Festivalerbjudande",
+    "onlinePayment": "Onlinebetalning"
+  },
+  "product_details": {
+    "brand": "Varumärke",
+    "homeAndFurniture": "Hem & Möbler",
+    "selectSize": "Välj storlek",
+    "sizeChart": "Storlekstabell",
+    "quantity": "Kvantitet",
+    "addToCart": "Lägg till i varukorgen",
+    "buyNow": "Köp nu",
+    "productDetails": "Produktdetaljer",
+    "shareIt": "Dela det",
+    "timeReminder": "Tidspåminnelse",
+    "days": "dagar",
+    "hours": "timmar",
+    "minutes": "minuter",
+    "seconds": "sekunder",
+    "newProduct": "Ny produkt",
+    "description": "Beskrivning",
+    "details": "Detaljer",
+    "video": "Video",
+    "writeReview": "Skriv recension",
+    "format": "Format",
+    "size": "Storlek",
+    "version": "Version",
+    "compatibility": "Kompatibilitet",
+    "off": "Av",
+    "relatedProduct": "Relaterad produkt",
+    "selectColorAndSize": "Vänligen välj både färg och storlek innan du lägger till i varukorgen.",
+    "fileDetails": "Fildetaljer"
+  },
+  "landing_page": {
+    "welcome": "Välkommen till Mode",
+    "men_fashion": "Herrmode",
+    "women_fashion": "Dammode",
+    "shop_now": "Handla nu",
+    "men": "Herr",
+    "women": "Dam",
+    "special_offer": "Specialerbjudande",
+    "top_collection": "Toppkollektion",
+    "discover_offer": "Upptäck vårt specialerbjudande på vår toppkollektion! Begränsad tid, exklusiva rabatter på utvalda produkter. Missa inte chansen att förnya din stil med våra premiumprodukter. Handla nu och spara stort!",
+    "fashion_trends": "Modetrender",
+    "special_offer_section": "Specialerbjudande",
+    "trending_products": "Trendande produkter",
+    "winter": "Vinter",
+    "greens": "Grönsaker",
+    "various": "Olika",
+    "our_collection": "Vår kollektion",
+    "special_products": "Specialprodukter",
+    "instagram": "Instagram"
+  },
+  "productlist": {
+    "route_name": {
+      "product_list": "Produktlista"
+    },
+    "error": {
+      "loading_products": "Fel vid laddning av produkter!",
+      "issue_loading": "Det uppstod ett problem vid laddning av produktdata. Försök igen senare."
+    },
+    "placeholder": {
+      "search_products": "Sök efter produkter..."
+    },
+    "info": {
+      "no_products_found": "Inga produkter hittades",
+      "adjust_filters": "Försök att justera dina filter eller sökfråga."
+    },
+    "pagination": {
+      "prev": "Föregående",
+      "next": "Nästa"
+    },
+    "status": {
+      "available": "Tillgänglig",
+      "out_of_stock": "Slut i lager"
+    },
+    "details": {
+      "price": "Pris",
+      "colors": "Färger",
+      "sizes": "Storlekar",
+      "file_format": "Filformat",
+      "file_size": "Filstorlek",
+      "compatibility": "Kompatibilitet",
+      "status": "Status"
+    },
+    "sort": {
+      "hightolow": "Hög till låg",
+      "lowtohigh": "Låg till hög",
+      "default": "Standard"
+    }
+  },
+  "compare": {
+    "home": "Hem",
+    "title": "Jämför",
+    "empty": {
+      "title": "Din varukorg är tom",
+      "message": "Utforska mer och spara några artiklar."
+    },
+    "product_name": "Produktnamn",
+    "product_image": "Produktbild",
+    "product_description": "Produktbeskrivning",
+    "availability": "Tillgänglighet",
+    "remove": "Ta bort",
+    "on_sale": "På rea",
+    "add_to_cart": "Lägg till i varukorgen",
+    "not_available": "Inte tillgänglig",
+    "available": "Tillgänglig",
+    "action": "Åtgärd"
+  },
+  "wishlist": {
+    "image": "Bild",
+    "product_name": "Produktnamn",
+    "price": "Pris",
+    "availability": "Tillgänglighet",
+    "action": "Åtgärd",
+    "out_of_stock": "Slut i lager",
+    "continue_shopping": "Fortsätt handla",
+    "check_out": "Kassa",
+    "remove_from_wishlist": "Ta bort från önskelista",
+    "add_to_cart": "Lägg till i varukorgen",
+    "home": "Hem",
+    "wishlist": "Önskelista",
+    "removeFromFavourite": "Ta bort favoritprodukt framgångsrikt",
+    "notAvailableFavouriteProduct": "Favoritprodukt inte tillgänglig"
+  },
+  "quickview": {
+    "product_details": "Produktdetaljer",
+    "quantity": "Kvantitet",
+    "add_to_cart": "Lägg till i varukorgen",
+    "view_detail": "Visa detalj",
+    "product_description": "Produktbeskrivning"
+  },
+  "logout": "Logga ut",
+  "login": {
+    "welcome": "Välkommen tillbaka",
+    "email": "E-post",
+    "password": "Lösenord",
+    "new_customer": "Ny kund",
+    "create_account": "Skapa ett konto",
+    "create_account_description": "Registrera dig för ett gratis konto i vår butik. Registreringen är snabb och enkel. Det gör att du kan beställa från vår butik. För att börja handla, klicka på registrera.",
+    "login_button": "Logga in",
+    "register_button": "Skapa ett konto"
+  },
+  "register": {
+    "title": "Skapa konto",
+    "firstName": "Förnamn",
+    "lastName": "Efternamn",
+    "email": "E-post",
+    "password": "Lösenord",
+    "createAccount": "Skapa konto",
+    "errors": {
+      "firstName": "Förnamn krävs",
+      "lastName": "Efternamn krävs",
+      "email": "E-post krävs",
+      "emailInvalid": "E-post är inte giltig",
+      "password": "Lösenord krävs",
+      "passwordLength": "Lösenordet måste vara minst 6 tecken långt"
+    },
+    "successMessage": "Kund skapad framgångsrikt",
+    "errorMessage": "Ett fel uppstod vid skapande av kontot"
+  },
+  "myOrders": {
+    "myOrders": "Mina beställningar",
+    "searchPlaceholder": "Sök efter order-ID eller status...",
+    "noOrdersFound": "Inga beställningar hittades.",
+    "orderId": "Order-ID",
+    "date": "Datum",
+    "total": "Totalt",
+    "status": "Status",
+    "items": "Artiklar",
+    "actions": "Åtgärder",
+    "trackOrder": "Spåra order",
+    "viewProduct": "Visa produkt",
+    "refreshing": "Uppdaterar...",
+    "number": "Nr."
+  },
+  "orderStatus": {
+    "pending": "Väntar",
+    "shipped": "Skickad",
+    "delivered": "Levererad",
+    "completed": "Slutförd",
+    "canceled": "Avbruten"
+  },
+  "forgetPassword": {
+    "forgetPassword": "Glömt lösenord",
+    "title": "Glömt ditt lösenord",
+    "emailPlaceholder": "Ange din e-post",
+    "submitButton": "Skicka",
+    "successMessage": "Länk för återställning av lösenord skickad till din e-post.",
+    "errorMessage": "Misslyckades med att skicka återställningslänk. Försök igen."
+  },
+  "passwordReset": {
+    "resetPassword": "Återställ lösenord",
+    "resetYourPassword": "Återställ ditt lösenord",
+    "enterNewPassword": "Ange nytt lösenord",
+    "confirmNewPassword": "Bekräfta nytt lösenord",
+    "resetPasswordButton": "Återställ lösenord",
+    "passwordsDoNotMatch": "Lösenorden matchar inte!",
+    "successMessage": "Lösenordsåterställning lyckades.",
+    "errorMessage": "Misslyckades med att återställa lösenord. Försök igen."
+  },
+  "comingSoon": {
+    "openingSoon": "Kommer snart att öppna!",
+    "enterEmail": "Ange din e-post:",
+    "notifying": "Meddelar...",
+    "notifyMe": "Meddela mig",
+    "storeOwner": "Är du butiksägare?",
+    "loginHere": "Logga in här",
+    "or": "eller",
+    "changePassword": "ändra dina lösenordsinställningar",
+    "poweredBy": "Drivs av Multikart."
+  }
+}

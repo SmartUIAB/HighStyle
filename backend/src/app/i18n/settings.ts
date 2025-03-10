@@ -10,6 +10,7 @@ export const languages = [
   "cn",
   "hi",
   "ar",
+  "sv"
 ];
 export const defaultNS = "translation";
 

@@ -1,17 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "../../context/LanguageContext";
-import { usePathname, useRouter } from "next/navigation";
 
 const Language = () => {
-  const { t } = useTranslation(); // Access translation function
+  const { t } = useTranslation();
   const { language, changeLanguage } = useLanguage();
 
   const LanguageData = [
-    { lang: "en", icon: "us", title: "English" }, // Update icons to ISO country codes
+    { lang: "en", icon: "us", title: "English" },
     { lang: "es", icon: "es", title: "Spanish" },
     { lang: "pt", icon: "pt", title: "Portuguese" },
     { lang: "fr", icon: "fr", title: "French" },
     { lang: "ar", icon: "ar", title: "Arabic" },
+    { lang: "sv", icon: "sv", title: "Swedish" },
   ];
 
   const handleChangeLanguage = (lng: string) => {

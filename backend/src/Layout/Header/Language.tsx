@@ -29,6 +29,7 @@ const Language = ({ onLanguageChange }: LanguageProps) => {
     { lang: "pt", icon: "uy", title: "Portuguese" },
     { lang: "fr", icon: "nz", title: "French" },
     { lang: "ar", icon: "ar", title: "Arabic" },
+    { lang: "sv", icon: "sv", title: "Swedish" },
   ];
 
   return (

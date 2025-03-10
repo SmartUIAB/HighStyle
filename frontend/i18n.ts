@@ -11,7 +11,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: ["en"],
-    supportedLngs: ["en", "es", "fr", "pt","ar"],
+    supportedLngs: ["en", "es", "fr", "pt","ar","sv"],
     load: "all",
     preload: false,
     keySeparator: ".",
