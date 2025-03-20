@@ -19,40 +19,13 @@ const SalesOrders = () => {
     issuerCode: "",
     partyId: "",
     partyIdType: "",
-    name: "",
     companyName: "",
-    streets: "",
-    postalCode: "",
-    city: "",
-    countryCode: "",
-    contactName: "",
-    email: "",
     phoneNo: "",
     smsNo: "",
-    consignee_name: "",
-    consignee_companyName: "",
-    consignee_streets: "",
-    consignee_postalCode: "",
-    consignee_city: "",
-    consignee_countryCode: "",
-    consignee_contactName: "",
-    consignee_email: "",
-    consignee_phoneNo: "",
-    consignee_smsNo: "",
-    consignee_referenceNo: "",
-    consignee_referenceType: "",
     package_type: "",
     item_id: "",
-    height_value: "",
-    height_unit: "",
-    width_value: "",
-    width_unit: "",
-    length_value: "",
-    length_unit: "",
     grossWeight_value: "",
     grossWeight_unit: "",
-    volume_value: "",
-    volume_unit: ""
   }
   const [modal, setModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -112,6 +85,11 @@ const SalesOrders = () => {
       messageDate: new Date().toISOString(),
       messageFunction: "PickupBooking",
       messageId: "msg-182721551",
+      application: {
+        applicationId: 1234,
+        name: "PickupSystem",
+        version: "1.0"
+      },
       updateIndicator: "Original",
       shipment: [
         {
@@ -156,95 +134,25 @@ const SalesOrders = () => {
               },
               party: {
                 nameIdentification: {
-                  name: formData.name,
+                  name: selectedOrder?.user?.firstname,
                   companyName: formData.companyName
                 },
                 address: {
                   streets: [
-                    formData.streets
+                    selectedOrder.street
                   ],
-                  postalCode: formData.postalCode,
-                  city: formData.city,
-                  countryCode: formData.countryCode
+                  postalCode: selectedOrder.postalCode,
+                  city: selectedOrder.city,
+                  countryCode: selectedOrder.country.slice(0, 2).toUpperCase()
                 },
                 contact: {
-                  contactName: formData.countryCode,
-                  emailAddress: formData.email,
+                  contactName: selectedOrder?.user?.firstname,
+                  emailAddress: selectedOrder?.user?.email,
                   phoneNo: formData.phoneNo,
                   smsNo: formData.smsNo
                 }
               }
             },
-            pickupParty: {
-              party: {
-                nameIdentification: {
-                  name: formData.name,
-                  companyName: formData.companyName
-                },
-                address: {
-                  streets: [
-                    formData.streets
-                  ],
-                  postalCode: formData.postalCode,
-                  city: formData.city,
-                  countryCode: formData.countryCode
-                },
-                contact: {
-                  contactName: formData.countryCode,
-                  emailAddress: formData.email,
-                  phoneNo: formData.phoneNo,
-                  smsNo: formData.smsNo
-                }
-              }
-            },
-            consignee: {
-              party: {
-                nameIdentification: {
-                  name: formData.consignee_name,
-                  companyName: formData.consignee_companyName
-                },
-                address: {
-                  streets: [
-                    formData.consignee_streets
-                  ],
-                  postalCode: formData.consignee_postalCode,
-                  city: formData.consignee_city,
-                  countryCode: formData.consignee_countryCode
-                },
-                contact: {
-                  contactName: formData.consignee_contactName,
-                  emailAddress: formData.consignee_email,
-                  phoneNo: formData.consignee_phoneNo,
-                  smsNo: formData.consignee_smsNo
-                }
-              },
-              reference: {
-                referenceNo: formData.consignee_referenceNo,
-                referenceType: formData.consignee_referenceType
-              }
-            },
-            returnParty: {
-              party: {
-                nameIdentification: {
-                  name: formData.name,
-                  companyName: formData.companyName
-                },
-                address: {
-                  streets: [
-                    formData.streets
-                  ],
-                  postalCode: formData.postalCode,
-                  city: formData.city,
-                  countryCode: formData.countryCode
-                },
-                contact: {
-                  contactName: formData.countryCode,
-                  emailAddress: formData.email,
-                  phoneNo: formData.phoneNo,
-                  smsNo: formData.smsNo
-                }
-              }
-            }
           },
           goodsItem: [
             {
@@ -254,28 +162,10 @@ const SalesOrders = () => {
                   itemIdentification: {
                     itemId: formData.item_id
                   },
-                  dimensions: {
-                    height: {
-                      value: parseInt(formData.height_value),
-                      unit: formData.height_unit
-                    },
-                    width: {
-                      value: parseInt(formData.width_value),
-                      unit: formData.width_unit
-                    },
-                    length: {
-                      value: parseInt(formData.length_value),
-                      unit: formData.length_unit
-                    }
-                  },
                   grossWeight: {
                     value: parseInt(formData.grossWeight_value),
                     unit: formData.grossWeight_unit
                   },
-                  volume: {
-                    value: parseInt(formData.volume_value),
-                    unit: formData.volume_unit
-                  }
                 }
               ]
             }
@@ -381,36 +271,8 @@ const SalesOrders = () => {
                           <input type="text" name="partyIdType" onChange={handleInputChange} value={formData.partyIdType} className="saleorders-input" placeholder="Party Id Type" />
                         </div>
                         <div>
-                          <label htmlFor="" className="saleorders-label">Name</label>
-                          <input type="text" name="name" onChange={handleInputChange} value={formData.name} className="saleorders-input" placeholder="Name" />
-                        </div>
-                        <div>
                           <label htmlFor="" className="saleorders-label">Company Name</label>
                           <input type="text" name="companyName" onChange={handleInputChange} value={formData.companyName} className="saleorders-input" placeholder="Company Name" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Streets</label>
-                          <input type="text" name="streets" onChange={handleInputChange} value={formData.streets} className="saleorders-input" placeholder="Streets" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Postal Code</label>
-                          <input type="text" name="postalCode" onChange={handleInputChange} value={formData.postalCode} className="saleorders-input" placeholder="Postal Code" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">City</label>
-                          <input type="text" name="city" onChange={handleInputChange} value={formData.city} className="saleorders-input" placeholder="City" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Country Code</label>
-                          <input type="text" name="countryCode" onChange={handleInputChange} value={formData.countryCode} className="saleorders-input" placeholder="Country Code" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Contact Name</label>
-                          <input type="text" name="contactName" onChange={handleInputChange} value={formData.contactName} className="saleorders-input" placeholder="Contact Name" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Email Address</label>
-                          <input type="text" name="email" onChange={handleInputChange} value={formData.email} className="saleorders-input" placeholder="Email Address" />
                         </div>
                         <div>
                           <label htmlFor="" className="saleorders-label">Phone No</label>
@@ -422,57 +284,6 @@ const SalesOrders = () => {
                         </div>
 
                       </div>
-                      <h2 className="saleorders-title1 ">consignee</h2>
-                      <div className="saleorders-flex">
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Name</label>
-                          <input type="text" name="consignee_name" onChange={handleInputChange} value={formData.consignee_name} className="saleorders-input" placeholder="Name" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Company Name</label>
-                          <input type="text" name="consignee_companyName" onChange={handleInputChange} value={formData.consignee_companyName} className="saleorders-input" placeholder="Company Name" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Streets</label>
-                          <input type="text" name="consignee_streets" onChange={handleInputChange} value={formData.consignee_streets} className="saleorders-input" placeholder="Streets" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Postal Code</label>
-                          <input type="text" name="consignee_postalCode" onChange={handleInputChange} value={formData.consignee_postalCode} className="saleorders-input" placeholder="Postal Code" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">City</label>
-                          <input type="text" name="consignee_city" onChange={handleInputChange} value={formData.consignee_city} className="saleorders-input" placeholder="City" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Country Code</label>
-                          <input type="text" name="consignee_countryCode" onChange={handleInputChange} value={formData.consignee_countryCode} className="saleorders-input" placeholder="Country Code" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Contact Name</label>
-                          <input type="text" name="consignee_contactName" onChange={handleInputChange} value={formData.consignee_contactName} className="saleorders-input" placeholder="Contact Name" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Email Address</label>
-                          <input type="text" name="consignee_email" onChange={handleInputChange} value={formData.consignee_email} className="saleorders-input" placeholder="Email Address" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Phone No</label>
-                          <input type="text" name="consignee_phoneNo" onChange={handleInputChange} value={formData.consignee_phoneNo} className="saleorders-input" placeholder="Phone No" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Sms No</label>
-                          <input type="text" name="consignee_smsNo" onChange={handleInputChange} value={formData.consignee_smsNo} className="saleorders-input" placeholder="Sms No" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Reference No</label>
-                          <input type="text" name="consignee_referenceNo" onChange={handleInputChange} value={formData.consignee_referenceNo} className="saleorders-input" placeholder="Reference No" />
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Reference Type</label>
-                          <input type="text" name="consignee_referenceType" onChange={handleInputChange} value={formData.consignee_referenceType} className="saleorders-input" placeholder="Reference Type" />
-                        </div>
-                      </div>
                       <h2 className="saleorders-title1 ">Goods Item</h2>
                       <div>
                         <label htmlFor="" className="saleorders-label">Package Type Code</label>
@@ -483,43 +294,11 @@ const SalesOrders = () => {
                           <label htmlFor="" className="saleorders-label">Item Id</label>
                           <input type="text" className="saleorders-input" name="item_id" onChange={handleInputChange} value={formData.item_id} placeholder="Item Id" />
                         </div>
-                        <div >
-                          <div>
-                            <label htmlFor="" className="saleorders-label">Height</label>
-                            <div className="saleorders-dflax">
-                              <input type="text" name="height_value" onChange={handleInputChange} value={formData.height_value} className="saleorders-input" placeholder="Value" />
-                              <input type="text" name="height_unit" onChange={handleInputChange} value={formData.height_unit} className="saleorders-input" placeholder="Unit" />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="saleorders-flex">
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Width</label>
-                          <div className="saleorders-dflax">
-                            <input type="text" name="width_value" onChange={handleInputChange} value={formData.width_value} className="saleorders-input" placeholder="Value" />
-                            <input type="text" name="width_unit" onChange={handleInputChange} value={formData.width_unit} className="saleorders-input" placeholder="Unit" />
-                          </div>
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Length</label>
-                          <div className="saleorders-dflax">
-                            <input type="text" name="length_value" onChange={handleInputChange} value={formData.length_value} className="saleorders-input" placeholder="Value" />
-                            <input type="text" name="length_unit" onChange={handleInputChange} value={formData.length_unit} className="saleorders-input" placeholder="Unit" />
-                          </div>
-                        </div>
                         <div>
                           <label htmlFor="" className="saleorders-label">Gross Weight</label>
                           <div className="saleorders-dflax">
                             <input type="text" name="grossWeight_value" onChange={handleInputChange} value={formData.grossWeight_value} className="saleorders-input" placeholder="Value" />
                             <input type="text" name="grossWeight_unit" onChange={handleInputChange} value={formData.grossWeight_unit} className="saleorders-input" placeholder="Unit" />
-                          </div>
-                        </div>
-                        <div>
-                          <label htmlFor="" className="saleorders-label">Volume</label>
-                          <div className="saleorders-dflax">
-                            <input type="text" name="volume_value" onChange={handleInputChange} value={formData.volume_value} className="saleorders-input" placeholder="Value" />
-                            <input type="text" name="volume_unit" onChange={handleInputChange} value={formData.volume_unit} className="saleorders-input" placeholder="Unit" />
                           </div>
                         </div>
                       </div>
