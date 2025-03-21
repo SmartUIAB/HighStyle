@@ -27,10 +27,7 @@ const categorySubcategoryResolver = {
         throw new CustomError("Failed to fetch categories", 500);
       }
     },
-    categorieslist: checkPermission({
-      module: "Category",
-      name: "View Category",
-    })(async (root, args, context) => {
+    categorieslist: async (root, args, context) => {
       if (!context.userId) {
         throw new CustomError("Not authenticated", 401);
       }
@@ -44,21 +41,15 @@ const categorySubcategoryResolver = {
         console.error("Error fetching category:", error);
         throw new CustomError(error.message, 500);
       }
-    }),
-    category: checkPermission({
-      module: "Category",
-      name: "View Category",
-    })(async (_, { id }) => {
+    },
+    category: async (_, { id }) => {
       try {
         return await Category.findById(id);
       } catch (error) {
         throw new CustomError("Category not found", 404);
       }
-    }),
-    subcategories: checkPermission({
-      module: "Category",
-      name: "View Category",
-    })(async (_, { pagination }) => {
+    },
+    subcategories: async (_, { pagination }) => {
       const { page = 1, limit = 10 } = pagination || {};
       try {
         const subcategories = await Subcategory.find()
@@ -73,11 +64,8 @@ const categorySubcategoryResolver = {
       } catch (error) {
         throw new CustomError("Failed to fetch subcategories", 500);
       }
-    }),
-    subcategorieslist: checkPermission({
-      module: "Category",
-      name: "View Category",
-    })(async (root, args, context) => {
+    },
+    subcategorieslist: async (root, args, context) => {
       if (!context.userId) {
         throw new CustomError("Not authenticated", 401);
       }
@@ -91,17 +79,14 @@ const categorySubcategoryResolver = {
         console.error("Error fetching subcategory:", error);
         throw new CustomError(error.message, 500);
       }
-    }),
-    subcategory: checkPermission({
-      module: "Category",
-      name: "View Category",
-    })(async (_, { id }) => {
+    },
+    subcategory: async (_, { id }) => {
       try {
         return await Subcategory.findById(id);
       } catch (error) {
         throw new CustomError("Subcategory not found", 404);
       }
-    }),
+    },
   },
   /* -------------------------------- Mutation -------------------------------- */
   Mutation: {

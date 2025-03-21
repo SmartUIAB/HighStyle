@@ -19,7 +19,6 @@ const findPermissionId = async (module, name) => {
 const checkPermission = (requiredPermission) => {
   return (resolve) => {
     return async (parent, args, context, info) => {
-      console.log("Context in checkPermission:", context); // Debugging line
 
       if (!context || !context.user) {
         throw new CustomError("Unauthorized: User not authenticated.", 401);
@@ -44,8 +43,6 @@ const checkPermission = (requiredPermission) => {
       const hasPermission = userPermissions.some(
         (permission) => permission._id.toString() === permissionId.toString()
       );
-
-      console.log("hasPermission", hasPermission);
 
       if (!hasPermission) {
         throw new CustomError(
