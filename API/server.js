@@ -24,11 +24,11 @@ const allowedOrigins = [
   "https://high-style-4nxz-i7ter0x9u-baraa-abdullatifs-projects-0de89e64.vercel.app",
   "https://high-style.vercel.app",
   "http://localhost:3000",
-  "http://localhost:3001",
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
+    console.log("Origin:", origin); // Log the origin for debugging
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
