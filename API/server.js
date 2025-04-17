@@ -20,27 +20,32 @@ const { authenticateUser } = require("./Utilities/authUtils");
 const app = express();
 
 /* ---------------------------- Middleware setup ---------------------------- */
-const allowedOrigins = ["http://localhost:3001", "http://localhost:3000"]; // List of allowed origins
+const allowedOrigins = [
+  "https://high-style-4nxz-i7ter0x9u-baraa-abdullatifs-projects-0de89e64.vercel.app",
+  "https://high-style.vercel.app",
+  "http://localhost:3000",
+  "http://localhost:3001",
+];
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+
+// Apply CORS and other middleware
+app.use(cors(corsOptions));
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin) || true) {
-        //remove true from if condition in production mode
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-  })
-);
-
-app.use("/", paymentRoute);
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
+app.use("/", paymentRoute);
 
 /* -------------------------- GraphQL schema setup -------------------------- */
 const schema = makeExecutableSchema({
@@ -61,17 +66,14 @@ const server = new ApolloServer({
   },
   formatError: (err) => {
     console.error(err);
+    0;
     return {
       success: false,
       message: err.message || "Internal Server Error",
     };
   },
   introspection: true,
-  uploads: {
-    maxFileSize: 10000000,
-    maxFiles: 10,
-    csrfPrevention: true,
-  },
+  csrfPrevention: true,
 });
 
 /* ------------------------ Error handling middleware ----------------------- */
@@ -110,7 +112,7 @@ const startServer = async () => {
     await server.start();
     server.applyMiddleware({
       app,
-      cors: false, //Disable Apollo Server CORS configuration to use Express CORS configuration
+      cors: false, // We already used express CORS middleware
     });
 
     const httpServer = createServer(app);
