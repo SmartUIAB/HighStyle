@@ -163,13 +163,13 @@ const app = express();
 
 /* ---------------------------- CORS Configuration ---------------------------- */
 const allowedOrigins = [
+  "https://highstyle-production-c6da.up.railway.app",
   "https://high-style-4nxz-i7ter0x9u-baraa-abdullatifs-projects-0de89e64.vercel.app",
   "https://high-style.vercel.app",
   "http://localhost:3000",
   "http://localhost:3001",
   "https://highstyle-production.up.railway.app",
-  "https://73e8-2405-201-200c-b0e9-26b1-a2c3-cf4b-5c0e.ngrok-free.app",
-  "https://highstyle-production-c6da.up.railway.app", // Add your Railway URL
+  "https://73e8-2405-201-200c-b0e9-26b1-a2c3-cf4b-5c0e.ngrok-free.app", // Add your Railway URL
 ];
 
 const corsOptions = {
