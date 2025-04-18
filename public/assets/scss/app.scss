@@ -1,0 +1,28 @@
+// @import "~bootstrap-scss/bootstrap.scss";
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "theme/variables";
+@import "theme/admin_style";
+@import "theme/rtl";
+@import "flag-icon.scss";
+@import "themify.scss";
+@import "icoicon/icons";
+@import "font-awesome.scss";
+@import "slick.scss";
+@import "slick-theme.scss";
+@import "react-toastify/dist/ReactToastify.css";
+
+.new-notification {
+  background-color: #f0f8ff; /* Light blue background for new notifications */
+  font-weight: bold; /* Bold text for new notifications */
+}
+
+.old-notification {
+  background-color: #f5f5f5; /* Light gray for old notifications */
+  color: #6c757d; /* Muted text for old notifications */
+}
+.errorMsg {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  width: 100%;
+}
