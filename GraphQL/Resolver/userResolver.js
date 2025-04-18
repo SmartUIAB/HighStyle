@@ -442,20 +442,20 @@ const userResolver = {
 
         context.res.cookie("token", token, {
           httpOnly: true,
-          secure: false, // false for localhost (http)
-          sameSite: "lax", // Required for cross-origin
+          secure: true, // ngrok uses HTTPS → must be true
+          sameSite: "none", // Required for cross-origin with HTTPS
           maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
           path: "/",
-          domain: undefined, // No domain for localhost
+          domain: undefined, // Let browser handle domain
         });
 
         context.res.cookie("UserDetails", token, {
           httpOnly: true,
-          secure: false, // false for localhost (http)
-          sameSite: "lax", // Required for cross-origin
+          secure: true,
+          sameSite: "none",
           maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
           path: "/",
-          domain: undefined, // No domain for localhost
+          domain: undefined,
         });
 
         return { user, token };
