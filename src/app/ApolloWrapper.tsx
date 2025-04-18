@@ -29,6 +29,9 @@ function makeClient() {
     link: createUploadLink({
       uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT ||
         "http://localhost:2024/graphql", credentials: "include",
+      headers: {
+        "apollo-require-preflight": "true", // 👈 this triggers safe preflight
+      },
     }),
   });
 }
