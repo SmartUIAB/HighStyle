@@ -172,23 +172,25 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
+    // Allow requests with no origin (like mobile apps or Postman)
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.warn(`Blocked by CORS: ${origin}`);
+      console.warn(`CORS blocked: ${origin}`);
       callback(new Error("Not allowed by CORS"));
     }
   },
   credentials: true,
+  exposedHeaders: ["set-cookie"], // Crucial for cookies
   allowedHeaders: [
     "Origin",
     "X-Requested-With",
     "Content-Type",
     "Accept",
     "Authorization",
+    "Cookie", // Added Cookie header
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
 };
