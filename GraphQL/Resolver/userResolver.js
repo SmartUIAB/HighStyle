@@ -442,20 +442,20 @@ const userResolver = {
 
         context.res.cookie("token", token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: false, // false for localhost (http)
+          sameSite: "lax", // Required for cross-origin
           maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
-          sameSite: "none",
           path: "/",
-          domain: process.env.COOKIE_DOMAIN || "railway.app",
+          domain: undefined, // No domain for localhost
         });
 
         context.res.cookie("UserDetails", token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
+          secure: false, // false for localhost (http)
+          sameSite: "lax", // Required for cross-origin
           maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
-          sameSite: "none",
           path: "/",
-          domain: process.env.COOKIE_DOMAIN || "railway.app",
+          domain: undefined, // No domain for localhost
         });
 
         return { user, token };
