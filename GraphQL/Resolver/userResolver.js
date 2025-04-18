@@ -446,6 +446,7 @@ const userResolver = {
           sameSite: "none", // Required for cross-origin with HTTPS
           maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
           path: "/",
+          domain: ".railway.app",
         });
 
         context.res.cookie("UserDetails", token, {
@@ -454,6 +455,7 @@ const userResolver = {
           sameSite: "none",
           maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
           path: "/",
+          domain: ".railway.app",
         });
 
         return { user, token };
