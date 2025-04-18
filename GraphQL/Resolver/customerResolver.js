@@ -40,6 +40,7 @@ const customerResolver = {
           secure: process.env.NODE_ENV === "production",
           maxAge: 2 * 24 * 60 * 60 * 1000,
           path: "/",
+          domain: process.env.COOKIE_DOMAIN || "railway.app",
         });
 
         return { customer, token };
