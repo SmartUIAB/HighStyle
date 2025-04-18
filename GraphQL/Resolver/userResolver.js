@@ -438,16 +438,19 @@ const userResolver = {
           expiresIn: tokenExpiration,
         });
 
-        const cookieOptions = {
+        context.res.cookie("token", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
-          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
           maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
           path: "/",
-        };
+        });
 
-        context.res.cookie("token", token, cookieOptions);
-        context.res.cookie("UserDetails", token, cookieOptions);
+        context.res.cookie("UserDetails", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
+          path: "/",
+        });
 
         return { user, token };
       } catch (error) {
