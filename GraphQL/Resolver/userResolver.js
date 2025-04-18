@@ -390,6 +390,7 @@ const userResolver = {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           maxAge: 2 * 60 * 60 * 1000,
+          sameSite: "none",
           path: "/",
           domain: process.env.COOKIE_DOMAIN || "railway.app",
         });
@@ -443,6 +444,7 @@ const userResolver = {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
+          sameSite: "none",
           path: "/",
           domain: process.env.COOKIE_DOMAIN || "railway.app",
         });
@@ -451,7 +453,9 @@ const userResolver = {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           maxAge: rememberMe ? 2 * 24 * 60 * 60 * 1000 : 2 * 60 * 60 * 1000,
+          sameSite: "none",
           path: "/",
+          domain: process.env.COOKIE_DOMAIN || "railway.app",
         });
 
         return { user, token };
