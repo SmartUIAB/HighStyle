@@ -183,11 +183,11 @@ export const digitalproductSchema = Yup.object().shape({
     .required("Status is required")
     .oneOf(["Available", "Unavailable"], "Invalid status"),
 
-  meta_title: Yup.string()
+  metaTitle: Yup.string()
     .required("Meta title is required")
     .min(5, "Meta title must be at least 5 characters"),
 
-  meta_description: Yup.string()
+  metaDescription: Yup.string()
     .required("Meta description is required")
     .min(10, "Meta description must be at least 10 characters"),
 
