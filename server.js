@@ -29,6 +29,7 @@ const allowedOrigins = [
   "https://highstyle-production-c6da.up.railway.app",
 ];
 
+// Update your CORS middleware section to include Apollo headers
 app.use((req, res, next) => {
   const origin = req.headers.origin;
 
@@ -38,7 +39,7 @@ app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Credentials", "true");
     res.setHeader(
       "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization, apollo-require-preflight" // Added apollo-require-preflight here
     );
     res.setHeader(
       "Access-Control-Allow-Methods",
