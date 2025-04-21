@@ -69,7 +69,7 @@ const Datatable = ({
   const [deleteSubCategory] = useMutation(DELETE_SUB_CATEGORY);
   const [updateCategory] = useMutation(UPDATE_CATEGORY);
   const [updateSubCategory] = useMutation(UPDATE_SUB_CATEGORY);
-  const { data: allCategoriesData } = useQuery(GET_ALL_CATEGORY);
+  const { data: allCategoriesData,refetch } = useQuery(GET_ALL_CATEGORY);
   const route = usePathname();
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
@@ -108,6 +108,7 @@ const Datatable = ({
           ? t("toast.success.deleteSubCategory")
           : t("toast.success.deleteCategory");
         toast.success(successMessage);
+        refetch()
       }
     } catch (error) {
       toast.error(t("toast.error.delete"));
@@ -137,6 +138,7 @@ const Datatable = ({
           : t("toast.success.category");
         toast.success(successMessage);
         toggleModal();
+        refetch()
       }
     } catch (error) {
       toast.error(t("toast.error.update"));
