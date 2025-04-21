@@ -77,6 +77,7 @@ const schema = makeExecutableSchema({
 
 const server = new ApolloServer({
   schema,
+  cache: "bounded",
   context: async ({ req, res }) => {
     if (!req) {
       return { userId: null, user: { role: "cron-job" } };
