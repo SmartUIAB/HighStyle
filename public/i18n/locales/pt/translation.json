@@ -1,0 +1,302 @@
+{
+  "footer": {
+    "subscribe": {
+      "title": "SEJA O PRIMEIRO A SABER!",
+      "description": "Não perca nada da High Style assinando nossa newsletter.",
+      "placeholder": "Digite seu endereço de e-mail",
+      "button": "Assinar"
+    },
+    "about": {
+      "title": "sobre",
+      "description": "A High Style é uma empresa sueca de estilo de vida que se concentra em oferecer acessórios elegantes e modernos aos seus clientes. Nos esforçamos para criar uma experiência de compra única e pessoal para cada indivíduo, independentemente de seu estilo e preferências. Com nossa seleção cuidadosamente curada e nosso compromisso com qualidade e design, buscamos inspirar e oferecer aos nossos clientes a oportunidade de expressar seu estilo pessoal da melhor maneira possível. Visite nosso site para descobrir nossa última coleção."
+    },
+    "account": {
+      "title": "minha conta",
+      "links": {
+        "women": "Mulheres",
+        "clothes": "Roupas",
+        "accessories": "Acessórios",
+        "presents": "Presentes"
+      }
+    },
+    "whyChooseUs": {
+      "title": "por que escolhemos",
+      "links": {
+        "shippingReturns": "Envios e Devoluções",
+        "secureShopping": "Compras Seguras",
+        "gallery": "Galeria",
+        "affiliates": "Afiliados",
+        "contacts": "Contatos"
+      }
+    },
+    "storeInfo": {
+      "title": "informações sobre a loja",
+      "address": "High Style AB Market",
+      "phone": "Ligue para nós: 0735 50 20 62",
+      "email": "Envie-nos um e-mail: Support@highstyle.se",
+      "whatsapp": "Whatsapp: 0735 50 20 62"
+    }
+  },
+  "header": {
+    "search": {
+      "title": "Encontre o melhor para o seu desejo"
+    }
+  },
+  "top_header": {
+    "welcome": "Bem-vindo à nossa loja High Style",
+    "call_us": "Ligue-nos: 073 - 550 - 2062",
+    "compare": "Comparar",
+    "wishlist": "Lista de desejos",
+    "my_account": "Minha conta",
+    "login": "Entrar",
+    "register": "Cadastrar-se"
+  },
+  "cart_details": {
+    "image": "Imagem",
+    "product_name": "Nome do produto",
+    "price": "Preço",
+    "quantity": "Quantidade",
+    "action": "Ação",
+    "total": "Total",
+    "total_price": "Preço total",
+    "subTotal": "Subtotal",
+    "continue_shopping": "Continuar comprando",
+    "check_out": "Finalizar compra",
+    "cart_empty": "Seu carrinho está vazio",
+    "explore_more": "Explore mais e selecione alguns itens.",
+    "cart_empty_message": "Seu carrinho de compras está atualmente vazio."
+  },
+  "shipping_address": {
+    "modal_title": "Insira o endereço de entrega",
+    "street": "Rua",
+    "city": "Cidade",
+    "state": "Estado",
+    "postal_code": "Código Postal",
+    "country": "País",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "btn_title": "Adicionar endereço"
+  },
+  "route_name": {
+    "product_list": "Lista de produtos",
+    "product": "Produto",
+    "home": "Início"
+  },
+  "services": {
+    "freeShipping": "Frete Grátis",
+    "freeShippingWorldwide": "Frete Grátis para Todo o Mundo",
+    "service247": "Serviço 24 X 7",
+    "onlineService247": "Serviço Online 24 X 7",
+    "festivalOffer": "Oferta de Festival",
+    "newOnlineSpecialFestivalOffer": "Nova Oferta Especial de Festival Online",
+    "onlinePayment": "Pagamento Online"
+  },
+  "product_details": {
+    "brand": "Marca",
+    "homeAndFurniture": "Casa e Mobiliário",
+    "selectSize": "Selecionar Tamanho",
+    "sizeChart": "Tabela de Tamanhos",
+    "quantity": "Quantidade",
+    "addToCart": "Adicionar ao Carrinho",
+    "buyNow": "Comprar Agora",
+    "productDetails": "Detalhes do Produto",
+    "shareIt": "Compartilhe",
+    "timeReminder": "Lembrete de Tempo",
+    "days": "dias",
+    "hours": "horas",
+    "minutes": "minutos",
+    "seconds": "segundos",
+    "newProduct": "Novo Produto",
+    "description": "Descrição",
+    "details": "Detalhes",
+    "video": "Vídeo",
+    "writeReview": "Escrever Avaliação",
+    "format": "Formato",
+    "size": "Tamanho",
+    "version": "Versão",
+    "compatibility": "Compatibilidade",
+    "off": "Desconto",
+    "relatedProduct": "Produto Relacionado",
+    "selectColorAndSize": "Por favor, selecione tanto a cor quanto o tamanho antes de adicionar ao carrinho.",
+    "fileDetails": "Detalhes do arquivo"
+  },
+  "landing_page": {
+    "welcome": "Bem-vindo à Moda",
+    "men_fashion": "Moda Masculina",
+    "women_fashion": "Moda Feminina",
+    "shop_now": "Compre Agora",
+    "men": "Homens",
+    "women": "Mulheres",
+    "special_offer": "Oferta Especial",
+    "top_collection": "Coleção Top",
+    "discover_offer": "Descubra nossa oferta especial na nossa Coleção Top! Descontos exclusivos por tempo limitado em produtos selecionados. Não perca a chance de renovar seu estilo com nossos itens premium. Compre agora e economize muito!",
+    "fashion_trends": "Tendências de Moda",
+    "special_offer_section": "Oferta Especial",
+    "trending_products": "Produtos em Alta",
+    "winter": "Inverno",
+    "greens": "Verde",
+    "various": "Vários",
+    "our_collection": "Nossa Coleção",
+    "special_products": "Produtos Especiais",
+    "instagram": "Instagram"
+  },
+  "productlist": {
+    "route_name": {
+      "product_list": "Lista de Produtos"
+    },
+    "error": {
+      "loading_products": "Erro ao carregar os produtos!",
+      "issue_loading": "Houve um problema ao carregar os dados do produto. Por favor, tente novamente mais tarde."
+    },
+    "placeholder": {
+      "search_products": "Buscar produtos..."
+    },
+    "info": {
+      "no_products_found": "Nenhum produto encontrado",
+      "adjust_filters": "Tente ajustar seus filtros ou sua pesquisa."
+    },
+    "pagination": {
+      "prev": "Anterior",
+      "next": "Próximo"
+    },
+    "status": {
+      "available": "Disponível",
+      "out_of_stock": "Esgotado"
+    },
+    "details": {
+      "price": "Preço",
+      "colors": "Cores",
+      "sizes": "Tamanhos",
+      "file_format": "Formato do Arquivo",
+      "file_size": "Tamanho do Arquivo",
+      "compatibility": "Compatibilidade",
+      "status": "Status"
+    },
+    "sort": {
+      "hightolow": "Maior para Menor",
+      "lowtohigh": "Menor para Maior",
+      "default": "Padrão"
+    }
+  },
+  "compare": {
+    "title": "Comparar",
+    "home": "Início",
+    "empty": {
+      "title": "Seu carrinho está vazio",
+      "message": "Explore mais e selecione alguns itens."
+    },
+    "product_name": "Nome do produto",
+    "product_image": "Imagem do produto",
+    "product_description": "Descrição do produto",
+    "availability": "Disponibilidade",
+    "remove": "Remover",
+    "on_sale": "Em promoção",
+    "add_to_cart": "Adicionar ao carrinho",
+    "not_available": "Não disponível",
+    "available": "Disponível",
+    "action": "Ação"
+  },
+  "wishlist": {
+    "image": "Imagem",
+    "product_name": "Nome do produto",
+    "price": "Preço",
+    "availability": "Disponibilidade",
+    "action": "Ação",
+    "out_of_stock": "Fora de estoque",
+    "continue_shopping": "Continuar comprando",
+    "check_out": "Finalizar compra",
+    "remove_from_wishlist": "Remover da lista de desejos",
+    "add_to_cart": "Adicionar ao carrinho",
+    "home": "Início",
+    "wishlist": "Lista de desejos",
+    "removeFromFavourite": "Produto favorito removido com sucesso",
+    "notAvailableFavouriteProduct": "Produto favorito não disponível"
+  },
+  "quickview": {
+    "product_details": "Detalhes do produto",
+    "quantity": "Quantidade",
+    "add_to_cart": "Adicionar ao carrinho",
+    "view_detail": "Ver detalhes",
+    "product_description": "Descrição do produto"
+  },
+  "logout": "Sair",
+  "login": {
+    "welcome": "Bem-vindo de volta",
+    "email": "E-mail",
+    "password": "Senha",
+    "new_customer": "Novo cliente",
+    "create_account": "Criar uma conta",
+    "create_account_description": "Inscreva-se para uma conta gratuita em nossa loja. O registro é rápido e fácil. Ele permite que você faça pedidos em nossa loja. Para começar a comprar, clique em registrar.",
+    "login_button": "Entrar",
+    "register_button": "Criar uma conta"
+  },
+  "register": {
+    "title": "Criar Conta",
+    "firstName": "Primeiro Nome",
+    "lastName": "Último Nome",
+    "email": "E-mail",
+    "password": "Senha",
+    "createAccount": "Criar Conta",
+    "errors": {
+      "firstName": "O Primeiro Nome é obrigatório",
+      "lastName": "O Último Nome é obrigatório",
+      "email": "O E-mail é obrigatório",
+      "emailInvalid": "O E-mail não é válido",
+      "password": "A Senha é obrigatória",
+      "passwordLength": "A Senha deve ter pelo menos 6 caracteres"
+    },
+    "successMessage": "Conta criada com sucesso",
+    "errorMessage": "Ocorreu um erro ao criar a conta"
+  },
+  "myOrders": {
+    "myOrders": "Meus Pedidos",
+    "searchPlaceholder": "Pesquisar por ID do Pedido ou Status...",
+    "noOrdersFound": "Nenhum pedido encontrado.",
+    "orderId": "ID do Pedido",
+    "date": "Data",
+    "total": "Total",
+    "status": "Status",
+    "items": "Itens",
+    "actions": "Ações",
+    "trackOrder": "Rastrear Pedido",
+    "viewProduct": "Ver Produto",
+    "refreshing": "Atualizando...",
+    "number": "N.º"
+  },
+  "orderStatus": {
+    "pending": "Pendente",
+    "shipped": "Enviado",
+    "delivered": "Entregue",
+    "completed": "Concluído",
+    "canceled": "Cancelado"
+  },
+  "forgetPassword": {
+    "forgetPassword": "Esqueci a Senha",
+    "title": "Esqueceu Sua Senha",
+    "emailPlaceholder": "Digite Seu Email",
+    "submitButton": "Enviar",
+    "successMessage": "Link de redefinição de senha enviado para o seu email.",
+    "errorMessage": "Falha ao enviar o link de redefinição. Por favor, tente novamente."
+  },
+  "passwordReset": {
+    "resetPassword": "Redefinir Senha",
+    "resetYourPassword": "Redefina Sua Senha",
+    "enterNewPassword": "Digite a Nova Senha",
+    "confirmNewPassword": "Confirme a Nova Senha",
+    "resetPasswordButton": "Redefinir Senha",
+    "passwordsDoNotMatch": "As senhas não coincidem.",
+    "successMessage": "Senha redefinida com sucesso.",
+    "errorMessage": "Falha ao redefinir a senha. Por favor, tente novamente."
+  },
+  "comingSoon": {
+    "openingSoon": "Em breve!",
+    "enterEmail": "Digite seu e-mail:",
+    "notifying": "Notificando...",
+    "notifyMe": "Notifique-me",
+    "storeOwner": "Você é o dono da loja?",
+    "loginHere": "Faça login aqui",
+    "or": "ou",
+    "changePassword": "altere suas configurações de senha",
+    "poweredBy": "Desenvolvido por Multikart."
+  }
+}
