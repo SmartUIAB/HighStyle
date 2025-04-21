@@ -27,7 +27,6 @@ const allowedOrigins = [
   "http://localhost:3001",
   "https://highstyle-production.up.railway.app",
   "https://highstyle-production-c6da.up.railway.app",
-  "https://highstyle-production-6b5f.up.railway.app",
 ];
 
 // Update your CORS middleware section to include Apollo headers
