@@ -6,7 +6,7 @@ import { GET_ALL_CATEGORY, GET_ALL_SUBCATEGORY } from "@/GraphQL/Queries/categor
 import { useAppSelector } from "@/Redux/Hooks";
 import { useTranslation } from "@/app/i18n/client";
 
-const GeneralForm = ({ formData, setFormData,errors }) => {
+const GeneralForm = ({ formData, setFormData, errors }) => {
 
   const { data: allCategoriesData } = useQuery(GET_ALL_CATEGORY);
   const { data: allSubCategoriesData } = useQuery(GET_ALL_SUBCATEGORY);
@@ -172,14 +172,19 @@ const GeneralForm = ({ formData, setFormData,errors }) => {
             <Label className="col-form-label">
               <span>*</span> {t("digital.add_product.License Type")}
             </Label>
-            <Input
+            <select
               id="validationCustom08"
-              type="text"
               name="licenseType"
               value={formData.licenseType}
               onChange={handleChange}
               required
-            />
+              className="form-control"
+            >
+              <option value="" disabled>Select License Type</option>
+              <option value="single_use">Single Use</option>
+              <option value="multi_use">Multi Use</option>
+              <option value="lifetime">Lifetime</option>
+            </select>
             {errors?.licenseType && <div className="errorMsg">{errors?.licenseType}</div>}
           </FormGroup>
           <FormGroup>
