@@ -29,6 +29,9 @@ const AddDigitalProduct = () => {
   const { i18LangStatus } = useAppSelector((store) => store.LangReducer);
   const { t } = useTranslation(i18LangStatus);
 
+  const [createDigitalProduct] = useMutation(CREATE_DIGITAL_PRODUCT)
+  const [updateDigitalProduct] = useMutation(UPDATE_DIGITAL_PRODUCT);
+
   // Default form data, ensuring it's not conditionally set
   const [formData, setFormData] = useState({
     title: "",
