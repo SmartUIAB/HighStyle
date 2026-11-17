@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import Profile from "../../../../../public/assets/images/vendor/profile.jpg";
 import { Media, Container, Row, Col } from "reactstrap";
 import seventeen from "../../../../../public/assets/images/logos/17.png";
 import FilterPage from "../../../shop/common/filter";
@@ -21,7 +20,7 @@ const ProfilePage = () => {
       <div className="vendor-cover">
         <div
           className="bg-size"
-          style={{ backgroundImage: "url(" + Profile.src + ")" }}
+          style={{ backgroundColor: "#f4f4f4" }}
         ></div>
       </div>
 
