@@ -49,9 +49,8 @@ const ProductTab = ({ item }) => {
     loading,
     refetch,
   } = useQuery(GET_REVIEWS, {
-    variables: {
-      productId: item?.id,
-    },
+    variables: { productId: item?.id || "000000000000000000000000" },
+    skip: !item?.id,
   });
 
   const totalReviews = reviewsData?.getReviews?.length || 0;
@@ -149,6 +148,8 @@ const ProductTab = ({ item }) => {
     setRating(review.rating);
     setComment(review.comment);
   };
+
+  if (!item) return null;
 
   return (
     <section className="tab-product m-0">
