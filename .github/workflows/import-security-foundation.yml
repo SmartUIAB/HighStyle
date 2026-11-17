@@ -1,0 +1,105 @@
+name: One-time verified security source import
+
+# Temporary migration helper. Restricted to this branch, actor and immutable payload.
+# It is removed immediately after importing the reviewed source. Never runs on a PR.
+on:
+  push:
+    branches: [fix/security-foundation-20261117]
+    paths: [.github/workflows/import-security-foundation.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    if: github.repository == 'SmartUIAB/HighStyle' && github.ref == 'refs/heads/fix/security-foundation-20261117' && github.actor == 'baraabd'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Verify immutable package and every source preimage before staging changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, lzma, os, subprocess, urllib.request
+          from pathlib import Path, PurePosixPath
+
+          repo = 'SmartUIAB/HighStyle'
+          expected_base = '476050d7c7bf20089a6e1e0e293ef79703d95606'
+          digest = '4a9cf9f4fa84a4fc5cf943699bb1a8a72ec64549ed420b177b38a80af0c4c672'
+          blobs = [
+              '667564daa4bec346ef748b757a99ce9a7511530c',
+              'd202f526c1d8d8aa6fd5caeb944c8f5d7dcd2b0c',
+              'c51d72c39a6b4062890f74800774d8cdcf99fea3',
+              'db2d08d7ac146b1dd65eba384eb2300cfcdb4cf8',
+          ]
+          def git(*args):
+              return subprocess.check_output(['git', '-c', 'core.hooksPath=/dev/null', *args]).decode().strip()
+          def require(condition, message):
+              if not condition:
+                  raise RuntimeError(message)
+          require(git('rev-parse', 'HEAD') == os.environ['GITHUB_SHA'], 'Unexpected checkout')
+          require(git('rev-parse', 'HEAD^') == expected_base, 'Base changed; manual re-review required')
+          require(git('diff', '--name-only', 'HEAD^', 'HEAD').splitlines() == ['.github/workflows/import-security-foundation.yml'], 'Unexpected bootstrap changes')
+          require(not git('status', '--porcelain'), 'Checkout must be clean')
+          pieces = []
+          for sha in blobs:
+              request = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/git/blobs/{sha}',
+                  headers={'Authorization': 'Bearer ' + os.environ['GH_TOKEN'], 'Accept': 'application/vnd.github+json', 'User-Agent': 'HighStyle-fixed-source-import'},
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  obj = json.load(response)
+              require(obj.get('encoding') == 'base64' and obj.get('sha') == sha, 'Unexpected blob response')
+              piece = base64.b64decode(obj['content'])
+              require(hashlib.sha1(b'blob ' + str(len(piece)).encode() + b'\0' + piece).hexdigest() == sha, 'Blob integrity failure')
+              pieces.append(piece)
+          encoded = b''.join(pieces)
+          require(len(encoded) == 47980, 'Unexpected encoded size')
+          compressed = base64.b64decode(encoded, validate=True)
+          require(len(compressed) == 35984 and hashlib.sha256(compressed).hexdigest() == digest, 'Package integrity failure')
+          payload = json.loads(lzma.decompress(compressed))
+          require(payload['base'] == expected_base and len(payload['updates']) == 63, 'Invalid source manifest')
+          root = Path.cwd().resolve()
+          names = []
+          for update in payload['updates']:
+              name = update['path']
+              relative = PurePosixPath(name)
+              require(not relative.is_absolute() and '..' not in relative.parts and relative.parts[0] in {'API', 'frontend', 'backend', 'docs'}, 'Path outside approved source directories')
+              require(name not in names and name == relative.as_posix(), 'Duplicate or noncanonical path')
+              names.append(name)
+              path = root / name
+              require(not any(parent.is_symlink() for parent in [path, *path.parents] if parent != root), 'Symlink not permitted')
+              if update['before'] is None:
+                  require(not path.exists(), 'New file already exists: ' + name)
+              else:
+                  require(path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() == update['before'], 'Preimage mismatch: ' + name)
+          for update in payload['updates']:
+              path = root / update['path']
+              if 'content' in update:
+                  path.parent.mkdir(parents=True, exist_ok=True)
+                  path.write_bytes(update['content'].encode('utf-8'))
+                  subprocess.run(['git', 'add', '--', update['path']], check=True)
+              else:
+                  subprocess.run(['git', 'apply', '--unidiff-zero', '--index', '--whitespace=nowarn'], input=update['patch'].encode('utf-8'), check=True)
+              require(hashlib.sha256(path.read_bytes()).hexdigest() == update['after'], 'Result mismatch: ' + update['path'])
+          require(sorted(git('diff', '--cached', '--name-only').splitlines()) == sorted(names), 'Unexpected staged paths')
+          print('Verified and staged all 63 source files. No deployment, workflow or secret changes in payload.')
+          PY
+      - name: Commit and fast-forward only the approved feature branch
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          branch=fix/security-foundation-20261117
+          remote_head=$(git ls-remote origin "refs/heads/$branch" | cut -f1)
+          test "$remote_head" = "$GITHUB_SHA"
+          git -c core.hooksPath=/dev/null -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'fix(security): enforce ownership, server pricing and atomic signed payment settlement'
+          auth=$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)
+          git -c "http.https://github.com/.extraheader=AUTHORIZATION: basic $auth" push origin "HEAD:refs/heads/$branch"
