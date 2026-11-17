@@ -25,7 +25,9 @@ const OrdersPage = () => {
   const router = useRouter();
   useEffect(() => {
     // Check customerDetail in localStorage
-    const customerDetail = JSON.parse(localStorage.getItem("customerDetail"));
+    let customerDetail = null;
+    try { customerDetail = JSON.parse(window.localStorage.getItem("customerDetail") || "null"); } catch (_) {}
+    setUserData(customerDetail);
     if (
       !customerDetail ||
       customerDetail === "null" ||
@@ -34,7 +36,7 @@ const OrdersPage = () => {
       router.replace("/page/account/login"); // Redirect to login page if empty
     }
   }, []);
-  const userData = JSON.parse(localStorage.getItem("customerDetail"));
+  const [userData, setUserData] = useState(null);
 
   const {
     data: myorder,
@@ -43,8 +45,9 @@ const OrdersPage = () => {
     refetch,
   } = useQuery(GET_MY_ORDERS, {
     variables: {
-      customerId: userData?.id,
+      customerId: userData?.id || "000000000000000000000000",
     },
+    skip: !userData?.id,
   });
   if (loading) {
     return (
