@@ -28,19 +28,22 @@ const MasterFooter = ({
 }) => {
   const [isOpen, setIsOpen] = useState();
   const [collapse, setCollapse] = useState(0);
-  const width = window.innerWidth <= 767;
+  const [width, setWidth] = useState(false);
 
   // Initialize the translation hook
   const { t } = useTranslation();
 
   useEffect(() => {
     const changeCollapse = () => {
-      if (window.innerWidth <= 767) {
+      const compact = window.innerWidth <= 767;
+      setWidth(compact);
+      if (compact) {
         setCollapse(0);
         setIsOpen(false);
       } else setIsOpen(true);
     };
 
+    changeCollapse();
     window.addEventListener("resize", changeCollapse);
 
     return () => {
