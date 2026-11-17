@@ -1,0 +1,62 @@
+name: Engineering dependency migration candidate
+on:
+  push:
+    branches: [fix/security-foundation-20261117]
+    paths: [.github/workflows/engineering-dependency-upgrade.yml]
+permissions:
+  contents: read
+jobs:
+  prepare:
+    if: github.repository == 'SmartUIAB/HighStyle' && github.ref == 'refs/heads/fix/security-foundation-20261117' && github.actor == 'baraabd'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          fetch-depth: 2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+      - name: Verify migration base and prepare supported runtime candidate
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = 1e7bdf9084fa139cfdea345b2987152e9906a7fd
+          node scripts/engineering-modernize.cjs
+          for app in API frontend backend; do
+            rm "$app/package-lock.json"
+            npm install --package-lock-only --ignore-scripts --legacy-peer-deps --prefix "$app"
+          done
+          rm package-lock.json
+          npm install --package-lock-only --ignore-scripts
+      - name: Publish candidate only if the branch has not moved
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git ls-remote origin refs/heads/fix/security-foundation-20261117 | cut -f1)" = "$GITHUB_SHA"
+          git diff --check
+          git add API frontend backend package.json package-lock.json .github/workflows/security-validation.yml
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'refactor: migrate Apollo 5 and Next 16; regenerate pruned dependency locks'
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" push origin HEAD:refs/heads/fix/security-foundation-20261117
+      - name: Record diagnostic evidence (not release acceptance)
+        if: always()
+        run: |
+          mkdir -p evidence
+          git diff > evidence/uncommitted.patch
+          git archive --format=tar HEAD -o evidence/source.tar
+          git rev-parse HEAD > evidence/commit.txt
+          git rev-parse HEAD^{tree} > evidence/tree.txt
+          for app in API frontend backend; do
+            (cd "$app" && npm audit --package-lock-only --omit=dev --json) > "evidence/$app-audit.json" || true
+          done
+          npm ci --ignore-scripts --prefix API
+          tar -czf evidence/api-dependencies.tgz -C API node_modules
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: dependency-migration-candidate-${{ github.sha }}
+          path: evidence/
+          retention-days: 3
