@@ -100,6 +100,8 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
     }
   };
 
+  if (!product) return null;
+
   return (
     <div className={`product-right ${stickyClass}`}>
       <h2>{product?.title}</h2>
