@@ -24,8 +24,10 @@ jobs:
       JWT_SECRET: highstyle-ci-only-not-a-deployment-secret-20261117
       STRIPE_SECRET_KEY: sk_test_ci_placeholder_not_a_real_key
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
           cache: npm
@@ -36,19 +38,16 @@ jobs:
         working-directory: API
         run: |
           node -e "require('@graphql-tools/schema').makeExecutableSchema({typeDefs:require('./GraphQL/TypeDef'),resolvers:require('./GraphQL/Resolver')}); console.log('GraphQL schema constructed')"
-          if [ -d test ]; then node --test test/*.test.js; else echo 'Regression tests are not yet committed'; exit 1; fi
-      - name: Capture reproducible source snapshot for engineering review
+          node --test test/*.test.js
+      - name: Capture installed dependencies for offline regression reproduction
         if: always()
-        run: git archive --format=tar HEAD -o highstyle-source.tar
-      - uses: actions/upload-artifact@v4
+        run: tar -czf api-dependencies.tgz -C API node_modules
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:
-          name: source-and-api-validation-${{ github.sha }}
-          path: |
-            highstyle-source.tar
-            API/package.json
-            API/package-lock.json
-          retention-days: 7
+          name: api-dependencies-${{ github.sha }}
+          path: api-dependencies.tgz
+          retention-days: 3
   web:
     name: Build ${{ matrix.application }}
     runs-on: ubuntu-latest
@@ -62,8 +61,10 @@ jobs:
       NEXT_PUBLIC_GRAPHQL_ENDPOINT: http://127.0.0.1:2024/graphql
       NEXT_PUBLIC_API_KEY: http://127.0.0.1:2024
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
           cache: npm
