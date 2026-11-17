@@ -1,12 +1,14 @@
 "use strict";
 const test = require("node:test");
+const { before } = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const { graphql, parse, validate } = require("graphql");
 const { buildSchema, queryBudget } = require("../app");
 const policy = require("../Security/resolverPolicy");
-const schema = buildSchema();
+let schema;
+before(async () => { schema = await buildSchema(); });
 const id = "111111111111111111111111";
 const other = "222222222222222222222222";
 const customer = { userId: id, user: { _id: id }, principalType: "customer" };

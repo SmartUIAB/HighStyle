@@ -4,7 +4,7 @@ import Service from "../common/service";
 import NewProduct from "../../shop/common/newProduct";
 import Slider from "react-slick";
 import { useQuery } from "@apollo/client";
-import ReactImageMagnify from "react-image-magnify";
+const ReactImageMagnify = ({ smallImage }) => <img src={smallImage.src} alt={smallImage.alt || "Product image"} width={smallImage.width} height={smallImage.height} style={{ maxWidth: "100%", height: "auto" }} />;
 import DetailsWithPrice from "../common/detail-price";
 import Filter from "../common/filter";
 import { Container, Row, Col, Media } from "reactstrap";

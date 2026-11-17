@@ -72,5 +72,4 @@ const resolver = {
   },
 };
 
-resolver.Upload = require("graphql-upload").GraphQLUpload;
 module.exports = require("../../Security/resolverPolicy").secureResolvers(resolver);

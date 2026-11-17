@@ -4,9 +4,10 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
-const { ApolloServer } = require("apollo-server-express");
+const { ApolloServer } = require("@apollo/server");
+const { expressMiddleware } = require("@as-integrations/express4");
+const { unwrapResolverError } = require("@apollo/server/errors");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
-const { graphqlUploadExpress } = require("graphql-upload");
 const { GraphQLError } = require("graphql");
 const typeDefs = require("./GraphQL/TypeDef");
 const resolvers = require("./GraphQL/Resolver");
@@ -15,7 +16,10 @@ const { authenticateUser } = require("./Utilities/authUtils");
 const { allowedOrigins } = require("./Security/http");
 const { requireStaff } = require("./Security/access");
 
-function buildSchema() { return makeExecutableSchema({ typeDefs, resolvers }); }
+async function buildSchema() {
+  const { default: Upload } = await import("graphql-upload/GraphQLUpload.mjs");
+  return makeExecutableSchema({ typeDefs, resolvers: { ...resolvers, Upload } });
+}
 function queryBudget(context) {
   return { OperationDefinition(operation) {
     let count = 0;
@@ -37,8 +41,8 @@ function queryBudget(context) {
     if (exceeded) context.reportError(new GraphQLError("Query exceeds the allowed complexity"));
   } };
 }
-function formatError(error) {
-  const status = error.originalError?.statusCode;
+function formatError(error, originalError = error) {
+  const status = unwrapResolverError(originalError)?.statusCode;
   const codes = { 400: "BAD_USER_INPUT", 401: "UNAUTHENTICATED", 403: "FORBIDDEN", 404: "NOT_FOUND", 409: "CONFLICT", 429: "RATE_LIMITED", 503: "SERVICE_UNAVAILABLE" };
   const known = codes[status] || ["GRAPHQL_VALIDATION_FAILED", "GRAPHQL_PARSE_FAILED", "BAD_USER_INPUT"].includes(error.extensions?.code);
   return { message: known ? error.message : "Internal server error", path: error.path, extensions: { code: codes[status] || (known ? error.extensions.code : "INTERNAL_SERVER_ERROR") } };
@@ -50,6 +54,7 @@ async function requestIdentity(req) {
 }
 
 async function createApp() {
+  const { default: graphqlUploadExpress } = await import("graphql-upload/graphqlUploadExpress.mjs");
   const app = express();
   app.disable("x-powered-by");
   const trustedHops = Number(process.env.TRUST_PROXY_HOPS || 0);
@@ -74,11 +79,11 @@ async function createApp() {
     requestIdentity(req).then(identity => { requireStaff(identity); req.verifiedIdentity = identity; next(); }).catch(next);
   }, graphqlUploadExpress({ maxFileSize: 8 * 1024 * 1024, maxFiles: 5 }));
   const server = new ApolloServer({
-    schema: buildSchema(), csrfPrevention: true, introspection: process.env.NODE_ENV !== "production", validationRules: [queryBudget],
-    context: async ({ req, res }) => ({ ...await requestIdentity(req), res, ip: req.ip }), formatError,
+    schema: await buildSchema(), csrfPrevention: true, introspection: process.env.NODE_ENV !== "production", validationRules: [queryBudget],
+    formatError,
   });
   await server.start();
-  server.applyMiddleware({ app, path: "/graphql", cors: false, bodyParserConfig: false });
+  app.use("/graphql", expressMiddleware(server, { context: async ({ req, res }) => ({ ...await requestIdentity(req), res, ip: req.ip }) }));
   app.use((error, req, res, next) => {
     if (res.headersSent) return next(error);
     const status = error.statusCode || error.status || 500;
