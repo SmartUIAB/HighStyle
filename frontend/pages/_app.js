@@ -17,12 +17,12 @@ import { Elements } from "@stripe/react-stripe-js";
 import { LanguageProvider } from "../context/LanguageContext";
 import { loadStripe } from "@stripe/stripe-js";
 import "../i18n";
-const stripePromise = loadStripe(
-  "pk_test_51PKusfSF45ceFcmopwfwQGLXa25pG4dTLugYmf6ts69EQvkF8JibIJZZcBPqmyiFYbOtGgbQ3wVy7kHX4DiZX5Md00AX9Ma4SD"
-);
+const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+  ? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
+  : null;
 
 export default function MyApp({ Component, pageProps }) {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading] = useState(false);
   const [url, setUrl] = useState();
 
   useEffect(() => {
@@ -30,12 +30,6 @@ export default function MyApp({ Component, pageProps }) {
     const url = path[path.length - 1];
     document.body.classList.add("dark");
 
-    let timer = setTimeout(function () {
-      setIsLoading(false);
-    }, 1000);
-    return () => {
-      clearTimeout(timer);
-    };
   }, []);
 
   return (
@@ -64,7 +58,7 @@ export default function MyApp({ Component, pageProps }) {
               {/* <Head>
               <link rel="icon" type="image/x-icon" href={favicon} />
             </Head> */}
-              <title>Multikart - Multi-purpose E-commerce React Template</title>
+              <title>HighStyle | Fashion and lifestyle</title>
             </Helmet>
             <div>
               <LanguageProvider>
