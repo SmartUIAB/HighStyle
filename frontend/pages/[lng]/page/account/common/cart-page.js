@@ -26,15 +26,17 @@ import {
 } from "../../../../../GraphQL/Mutations/cartMutations";
 import { toast } from "react-toastify";
 import { CREATE_ORDER } from "../../../../../GraphQL/Mutations/orderMutations";
-import { loadStripe } from "@stripe/stripe-js";
 import LocalLink from "../../../../../components/LocalLink";
 import { useTranslation } from "react-i18next";
-import axios from "axios";
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_SECRET_KEY);
 
 const CartPage = () => {
-  const userData = JSON.parse(localStorage.getItem("customerDetail"));
+  const [userData, setUserData] = useState(null);
+  const [ready, setReady] = useState(false);
+  useEffect(() => {
+    try { setUserData(JSON.parse(window.localStorage.getItem("customerDetail") || "null")); }
+    catch (_) { setUserData(null); }
+    setReady(true);
+  }, []);
   const [cartId, setCartId] = useState(null);
   const [deleteCart] = useMutation(DELETE_CART_ITEM);
   const [updateCart] = useMutation(UPDATE_CART_ITEM);
@@ -47,20 +49,17 @@ const CartPage = () => {
     country: "",
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const lang = localStorage.getItem("i18nextLng");
 
   const { t } = useTranslation();
-
-  if (!stripePromise) {
-    return <div>Loading...</div>;
-  }
 
   const {
     data: cartItems,
     loading,
     refetch,
   } = useQuery(GET_CART, {
-    variables: { userId: userData?.id },
+    variables: { userId: userData?.id || "000000000000000000000000" },
+    skip: !userData?.id,
+    fetchPolicy: "network-only",
   });
 
   useEffect(() => {
@@ -68,23 +67,6 @@ const CartPage = () => {
       setCartId(cartItems.getCart.id);
     }
   }, [cartItems]);
-
-  const [rates, setRates] = useState({});
-
-  const fetchRates = async () => {
-    try {
-      const response = await axios.get(
-        "https://v6.exchangerate-api.com/v6/8c6fe5d5c563341bd11be392/latest/USD"
-      );
-      setRates(response.data);
-    } catch (err) {
-      console.log("Failed to fetch exchange rates");
-    }
-  };
-
-  useEffect(() => {
-    fetchRates();
-  }, []);
 
   const handleQtyUpdate = async (item, quantity) => {
     const { data } = await updateCart({
@@ -164,7 +146,8 @@ const CartPage = () => {
     setIsModalOpen(false);
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (!ready || loading) return <div role="status">Loading your cart…</div>;
+  if (!userData?.id) return <div className="container py-5"><p>Please sign in to view your cart.</p><LocalLink href="/page/account/login">Sign in</LocalLink></div>;
 
   return (
     <div>
@@ -197,12 +180,8 @@ const CartPage = () => {
                             href={`/product-details/` + item.ProductID}
                           >
                             <Media
-                              src={
-                                item.images
-                                  ? process.env.NEXT_PUBLIC_API_KEY + item.image
-                                  : process.env.NEXT_PUBLIC_API_KEY + item.image
-                              }
-                              alt=""
+                              src={item.image ? (item.image.startsWith("https://") ? item.image : (process.env.NEXT_PUBLIC_API_KEY || "") + item.image) : "/assets/images/icon-empty-cart.png"}
+                              alt={item.title}
                             />
                           </LocalLink>
                         </td>
@@ -216,22 +195,7 @@ const CartPage = () => {
                         <td>
                           <h2>
                             $
-                            {(
-                              item?.price.toFixed(2) *
-                              ((lang === "en" &&
-                                rates?.conversion_rates?.USD) ||
-                                (lang === "es" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "pt" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "fr" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "ar" &&
-                                  rates?.conversion_rates?.SRD) ||
-                                (lang === "sv" &&
-                                  rates?.conversion_rates?.SEK) ||
-                                1)
-                            ).toFixed(2)}
+                            {Number(item?.price || 0).toFixed(2)}
                           </h2>
                         </td>
                         <td>
@@ -239,6 +203,8 @@ const CartPage = () => {
                             <div className="input-group">
                               <input
                                 type="number"
+                                min="0" max="99" step="1"
+                                aria-label={`Quantity of ${item.title}`}
                                 name="quantity"
                                 onChange={(e) =>
                                   handleQtyUpdate(item, e.target.value)
@@ -250,30 +216,12 @@ const CartPage = () => {
                           </div>
                         </td>
                         <td>
-                          <i
-                            className="fa fa-times"
-                            onClick={() => removeFromCart(item)}
-                          ></i>
+                          <button type="button" className="btn btn-outline-danger" aria-label={`Remove ${item.title} from cart`} onClick={() => removeFromCart(item)}><i className="fa fa-times" aria-hidden="true" /></button>
                         </td>
                         <td>
                           <h2 className="td-color">
                             $
-                            {(
-                              item.totalAmount.toFixed(2) *
-                              ((lang === "en" &&
-                                rates?.conversion_rates?.USD) ||
-                                (lang === "es" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "pt" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "fr" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "ar" &&
-                                  rates?.conversion_rates?.SRD) ||
-                                (lang === "sv" &&
-                                  rates?.conversion_rates?.SEK) ||
-                                1)
-                            ).toFixed(2)}
+                            {Number(item?.totalAmount || 0).toFixed(2)}
                           </h2>
                         </td>
                       </tr>
@@ -288,16 +236,7 @@ const CartPage = () => {
                         {/* <h2>${cartItems?.getCart?.totalAmount.toFixed(2)}</h2> */}
                         <h2>
                           $
-                          {(
-                            cartItems?.getCart?.totalAmount.toFixed(2) *
-                            ((lang === "en" && rates?.conversion_rates?.USD) ||
-                              (lang === "es" && rates?.conversion_rates?.EUR) ||
-                              (lang === "pt" && rates?.conversion_rates?.EUR) ||
-                              (lang === "fr" && rates?.conversion_rates?.EUR) ||
-                              (lang === "ar" && rates?.conversion_rates?.SRD) ||
-                              (lang === "sv" && rates?.conversion_rates?.SEK) ||
-                              1)
-                          ).toFixed(2)}
+                          {Number(cartItems?.getCart?.totalAmount || 0).toFixed(2)}
                         </h2>
                       </td>
                     </tr>
