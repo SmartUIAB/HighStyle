@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -42,7 +42,8 @@ const ProductTab = ({ item }) => {
   const [update_review] = useMutation(UPDATE_REVIEW);
   const router = useRouter();
 
-  const userData = JSON.parse(localStorage.getItem("customerDetail"));
+  const [userData, setUserData] = useState(null);
+  useEffect(() => { try { setUserData(JSON.parse(window.localStorage.getItem("customerDetail") || "null")); } catch (_) { setUserData(null); } }, []);
   const {
     data: reviewsData,
     loading,
