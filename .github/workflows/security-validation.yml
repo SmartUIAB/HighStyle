@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [fix/security-foundation-20261117]
+    branches: [main, fix/security-foundation-20261117]
   workflow_dispatch:
 
 permissions:
