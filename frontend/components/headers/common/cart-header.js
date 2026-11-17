@@ -1,88 +1,38 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
-import Link from "next/link";
+import React from "react";
 import { Media } from "reactstrap";
-import { DELETE_CART_ITEM } from "../../../GraphQL/Mutations/cartMutations";
 import { useMutation } from "@apollo/client";
+import { toast } from "react-toastify";
+import { DELETE_CART_ITEM } from "../../../GraphQL/Mutations/cartMutations";
 import LocalLink from "../../LocalLink";
-import axios from "axios";
 
-const CartHeader = ({ item, symbol }) => {
-  const [deleteCart] = useMutation(DELETE_CART_ITEM);
-  const lang = localStorage.getItem("i18nextLng");
-
-  const [rates, setRates] = useState({});
-
-  const fetchRates = async () => {
+export default function CartHeader({ item, cartId, onChanged }) {
+  const [deleteCart, { loading }] = useMutation(DELETE_CART_ITEM);
+  const remove = async () => {
+    if (!cartId || !item?._id) return;
     try {
-      const response = await axios.get(
-        "https://v6.exchangerate-api.com/v6/8c6fe5d5c563341bd11be392/latest/USD"
-      );
-      setRates(response.data);
-    } catch (err) {
-      setError("Failed to fetch exchange rates");
-    }
+      await deleteCart({ variables: { cartId, productId: item._id } });
+      await onChanged?.();
+      toast.success("Item removed from your cart");
+    } catch (error) { toast.error(error.message || "Could not remove this item"); }
   };
-
-  useEffect(() => {
-    fetchRates();
-  }, []);
-
-  const removeFromCart = async (item) => {
-    const { data } = await deleteCart({
-      variables: {
-        cartId: cartItems.getCart.id,
-        productId: item._id,
-      },
-    });
-    if (data) {
-      refetch();
-    } else {
-      toast.error("Failed to remove item from cart");
-    }
-  };
+  const image = item.image?.startsWith("https://") ? item.image
+    : item.image ? `${process.env.NEXT_PUBLIC_API_KEY || ""}${item.image}`
+    : "/assets/images/icon-empty-cart.png";
   return (
-    <Fragment>
-      <li>
-        <div className="media">
-          <LocalLink href={"/product-details/" + item.ProductID}>
-            <Media
-              alt=""
-              className="me-3"
-              src={process.env.NEXT_PUBLIC_API_KEY + `${item.image}`}
-            />
-          </LocalLink>
-          <div className="media-body">
-            <LocalLink href={"/product-details/" + item.id}>
-              <h6>{item.title}</h6>
-            </LocalLink>
-
-            <h4>
-              <span>
-                {item.qty} x
-                {(
-                  item?.price.toFixed(2) *
-                  ((lang === "en" && rates?.conversion_rates?.USD) ||
-                    (lang === "es" && rates?.conversion_rates?.EUR) ||
-                    (lang === "pt" && rates?.conversion_rates?.EUR) ||
-                    (lang === "fr" && rates?.conversion_rates?.EUR) ||
-                    (lang === "ar" && rates?.conversion_rates?.SRD) ||
-                    (lang === "sv" && rates?.conversion_rates?.SEK) ||
-                    1)
-                ).toFixed(2)}
-              </span>
-            </h4>
-          </div>
+    <li>
+      <div className="media">
+        <LocalLink href={`/product-details/${item.ProductID}`}>
+          <Media alt={item.title} className="me-3" src={image} loading="lazy" />
+        </LocalLink>
+        <div className="media-body">
+          <h6>{item.title}</h6>
+          <p>{item.quantity} × {Number(item.price || 0).toFixed(2)} USD</p>
         </div>
-        <div className="close-circle">
-          <i
-            className="fa fa-times"
-            aria-hidden="true"
-            onClick={() => removeFromCart(item)}
-          ></i>
-        </div>
-      </li>
-    </Fragment>
+      </div>
+      <button type="button" className="close-circle" onClick={remove}
+        disabled={loading} aria-label={`Remove ${item.title} from cart`}>
+        <i className="fa fa-times" aria-hidden="true" />
+      </button>
+    </li>
   );
-};
-
-export default CartHeader;
+}
