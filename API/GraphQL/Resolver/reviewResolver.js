@@ -6,7 +6,7 @@ const reviewResolvers = {
       try {
         return await Review.find({ productId })
           .sort({ createdAt: -1 })
-          .populate("userId", "firstname lastname email");
+          .populate("userId", "firstname lastname");
       } catch (error) {
         throw new Error("Error fetching reviews: " + error.message);
       }

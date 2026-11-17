@@ -11,7 +11,7 @@ const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const vendorResolver = {
   Query: {
-    vendorById: async (_, { vendorId }) => {
+    vendorById: async (_, { vendorId }, context) => {
       try {
         const vendor = await Vendor.findById(vendorId);
 
@@ -40,10 +40,10 @@ const vendorResolver = {
       }
     },
 
-    vendors: async (_, { page = 1, limit = 10 }) => {
+    vendors: async (_, { page = 1, limit = 10 }, context) => {
       try {
         const skip = (page - 1) * limit;
-        const totalCount = await Vendor.countDocuments();
+        const totalCount = await Vendor.countDocuments({ company: context.user.company });
 
         if (totalCount === 0) {
           return {
@@ -55,7 +55,7 @@ const vendorResolver = {
           };
         }
 
-        const vendors = await Vendor.find().skip(skip).limit(limit);
+        const vendors = await Vendor.find({ company: context.user.company }).skip(skip).limit(limit);
 
         return {
           vendors: vendors.map((vendor) => ({

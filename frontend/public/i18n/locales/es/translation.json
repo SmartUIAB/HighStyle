@@ -243,7 +243,7 @@
       "email": "El Correo Electrónico es obligatorio",
       "emailInvalid": "El Correo Electrónico no es válido",
       "password": "La Contraseña es obligatoria",
-      "passwordLength": "La Contraseña debe tener al menos 6 caracteres"
+      "passwordLength": "La Contraseña debe tener al menos 10 caracteres"
     },
     "successMessage": "Cuenta creada exitosamente",
     "errorMessage": "Ocurrió un error al crear la cuenta"

@@ -38,7 +38,7 @@ const Login = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!validateForm()) {
+    if (loading || !validateForm()) {
       return;
     }
 
@@ -55,7 +55,7 @@ const Login = () => {
         JSON.stringify(data.loginCustomer.customer)
       );
       toast.success("Login successful");
-      router.replace("/");
+      router.replace(`/${["en", "ar", "sv", "fr", "es", "pt"].includes(router.query.lng) ? router.query.lng : "en"}`);
     } catch (error) {
       toast.error(error.message || "An error occurred during login");
     }
@@ -69,7 +69,7 @@ const Login = () => {
             <Col lg="6">
               <h3>{t("login.welcome")}</h3>
               <div className="theme-card">
-                <Form className="theme-form">
+                <Form className="theme-form" onSubmit={handleSubmit} aria-busy={loading}>
                   <div className="form-group">
                     <Label className="form-label" for="email">
                       {t("login.email")}
@@ -78,6 +78,7 @@ const Login = () => {
                       type="email"
                       className="form-control"
                       id="email"
+                      autoComplete="username"
                       placeholder="Email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -95,6 +96,7 @@ const Login = () => {
                       type="password"
                       className="form-control"
                       id="review"
+                      autoComplete="current-password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your password"
@@ -109,9 +111,9 @@ const Login = () => {
                     forgetPassword
                   </LocalLink>
                   <br />
-                  <a onClick={handleSubmit} className="btn btn-solid">
+                  <button type="submit" disabled={loading} className="btn btn-solid">
                     {t("login.login_button")}
-                  </a>
+                  </button>
                 </Form>
               </div>
             </Col>

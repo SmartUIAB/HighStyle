@@ -16,7 +16,7 @@ const Register = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [createCustomer] = useMutation(REGISTER_USER);
+  const [createCustomer, { loading }] = useMutation(REGISTER_USER);
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -39,7 +39,7 @@ const Register = () => {
     }
     if (!formData.password.trim()) {
       newErrors.password = t("register.error.password");
-    } else if (formData.password.length < 6) {
+    } else if (formData.password.length < 10) {
       newErrors.password = t("register.error.passwordLength");
     }
     setErrors(newErrors);
@@ -49,7 +49,7 @@ const Register = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!validateForm()) {
+    if (loading || !validateForm()) {
       return;
     }
 
@@ -143,6 +143,8 @@ const Register = () => {
                       </Label>
                       <Input
                         type="password"
+                        minLength={10}
+                        autoComplete="new-password"
                         className="form-control"
                         id="password"
                         placeholder={t("register.password")}
@@ -155,7 +157,7 @@ const Register = () => {
                       )}
                     </Col>
                     <Col md="12">
-                      <Button type="submit" className="btn btn-solid w-auto">
+                      <Button type="submit" disabled={loading} className="btn btn-solid w-auto">
                         {t("register.createAccount")}
                       </Button>
                     </Col>

@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const cartSchema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "Customer", required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "Customer", required: true, unique: true },
     products: [
       {
         ProductID: {
@@ -20,7 +20,7 @@ const cartSchema = new Schema(
     ],
     totalAmount: { type: Number, required: true },
   },
-  { timestamps: true }
+  { timestamps: true, optimisticConcurrency: true }
 );
 
 const Cart = mongoose.model("Cart", cartSchema);

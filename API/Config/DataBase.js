@@ -1,11 +1,7 @@
+"use strict";
 const mongoose = require("mongoose");
-
-const DatabaseConnection = async () => {
-  await mongoose
-    .connect(process.env.MONGODB_ATLAS)
-    // .connect("mongodb://127.0.0.1:27017/HighStyle")
-    .then(() => console.log(".....Database is working....."))
-    .catch((er) => console.log(er.message));
-};
-
+async function DatabaseConnection() {
+  if (!process.env.MONGODB_ATLAS) throw new Error("MONGODB_ATLAS is required");
+  return mongoose.connect(process.env.MONGODB_ATLAS, { serverSelectionTimeoutMS: 10000 });
+}
 module.exports = DatabaseConnection;

@@ -4,7 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node --experimental-modules server.js"
+    "start": "node server.js",
+    "test": "node --test test/*.test.js",
+    "test:unit": "node --test test/access.test.js test/pricing.test.js test/http.test.js test/policy.test.js test/auth.test.js"
   },
   "repository": {
     "type": "git",
@@ -41,6 +43,7 @@
     "nodemailer": "^6.9.16",
     "nodemon": "^2.0.4",
     "react-slide-toggle": "^0.3.5",
-    "stripe": "^15.11.0"
+    "stripe": "^15.11.0",
+    "cors": "^2.8.5"
   }
 }

@@ -1,168 +1,61 @@
-const Cart = require("../../Model/cartModel"); // Assuming the Cart model is in models/Cart.js
-const customerModel = require("../../Model/customerModel");
-const DigitalProduct = require("../../Model/digitalProductModel");
-const PhysicalProduct = require("../../Model/physicalProductModel");
+"use strict";
+const Cart = require("../../Model/cartModel");
 const CustomError = require("../../Utilities/CustomError");
+const { requireCustomer, requireOwnership, objectId } = require("../../Security/access");
+const { priceCart, quantity } = require("../../Services/catalogPricing");
 
-const cartResolvers = {
+async function ownCart(cartId, context) {
+  const customerId = requireCustomer(context);
+  const cart = await Cart.findById(objectId(cartId, "Cart"));
+  if (!cart) throw new CustomError("Cart not found", 404);
+  requireOwnership(cart.userId, customerId);
+  return cart;
+}
+async function savePriced(cart, lines) {
+  const priced = await priceCart(lines);
+  cart.products = priced.products;
+  cart.totalAmount = priced.totalAmount;
+  try { await cart.save(); } catch (error) {
+    if (error.name === "VersionError") throw new CustomError("Cart changed; refresh and retry", 409);
+    throw error;
+  }
+  return cart;
+}
+
+module.exports = {
   Query: {
-    getCart: async (_, { userId }) => {
-      try {
-        const cart = await Cart.findOne({ userId: userId });
-        if (!cart) {
-          throw new Error("Cart not found");
-        }
-        return cart;
-      } catch (err) {
-        throw new Error(err.message);
-      }
+    getCart: async (_, { userId }, context) => {
+      requireCustomer(context, userId);
+      return Cart.findOne({ userId });
     },
-    getCarts: async () => {
-      try {
-        const carts = await Cart.find().populate("products.ProductID");
-        return carts;
-      } catch (err) {
-        throw new Error(err.message);
-      }
-    },
+    getCarts: async () => Cart.find().limit(100), // Platform-admin policy applies at the schema boundary.
   },
-
   Mutation: {
-    createCart: async (_, { input }) => {
+    createCart: async (_, { input }, context) => {
+      const userId = requireCustomer(context, input.userId);
+      if (!Array.isArray(input.products) || !input.products.length) throw new CustomError("Cart products are required", 400);
+      let cart;
       try {
-        const existingUser = await customerModel.findById(input.userId);
-        if (!existingUser) {
-          throw new CustomError("User not found");
-        }
-
-        const cartUser = await Cart.findOne({ userId: input.userId }).exec();
-        if (cartUser) {
-          let products = input.products;
-
-          let image;
-
-          const existingProducts = await PhysicalProduct.findById(
-            products[0].ProductID
-          );
-
-          image = existingProducts?.images[0];
-          if (!image) {
-            const existingProducts = await DigitalProduct.findById(
-              products[0].ProductID
-            );
-            image = existingProducts?.images[0];
-          }
-
-          products = products.map((product) => ({
-            ...product,
-            image,
-          }));
-
-          const combinedProducts = [...cartUser.products, ...products];
-
-          const productsTotal = combinedProducts.reduce((sum, product) => {
-            return sum + product.totalAmount;
-          }, 0);
-          cartUser.products.push(...products);
-          cartUser.totalAmount = productsTotal;
-          await cartUser.save();
-          return cartUser;
-        } else {
-          let image;
-          let products = input.products;
-
-          const existingProducts = await PhysicalProduct.findById(
-            products[0].ProductID
-          );
-
-          image = existingProducts?.images[0];
-          if (!image) {
-            const existingProducts = await DigitalProduct.findById(
-              products[0].ProductID
-            );
-            image = existingProducts?.images[0];
-          }
-
-          products = products.map((product) => ({
-            ...product,
-            image,
-          }));
-          const newCart = new Cart(input);
-          newCart.totalAmount = input.products[0].totalAmount;
-          newCart.products[0].image = image;
-
-          await newCart.save();
-          return newCart;
-        }
-      } catch (err) {
-        throw new Error(err.message);
+        cart = await Cart.findOneAndUpdate({ userId }, { $setOnInsert: { userId, products: [], totalAmount: 0 } }, { new: true, upsert: true, runValidators: true });
+      } catch (error) {
+        if (error.code !== 11000) throw error;
+        cart = await Cart.findOne({ userId });
       }
+      return savePriced(cart, [...cart.products.map(item => item.toObject()), ...input.products]);
     },
-
-    deleteCart: async (_, { cartId, productId }) => {
-      try {
-        const cart = await Cart.findById(cartId);
-        if (!cart) {
-          throw new Error("Cart not found");
-        }
-
-        const productIndex = cart.products.findIndex(
-          (product) => product._id.toString() === productId
-        );
-
-        if (productIndex === -1) {
-          throw new Error("Product not found in the cart");
-        }
-
-        const removedProduct = cart.products.splice(productIndex, 1)[0];
-        cart.totalAmount -= removedProduct.totalAmount;
-
-        await cart.save();
-
-        return cart;
-      } catch (err) {
-        throw new Error(err.message);
-      }
+    updateCart: async (_, { cartId, productId, newQuantity }, context) => {
+      quantity(newQuantity, true);
+      const cart = await ownCart(cartId, context);
+      const id = objectId(productId, "Cart line");
+      if (!cart.products.some(item => String(item._id) === id)) throw new CustomError("Cart line not found", 404);
+      const lines = cart.products.map(item => item.toObject()).flatMap(item => String(item._id) !== id ? [item] : newQuantity === 0 ? [] : [{ ...item, quantity: newQuantity }]);
+      return savePriced(cart, lines);
     },
-    updateCart: async (_, { cartId, productId, newQuantity }) => {
-      try {
-        const cart = await Cart.findById(cartId);
-        if (!cart) {
-          throw new Error("Cart not found");
-        }
-
-        const product = cart.products.find(
-          (product) => product._id.toString() === productId
-        );
-
-        if (!product) {
-          throw new Error("Product not found in the cart");
-        }
-
-        if (newQuantity === 0) {
-          // Remove product from cart if quantity is set to 0
-          cart.products = cart.products.filter(
-            (product) => product._id.toString() !== productId
-          );
-        } else {
-          // Update quantity and totalAmount if quantity is not 0
-          product.quantity = newQuantity;
-          product.totalAmount = product.price * product.quantity;
-        }
-
-        // Recalculate the cart's totalAmount
-        cart.totalAmount = cart.products.reduce(
-          (total, product) => total + product.totalAmount,
-          0
-        );
-
-        await cart.save();
-        return cart;
-      } catch (err) {
-        throw new Error(err.message);
-      }
+    deleteCart: async (_, { cartId, productId }, context) => {
+      const cart = await ownCart(cartId, context);
+      const id = objectId(productId, "Cart line");
+      if (!cart.products.some(item => String(item._id) === id)) throw new CustomError("Cart line not found", 404);
+      return savePriced(cart, cart.products.filter(item => String(item._id) !== id).map(item => item.toObject()));
     },
   },
 };
-
-module.exports = cartResolvers;

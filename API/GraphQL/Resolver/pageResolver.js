@@ -16,9 +16,9 @@ const pageResolvers = {
         throw new CustomError("Error fetching page: " + error.message);
       }
     },
-    listPages: async () => {
+    listPages: async (_, args, context) => {
       try {
-        return await Page.find();
+        return await Page.find({ company: context.user.company });
       } catch (error) {
         throw new CustomError("Error fetching pages: " + error.message);
       }

@@ -27,6 +27,7 @@ const salesTypeDef = gql`
     PENDING
     SUCCESSFUL
     FAILED
+    PARTIALLY_REFUNDED
     REFUNDED
   }
 
@@ -62,6 +63,8 @@ const salesTypeDef = gql`
     PAID
     FAILED
     CASH_ON_DELIVERY
+    PARTIALLY_REFUNDED
+    REFUNDED
   }
 
   type CreateOrderResponse {

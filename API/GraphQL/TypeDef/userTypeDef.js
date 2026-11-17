@@ -53,7 +53,6 @@ const userTypeDefs = gql`
     firstname: String!
     lastname: String!
     company: String
-    password: String
     image: String
     role: String
     permissions: [ID!]!

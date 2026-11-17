@@ -1,28 +1,30 @@
+"use strict";
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = process.env;
 const User = require("../Model/userModel");
 const Customer = require("../Model/customerModel");
+const { objectId } = require("../Security/access");
 
-const authenticateUser = async (token) => {
-  let userId = null;
-  let user = null;
+const anonymous = () => ({ userId: null, user: null, principalType: null });
 
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET);
-      if (decoded.userId) {
-        userId = decoded.userId;
-        user = await User.findById(userId);
-      } else if (decoded.customerId) {
-        userId = decoded.customerId;
-        user = await Customer.findById(userId);
-      }
-    } catch (err) {
-      console.error("Authentication error:", err);
-    }
+async function authenticateUser(token) {
+  if (typeof token !== "string" || !token || !process.env.JWT_SECRET) return anonymous();
+  let claims;
+  try {
+    claims = jwt.verify(token, process.env.JWT_SECRET, { algorithms: ["HS256"] });
+    if (!claims || typeof claims !== "object" || !Number.isFinite(claims.exp)) return anonymous();
+    if (Boolean(claims.userId) === Boolean(claims.customerId)) return anonymous();
+    objectId(claims.userId || claims.customerId);
+  } catch (_) {
+    // Never log a token or silently authenticate as an environment/service user.
+    return anonymous();
   }
-
-  return { userId, user };
-};
+  const principalType = claims.userId ? "staff" : "customer";
+  const Model = claims.userId ? User : Customer;
+  const user = await Model.findById(claims.userId || claims.customerId);
+  if (!user) return anonymous();
+  const version = claims.authVersion ?? 0;
+  if (!Number.isSafeInteger(version) || version < 0 || version !== (user.authVersion || 0)) return anonymous();
+  return { userId: String(user._id), user, principalType };
+}
 
 module.exports = { authenticateUser };
