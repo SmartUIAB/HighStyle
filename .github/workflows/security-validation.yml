@@ -1,0 +1,74 @@
+name: Security and build validation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [fix/security-foundation-20261117]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: API security and contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NODE_ENV: test
+      JWT_SECRET: highstyle-ci-only-not-a-deployment-secret-20261117
+      STRIPE_SECRET_KEY: sk_test_ci_placeholder_not_a_real_key
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: API/package-lock.json
+      - name: Install locked API dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --prefix API
+      - name: Validate API schema and regression tests
+        working-directory: API
+        run: |
+          node -e "require('@graphql-tools/schema').makeExecutableSchema({typeDefs:require('./GraphQL/TypeDef'),resolvers:require('./GraphQL/Resolver')}); console.log('GraphQL schema constructed')"
+          if [ -d test ]; then node --test test/*.test.js; else echo 'Regression tests are not yet committed'; exit 1; fi
+      - name: Capture reproducible source snapshot for engineering review
+        if: always()
+        run: git archive --format=tar HEAD -o highstyle-source.tar
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-and-api-validation-${{ github.sha }}
+          path: |
+            highstyle-source.tar
+            API/package.json
+            API/package-lock.json
+          retention-days: 7
+  web:
+    name: Build ${{ matrix.application }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        application: [frontend, backend]
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_GRAPHQL_ENDPOINT: http://127.0.0.1:2024/graphql
+      NEXT_PUBLIC_API_KEY: http://127.0.0.1:2024
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: ${{ matrix.application }}/package-lock.json
+      - name: Install existing lockfile (legacy peer dependencies)
+        run: npm ci --legacy-peer-deps --prefix ${{ matrix.application }}
+      - name: Production build
+        run: npm run build --prefix ${{ matrix.application }}
