@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import sizeChart from "../../../../public/assets/images/size-chart.jpg";
 import { Modal, ModalBody, ModalHeader, Media, Input } from "reactstrap";
 import CountdownComponent from "../../../../components/common/widgets/countdownComponent";
@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import { CREATE_ADD_TO_CART } from "../../../../GraphQL/Mutations/cartMutations";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/router";
-import axios from "axios";
 
 const DetailsWithPrice = ({ item, stickyClass }) => {
   const { t } = useTranslation();
@@ -16,27 +15,6 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
   const [activeSize, setActiveSize] = useState(null);
   const [activeColor, setActiveColor] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const lang = localStorage.getItem("i18nextLng");
-
-  // multi currency
-
-  const [rates, setRates] = useState({});
-
-  const fetchRates = async () => {
-    try {
-      const response = await axios.get(
-        "https://v6.exchangerate-api.com/v6/8c6fe5d5c563341bd11be392/latest/USD"
-      );
-      setRates(response.data);
-    } catch (err) {
-      setError("Failed to fetch exchange rates");
-    }
-  };
-
-  useEffect(() => {
-    fetchRates();
-  }, []);
-
   const toggle = () => setModal(!modal);
   const router = useRouter();
 
@@ -44,7 +22,10 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
 
   const product = item;
   const isDigital = product?.__typename === "DigitalProduct";
-  const stockQuantity = isDigital ? Infinity : product?.stockQuantity || 0;
+  const stockQuantity = isDigital ? 99 : Math.min(99, product?.stockQuantity || 0);
+  const price = Number(product?.price || 0);
+  const discount = Number(product?.discount || 0);
+  const discountedPrice = Math.max(0, price * (1 - discount / 100));
 
   const IncrementItem = () => {
     if (quantity < stockQuantity) {
@@ -79,7 +60,7 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
 
       if (!product) return;
 
-      if (!isDigital && (activeColor === null || activeSize === null)) {
+      if (!isDigital && ((product.colors?.length && activeColor === null) || (product.sizes?.length && activeSize === null))) {
         toast.error(t("product_details.selectColorAndSize"));
         return;
       }
@@ -122,46 +103,10 @@ const DetailsWithPrice = ({ item, stickyClass }) => {
   return (
     <div className={`product-right ${stickyClass}`}>
       <h2>{product?.title}</h2>
-      <h4>
-        <del>
-          $
-          {(
-            product?.price.toFixed(2) *
-              ((lang === "en" && rates?.conversion_rates?.USD) ||
-                (lang === "es" && rates?.conversion_rates?.EUR) ||
-                (lang === "pt" && rates?.conversion_rates?.EUR) ||
-                (lang === "fr" && rates?.conversion_rates?.EUR) ||
-                (lang === "ar" && rates?.conversion_rates?.SRD) ||
-                (lang === "sv" && rates?.conversion_rates?.SEK) ||
-                1) +
-            product?.price.toFixed(2) *
-              ((lang === "en" && rates?.conversion_rates?.USD) ||
-                (lang === "es" && rates?.conversion_rates?.EUR) ||
-                (lang === "pt" && rates?.conversion_rates?.EUR) ||
-                (lang === "fr" && rates?.conversion_rates?.EUR) ||
-                (lang === "ar" && rates?.conversion_rates?.SRD) ||
-                (lang === "sv" && rates?.conversion_rates?.SEK) ||
-                1) *
-              (product?.discount / 100)
-          ).toFixed(2)}
-        </del>
-        <span>
-          {product?.discount}% {t("product_details.off")}
-        </span>
-      </h4>
-      <h3>
-        $
-        {(
-          product?.price.toFixed(2) *
-          ((lang === "en" && rates?.conversion_rates?.USD) ||
-            (lang === "es" && rates?.conversion_rates?.EUR) ||
-            (lang === "pt" && rates?.conversion_rates?.EUR) ||
-            (lang === "fr" && rates?.conversion_rates?.EUR) ||
-            (lang === "ar" && rates?.conversion_rates?.SRD) ||
-            (lang === "sv" && rates?.conversion_rates?.SEK) ||
-            1)
-        ).toFixed(2)}
-      </h3>
+      {discount > 0 && (
+        <h4><del>{price.toFixed(2)} USD</del><span> {discount}% {t("product_details.off")}</span></h4>
+      )}
+      <h3>{discountedPrice.toFixed(2)} USD</h3>
 
       {!isDigital && product?.colors?.length > 0 && (
         <ul className="color-variant d-flex list-unstyled">
