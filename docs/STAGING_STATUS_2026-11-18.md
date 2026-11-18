@@ -20,6 +20,7 @@ The catalog contains six explicitly labeled staging samples, including an unavai
 - Staff changes cannot delete reserved products or reduce on-hand inventory below current holds. Financial refunds do not automatically restock merchandise that has not been returned.
 - The responsive AR/EN storefront has real catalog search, ordering and availability filtering, explicit variant selection, an inline cart/address/summary flow, and customer-owned order confirmation.
 - Returning from hosted checkout through browser Back restores controls and reads the exact customer-owned order before offering cancellation. A pending order is never presented as evidence of failed payment.
+- Home pages are prerendered for each supported locale so Arabic starts with Arabic text and RTL direction. Authentication forms use a POST fallback and remain disabled until hydration/router readiness, preventing early native GET submissions of credentials.
 - Vercel uses a same-origin API proxy so the browser receives secure HttpOnly session cookies. Stripe and database credentials remain server-side.
 
 ## Isolated infrastructure
@@ -40,13 +41,15 @@ The known staging infrastructure IDs are explicitly rejected by the production r
 
 - API: **94 tests passed**, zero failures or skips, against a real MongoDB 7 replica set. Coverage includes ten buyers competing for three units, repeated checkout, multi-item rollback, cancellation/payment races, ambiguous provider responses, expiry recovery and order ownership.
 - Storefront helpers: **11 tests passed**; TypeScript passed.
-- Storefront production build: passed, 101 generated pages.
+- Storefront production build: passed, 106 generated pages after locale prerendering. Emitted Arabic/English HTML and disabled POST authentication forms were checked before hydration.
 - Administration production build: passed.
 - Full dependency audit: **zero reported vulnerabilities** in both browser applications after replacing the vulnerable Sass watcher chain.
 - Release guards: **25 tests passed**, including refusal of staging targets, incorrect API proxies, missing acceptance, live payment evidence and unprotected environments. Workflow YAML and script syntax were checked.
 - Manual hosted-browser inspection verified the live catalog, availability filtering, ascending price ordering, product details, unauthenticated cart/login return navigation, Arabic language switching and RTL presentation.
 
-Automated hosted-browser results and the final deployed commit must be read from the actual run evidence and PR status. The screenshot below documents the Arabic storefront at checkpoint `6a4bd9e5f780bea2eaddd5f7b5fa9430b6051083`; it is visual evidence only and cannot authorize release.
+An actual hosted browser-only run on `c86a50cafde13b05cafe9e1008c167edc65e1b77` passed Chromium 159, Firefox 159 and WebKit 27.2, with a 390×844 mobile viewport, RTL, login, product options, cart quantity changes, address persistence, session reload and keyboard checks. See the [sanitized baseline report](evidence/browser-smoke-c86a50c.json). Its seven provider/payment checks remain explicitly blocked; it cannot authorize production delivery. WebKit emulation is not a physical iPhone/Safari-device test.
+
+The final deployed commit and final browser rerun must be read from the actual release identity and PR status. The screenshot below documents the Arabic storefront at checkpoint `6a4bd9e5f780bea2eaddd5f7b5fa9430b6051083`; it is visual evidence only and cannot authorize release.
 
 ![Arabic staging storefront](screenshots/highstyle-staging-ar.jpg)
 

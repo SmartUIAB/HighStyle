@@ -5,7 +5,7 @@ import { dirname } from 'node:path';
 import { requireValue, requireSha, requireHttpsOrigin, verifyApiRelease, verifyAcceptance, REPOSITORY, REQUIRED_ACCEPTANCE_CHECKS } from '../release/evidence.mjs';
 import { AcceptanceError, hostedClients, ensure, poll } from './hosted-clients.mjs';
 import { stagingBrowserFixtures, stagingFixtures } from './hosted-fixtures.mjs';
-import { browserModule, payInBrowser, browserSmoke } from './hosted-browser.mjs';
+import { browserModule, payInBrowser, browserSmoke, authBeforeHydration } from './hosted-browser.mjs';
 
 const smokeOnly = process.argv.includes('--browser-smoke');
 const report = { schemaVersion: 1, kind: smokeOnly ? 'browser-smoke' : 'hosted-purchase', repository: REPOSITORY, environment: 'staging', stripeMode: 'test', startedAt: new Date().toISOString(), checks: Object.fromEntries(REQUIRED_ACCEPTANCE_CHECKS.map(name => [name, 'blocked'])) };
@@ -153,6 +153,7 @@ async function run() {
   verifyApiRelease(release, { commit, environment: 'staging', paymentsEnabled: smokeOnly ? release.paymentsEnabled : true });
   const clients = hostedClients(config);
   const playwright = await browserModule(config.playwrightPath);
+  report.authBeforeHydration = await authBeforeHydration(playwright, config);
   if (smokeOnly) {
     fixtures = await stagingBrowserFixtures(clients);
     const product = await fixtures.product('browser-smoke', 5);

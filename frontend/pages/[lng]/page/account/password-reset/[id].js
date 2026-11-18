@@ -6,18 +6,22 @@ import { RESET_PASSWORD } from "../../../../../GraphQL/Mutations/authMutations";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next"; // Import useTranslation hook
+import useFormReady from "../../../../../components/storefront/useFormReady";
+import { localeOf } from "../../../../../components/storefront/commerce.mjs";
 
 const PasswordReset = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [resetPassword] = useMutation(RESET_PASSWORD);
+  const [resetPassword, { loading }] = useMutation(RESET_PASSWORD);
   const router = useRouter();
+  const ready = useFormReady(router.isReady);
   const { id } = router.query || {};
   const { t } = useTranslation(); // Initialize the useTranslation hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!ready || loading) return;
 
     if (password !== confirmPassword) {
       toast.error(t("passwordReset.passwordsDoNotMatch")); // Localized error message
@@ -25,17 +29,15 @@ const PasswordReset = () => {
     }
 
     try {
-      const response = await resetPassword({
+      await resetPassword({
         variables: {
           token: id,
           newPassword: password,
         },
       });
-      console.log("Response:", response);
       toast.success(t("passwordReset.successMessage")); // Localized success message
-      router.push("/page/account/login");
-    } catch (error) {
-      console.error("Error:", error);
+      router.push(`/${localeOf(router.query.lng)}/page/account/login`);
+    } catch (_) {
       toast.error(t("passwordReset.errorMessage")); // Localized error message
     }
   };
@@ -50,7 +52,7 @@ const PasswordReset = () => {
           <Row>
             <Col lg="6" className="m-auto">
               <h2>{t("passwordReset.resetYourPassword")}</h2>
-              <Form className="theme-form" onSubmit={handleSubmit}>
+              <Form method="post" className="theme-form" onSubmit={handleSubmit} aria-busy={!ready || loading} data-ready={ready} data-testid="password-reset-form">
                 <Row>
                   <Col md="12">
                     <Input
@@ -59,6 +61,7 @@ const PasswordReset = () => {
                       id="password"
                       placeholder={t("passwordReset.enterNewPassword")}
                       value={password}
+                      disabled={!ready || loading}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                     />
@@ -70,12 +73,13 @@ const PasswordReset = () => {
                       id="confirmPassword"
                       placeholder={t("passwordReset.confirmNewPassword")}
                       value={confirmPassword}
+                      disabled={!ready || loading}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                     />
                   </Col>
                   <Col md="12" className="text-center mt-4">
-                    <Button type="submit" className="btn btn-solid w-auto">
+                    <Button type="submit" className="btn btn-solid w-auto" disabled={!ready || loading}>
                       {t("passwordReset.resetPasswordButton")}
                     </Button>
                   </Col>

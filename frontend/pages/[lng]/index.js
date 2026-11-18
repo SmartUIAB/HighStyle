@@ -6,11 +6,20 @@ import LiveCatalog from "../../components/common/Collections/LiveCatalog";
 import LocalLink from "../../components/LocalLink";
 import Icon from "../../components/storefront/Icon";
 import useStoreText from "../../components/storefront/useStoreText";
+import { supportedLocales } from "../../components/storefront/commerce.mjs";
+
+export async function getStaticPaths() {
+  return { paths: supportedLocales.map(lng => ({ params: { lng } })), fallback: false };
+}
+
+export async function getStaticProps() {
+  return { props: {} };
+}
 
 export default function Storefront() {
   const { text } = useStoreText();
   return <>
-    <Head><title>HighStyle | {text("physical")}</title><meta name="description" content={text("heroBody")} /></Head>
+    <Head><title>{`HighStyle | ${text("physical")}`}</title><meta name="description" content={text("heroBody")} /></Head>
     <Header />
     <main id="main-content" tabIndex={-1}>
       <section className="hs-hero hs-container" aria-labelledby="hero-title">

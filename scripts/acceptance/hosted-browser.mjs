@@ -6,10 +6,10 @@ export async function browserModule(modulePath) {
   catch { throw new Error('Playwright module is unavailable; install the pinned package and all three browser engines'); }
 }
 
-async function contextFor(engine, config, { mobile = false } = {}) {
+async function contextFor(engine, config, { mobile = false, javascriptEnabled = true } = {}) {
   const chromiumPath = engine.name() === 'chromium' ? process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE : undefined;
   const browser = await engine.launch({ headless: true, ...(chromiumPath ? { executablePath: chromiumPath } : {}) });
-  const context = await browser.newContext({ viewport: mobile ? { width: 390, height: 844 } : { width: 1365, height: 900 }, locale: 'en-US', ...(mobile ? { isMobile: true, hasTouch: true } : {}) });
+  const context = await browser.newContext({ viewport: mobile ? { width: 390, height: 844 } : { width: 1365, height: 900 }, locale: 'en-US', javaScriptEnabled: javascriptEnabled, ...(mobile ? { isMobile: true, hasTouch: true } : {}) });
   if (config.vercelBypass) {
     await context.route(`${config.storefrontOrigin}/**`, async route => {
       // Scope the bypass to this one staging origin; never send it to Stripe.
@@ -24,19 +24,41 @@ async function contextFor(engine, config, { mobile = false } = {}) {
   return { browser, context, page, failures };
 }
 
+export async function authBeforeHydration(playwright, config) {
+  const { browser, page, failures } = await contextFor(playwright.chromium, config, { javascriptEnabled: false });
+  try {
+    for (const route of ['login', 'register']) {
+      await page.goto(`${config.storefrontOrigin}/en/page/account/${route}`, { waitUntil: 'domcontentloaded' });
+      const form = page.getByTestId(`${route}-form`);
+      await form.waitFor({ state: 'visible' });
+      ensure((await form.getAttribute('method'))?.toLowerCase() === 'post', `${route} form can expose credentials through a native GET submission`);
+      ensure(await form.getAttribute('data-ready') === 'false', `${route} form claims readiness before JavaScript hydration`);
+      const controls = await form.locator('input:not([type="hidden"]), button[type="submit"]').all();
+      ensure(controls.length >= 3, `${route} credential form controls are incomplete`);
+      for (const control of controls) ensure(await control.isDisabled(), `${route} form accepts credentials before its submit handler is ready`);
+    }
+    ensure(failures.length === 0, 'Pre-hydration authentication pages observed a server failure');
+    return { javascriptEnabled: false, login: 'passed', register: 'passed', nativeMethod: 'post', controlsDisabled: true };
+  } finally { await browser.close(); }
+}
+
 async function shopJourney(page, config, customer, product) {
-  await page.goto(`${config.storefrontOrigin}/en/page/account/login`, { waitUntil: 'domcontentloaded' });
+  const productPath = `/en/product-details/${product._id}`;
+  await page.goto(`${config.storefrontOrigin}/en/page/account/login?returnTo=${encodeURIComponent(productPath)}`, { waitUntil: 'domcontentloaded' });
+  // Exercise the form only after the application exposes its hydrated state,
+  // including the intended return path and enabled credential controls.
+  await page.locator('[data-testid="login-form"][data-ready="true"]').waitFor({ state: 'visible' });
   const loginForm = page.getByTestId('login-form');
   await loginForm.locator('input[type="email"]').fill(customer.email);
   await loginForm.locator('input[type="password"]').fill(customer.password);
   await loginForm.locator('button[type="submit"]').click();
-  await page.waitForURL(url => url.origin === config.storefrontOrigin && !url.pathname.includes('/login'));
-  await page.goto(`${config.storefrontOrigin}/en/product-details/${product._id}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForURL(url => url.origin === config.storefrontOrigin && url.pathname === productPath);
   await page.getByTestId('add-to-cart').waitFor({ state: 'visible' });
   for (const options of await page.locator('fieldset.hs-options').all()) await options.locator('button').first().click();
   await page.getByTestId('add-to-cart').click();
   await poll(async () => page.locator('.hs-count').first().textContent().catch(() => ''), value => Number(value) >= 1, 'cart updated after adding product', { timeout: 20_000 });
-  await page.goto(`${config.storefrontOrigin}/en/page/account/cart`, { waitUntil: 'domcontentloaded' });
+  await page.locator('a.hs-bag-link').click();
+  await page.waitForURL(url => url.pathname === '/en/page/account/cart');
   await page.getByTestId('checkout-submit').waitFor({ state: 'visible' });
   ensure((await page.locator('body').innerText()).includes(product.title), 'The added product was not shown in the browser cart');
   await page.getByRole('button', { name: new RegExp(`^Increase quantity:`) }).first().click();
@@ -103,7 +125,10 @@ export async function browserSmoke(playwright, engineName, config, customer, pro
     await page.keyboard.press('Tab');
     ensure(await page.evaluate(() => document.activeElement && document.activeElement !== document.body), `${engineName} keyboard focus did not reach an interactive control`);
     if (mobile) ensure(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), 'Mobile cart has horizontal overflow');
-    await page.goto(`${config.storefrontOrigin}/ar`, { waitUntil: 'domcontentloaded' });
+    await page.getByRole('link', { name: 'HighStyle home', exact: true }).click();
+    await page.getByTestId('product-card').first().waitFor({ state: 'visible' });
+    await page.locator('#store-language').selectOption('ar');
+    await page.waitForURL(url => url.pathname === '/ar');
     await page.locator('#collection').waitFor();
     await page.getByTestId('product-card').first().waitFor({ state: 'visible' });
     await poll(() => page.evaluate(() => getComputedStyle(document.querySelector('#collection')).direction === 'rtl'), Boolean, 'hydrated Arabic catalog RTL layout', { timeout: 20_000 });
