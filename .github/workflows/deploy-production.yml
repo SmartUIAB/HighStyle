@@ -42,12 +42,14 @@ jobs:
       VERCEL_CLI_VERSION: ${{ vars.VERCEL_CLI_VERSION }}
       RAILWAY_CLI_VERSION: ${{ vars.RAILWAY_CLI_VERSION }}
       NEXT_TELEMETRY_DISABLED: '1'
-      STOREFRONT_SOURCE_DIR: ${{ runner.temp }}/highstyle-production-storefront
-      ADMIN_SOURCE_DIR: ${{ runner.temp }}/highstyle-production-admin
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+      - name: Initialize isolated runner paths
+        run: |
+          printf 'STOREFRONT_SOURCE_DIR=%s/highstyle-production-storefront\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          printf 'ADMIN_SOURCE_DIR=%s/highstyle-production-admin\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'

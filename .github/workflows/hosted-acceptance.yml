@@ -40,14 +40,16 @@ jobs:
       STAGING_API_ORIGIN: ${{ vars.STAGING_API_ORIGIN }}
       STAGING_STOREFRONT_ORIGIN: ${{ vars.STAGING_STOREFRONT_ORIGIN }}
       STAGING_SMTP_API_ORIGIN: ${{ vars.STAGING_SMTP_API_ORIGIN }}
-      HOSTED_ACCEPTANCE_OUTPUT: ${{ runner.temp }}/highstyle-hosted-evidence/hosted-acceptance.json
-      PLAYWRIGHT_MODULE: ${{ runner.temp }}/highstyle-playwright/node_modules/playwright/index.mjs
-      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/highstyle-playwright-browsers
       ALLOW_STAGING_FIXTURES: 'true'
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           persist-credentials: false
+      - name: Initialize isolated acceptance paths
+        run: |
+          printf 'HOSTED_ACCEPTANCE_OUTPUT=%s/highstyle-hosted-evidence/hosted-acceptance.json\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          printf 'PLAYWRIGHT_MODULE=%s/highstyle-playwright/node_modules/playwright/index.mjs\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          printf 'PLAYWRIGHT_BROWSERS_PATH=%s/highstyle-playwright-browsers\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: '22'
