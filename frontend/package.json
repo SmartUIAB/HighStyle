@@ -5,6 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "test": "node --test test/*.test.mjs",
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",

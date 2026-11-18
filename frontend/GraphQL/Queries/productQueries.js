@@ -25,6 +25,7 @@ export const GET_PHYSICAL_PRODUCT = gql`
         price
         discount
         stockQuantity
+        availableQuantity
         metaTitle
         metaDescription
         colors
@@ -110,6 +111,7 @@ export const PHYSICAL_PRODUCT_BY_ID = gql`
       price
       discount
       stockQuantity
+      availableQuantity
       metaTitle
       metaDescription
       colors

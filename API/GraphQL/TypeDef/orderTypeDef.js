@@ -8,6 +8,7 @@ const orderTypeDefs = gql`
       shippingAddress: ShippingAddressInput!
       locale: String
     ): CreateOrderResponses
+    cancelCheckout(orderId: ID!): Order
     deleteOldPendingOrders: Int
   }
 

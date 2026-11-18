@@ -1,20 +1,8 @@
-import Link from 'next/link';
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { localizedPath } from "./storefront/commerce.mjs";
 
-const LocalLink = ({ href, children, ...props }) => {
-    const savedLanguage =
-        typeof window !== "undefined" && localStorage.getItem("i18nextLng")
-            ? localStorage.getItem("i18nextLng")
-            : "en";
-
-    const normalizedHref = href?.startsWith("/") ? href : `/${href}`;
-
-    const localizedHref = `/${savedLanguage}${normalizedHref}`;
-
-    return (
-        <Link href={localizedHref} {...props}>
-            {children}
-        </Link>
-    );
-};
-
-export default LocalLink;
+export default function LocalLink({ href = "/", children, ...props }) {
+  const router = useRouter();
+  return <Link href={localizedPath(href, router.query.lng)} {...props}>{children}</Link>;
+}

@@ -8,6 +8,7 @@ const Transaction = require("../Model/transactionModel");
 const PaymentEvent = require("../Model/paymentEventModel");
 const ReceiptOutbox = require("../Model/receiptOutboxModel");
 const Notification = require("../Model/notificationModel");
+const { commitInventory, releaseInventory } = require("./inventory");
 const SUPPORTED_EVENTS = new Set(["checkout.session.completed", "checkout.session.async_payment_succeeded", "checkout.session.async_payment_failed", "checkout.session.expired", "charge.refunded"]);
 
 async function applyPaymentEvent(event) {
@@ -46,6 +47,7 @@ async function applyPaymentEvent(event) {
         if (paidEvent && payload.payment_status === "paid" && !["PAID", "REFUNDED", "PARTIALLY_REFUNDED"].includes(order.paymentStatus)) {
           const intent = typeof payload.payment_intent === "string" ? payload.payment_intent : payload.payment_intent?.id;
           if (!intent) throw new CustomError("Missing payment intent", 400);
+          await commitInventory(order, session);
           const transaction = await Transaction.findOneAndUpdate({ order: order._id }, { $setOnInsert: {
             order: order._id, user: order.customer, transactionAmount: order.amountMinor / 100,
             transactionStatus: "SUCCESSFUL", paymentGateway: "Stripe", transactionId: intent,
@@ -59,6 +61,10 @@ async function applyPaymentEvent(event) {
           await ReceiptOutbox.updateOne({ _id: String(order._id) }, { $setOnInsert: { order: order._id, status: "pending", attempts: 0, nextAttemptAt: new Date() } }, { session, upsert: true });
           await Notification.create([{ message: `Payment received for order ${order._id}.`, isNotified: true }], { session });
         } else if (!paidEvent && order.paymentStatus === "PENDING") {
+          // A stale failure cannot release inventory after successful settlement.
+          // A signed expiry/failure is authoritative; a browser redirect is not.
+          if (payload.payment_status === "paid") throw new CustomError("A paid checkout cannot release inventory", 409);
+          await releaseInventory(order, session, event.type);
           order.paymentStatus = "FAILED";
           if (order.orderStatus === "PENDING") order.orderStatus = "CANCELED";
           await order.save({ session });
@@ -66,7 +72,7 @@ async function applyPaymentEvent(event) {
       }
       await PaymentEvent.create([{ _id: event.id, type: event.type, order: order._id }], { session });
       result = { processed: true };
-    });
+    }, { readConcern: { level: "snapshot" }, writeConcern: { w: "majority" } });
     return result;
   } catch (error) {
     if (error.code === 11000 && await PaymentEvent.exists({ _id: event.id })) return { duplicate: true };

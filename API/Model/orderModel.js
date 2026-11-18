@@ -20,6 +20,8 @@ const orderSchema = new Schema(
         title: { type: String },
         unitAmountMinor: { type: Number },
         totalAmountMinor: { type: Number },
+        color: { type: String },
+        size: { type: String },
       },
     ],
     finalTotal: { type: Number, required: false },
@@ -27,8 +29,24 @@ const orderSchema = new Schema(
     currency: { type: String, default: "usd" },
     cartVersion: { type: Number },
     checkoutKey: { type: String, unique: true, sparse: true },
+    checkoutRequestKey: { type: String },
+    activeCartKey: { type: String, unique: true, sparse: true },
     checkoutSessionId: { type: String, unique: true, sparse: true },
     checkoutUrl: { type: String },
+    checkoutEmail: { type: String },
+    checkoutSuccessUrl: { type: String },
+    checkoutCancelUrl: { type: String },
+    checkoutExpiresAt: { type: Date },
+    checkoutCreateStartedAt: { type: Date },
+    inventoryStatus: { type: String, enum: ["UNRESERVED", "RESERVED", "COMMITTED", "RELEASED"], default: "UNRESERVED" },
+    inventoryReservedAt: { type: Date },
+    inventoryCommittedAt: { type: Date },
+    inventoryReleasedAt: { type: Date },
+    inventoryReleaseReason: { type: String },
+    reservationExpiresAt: { type: Date },
+    reservationCheckedAt: { type: Date },
+    reservationCheckAfter: { type: Date },
+    reservationError: { type: String },
     paymentIntentId: { type: String, sparse: true, index: true },
     refundedAmountMinor: { type: Number, default: 0 },
     paymentStatus: {
@@ -55,6 +73,8 @@ const orderSchema = new Schema(
   },
   { timestamps: true }
 );
+
+orderSchema.index({ inventoryStatus: 1, reservationCheckAfter: 1 });
 
 const Order = mongoose.model("Order", orderSchema);
 module.exports = Order;

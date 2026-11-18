@@ -20,7 +20,7 @@ async function dispatchReceipts(transporter, limit = 5) {
       const customer = order && await Customer.findById(order.customer).lean();
       if (!customer?.email) throw Object.assign(new Error("Recipient unavailable"), { code: "RECIPIENT_UNAVAILABLE" });
       const rows = order.products.map(item => `<tr><td>${escapeHtml(item.title)}</td><td>${escapeHtml(item.quantity)}</td></tr>`).join("");
-      await transporter.sendMail({ from: process.env.USER_EMAIL, to: customer.email,
+      await transporter.sendMail({ from: process.env.SMTP_FROM || process.env.USER_EMAIL, to: customer.email,
         messageId: `<highstyle-order-${order._id}@receipts.highstyle.invalid>`, subject: "HighStyle payment confirmation",
         html: `<h1>Payment received</h1><p>Order ${escapeHtml(order._id)}</p><table>${rows}</table><p>Paid: USD ${(order.amountMinor / 100).toFixed(2)}</p>`,
       });

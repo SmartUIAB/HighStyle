@@ -8,8 +8,14 @@ export const GET_MY_ORDERS = gql`
         productType
         productId
         quantity
+        title
+        unitAmountMinor
+        totalAmountMinor
+        color
+        size
       }
       finalTotal
+      currency
       paymentStatus
       orderStatus
       shippingAddress {

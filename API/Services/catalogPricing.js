@@ -1,6 +1,7 @@
 "use strict";
 const CustomError = require("../Utilities/CustomError");
 const { objectId } = require("../Security/access");
+const { availableQuantity } = require("./inventory");
 
 function quantity(value, allowZero = false) {
   if (!Number.isSafeInteger(value) || value < (allowZero ? 0 : 1) || value > 99) {
@@ -43,7 +44,7 @@ function calculateCart(lines, physical, digital) {
     }
     const requested = (quantities.get(id) || 0) + count;
     quantities.set(id, requested);
-    if (type === "PHYSICAL" && (!Number.isSafeInteger(product.stockQuantity) || requested > product.stockQuantity)) throw new CustomError("Requested quantity exceeds stock", 409);
+    if (type === "PHYSICAL" && requested > availableQuantity(product)) throw new CustomError("Requested quantity exceeds available stock", 409);
     const unitAmountMinor = Math.round(moneyMinor(product.price) * (100 - discount) / 100);
     const totalAmountMinor = unitAmountMinor * count;
     amountMinor += totalAmountMinor;
@@ -59,13 +60,15 @@ function calculateCart(lines, physical, digital) {
   return { products, amountMinor, totalAmount: amountMinor / 100 };
 }
 
-async function priceCart(lines) {
+async function priceCart(lines, { session } = {}) {
   if (!Array.isArray(lines) || lines.length > 100) throw new CustomError("Invalid cart lines", 400);
   const ids = [...new Set(lines.map(line => objectId(line.ProductID, "Product")))];
   if (!ids.length) return { products: [], amountMinor: 0, totalAmount: 0 };
   const Physical = require("../Model/physicalProductModel");
   const Digital = require("../Model/digitalProductModel");
-  const [physical, digital] = await Promise.all([Physical.find({ _id: { $in: ids } }).lean(), Digital.find({ _id: { $in: ids } }).lean()]);
+  // MongoDB does not support parallel operations inside the same transaction.
+  const physical = await Physical.find({ _id: { $in: ids } }).session(session || null).lean();
+  const digital = await Digital.find({ _id: { $in: ids } }).session(session || null).lean();
   return calculateCart(lines, physical, digital);
 }
 

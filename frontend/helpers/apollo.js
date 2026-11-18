@@ -12,7 +12,7 @@ function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: new HttpLink({
-      uri: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT, // Server URL (must be absolute)
+      uri: typeof window === "undefined" ? `${process.env.API_ORIGIN || "http://127.0.0.1:2024"}/graphql` : (process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "/api/graphql"),
       credentials: "include", // Additional fetch() options like `credentials` or `headers`
       fetch,
     }),

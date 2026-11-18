@@ -6,6 +6,9 @@ const salesTypeDef = gql`
     user: User!
     products: [OrderProduct!]!
     finalTotal: Float!
+    currency: String
+    inventoryStatus: String
+    reservationExpiresAt: String
     paymentStatus: PaymentStatus!
     orderStatus: OrderStatus!
     shippingAddress: ShippingAddressType
@@ -40,6 +43,11 @@ const salesTypeDef = gql`
     productType: ProductType!
     productId: ID!
     quantity: Int!
+    title: String
+    unitAmountMinor: Int
+    totalAmountMinor: Int
+    color: String
+    size: String
   }
 
   type ShippingAddressType {

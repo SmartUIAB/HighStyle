@@ -48,6 +48,7 @@ module.exports = {
       if (orderStatus !== order.orderStatus && !transition[order.orderStatus]?.includes(orderStatus)) throw new CustomError("Invalid fulfillment transition", 409);
       if (orderStatus === "SHIPPED" && !["PAID", "CASH_ON_DELIVERY"].includes(order.paymentStatus)) throw new CustomError("Payment is required before shipment", 409);
       if (orderStatus === "CANCELED" && ["PAID", "PARTIALLY_REFUNDED"].includes(order.paymentStatus)) throw new CustomError("Reconcile/refund the payment before cancellation", 409);
+      if (orderStatus === "CANCELED" && order.inventoryStatus === "RESERVED") throw new CustomError("Cancel the Stripe checkout through the reservation workflow before changing fulfillment", 409);
       const updated = await Order.findOneAndUpdate({ _id: order._id, orderStatus: order.orderStatus, paymentStatus: order.paymentStatus }, { $set: { orderStatus } }, { new: true, runValidators: true }).populate("customer", customerFields);
       if (!updated) throw new CustomError("Order changed; refresh and retry", 409);
       return orderView(updated);

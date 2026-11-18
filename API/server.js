@@ -7,6 +7,7 @@ const { createApp } = require("./app");
 
 async function startServer() {
   if (!process.env.JWT_SECRET || (process.env.NODE_ENV === "production" && process.env.JWT_SECRET.length < 32)) throw new Error("A strong JWT_SECRET is required");
+  require("./Security/paymentPolicy").paymentPolicy();
   const port = Number(process.env.PORT || 2024);
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error("Invalid PORT");
   await DatabaseConnection();
@@ -21,8 +22,8 @@ async function startServer() {
   const http = createServer(app);
   await new Promise((resolve, reject) => { http.once("error", reject); http.listen(port, resolve); });
   let receiptTimer;
-  if (process.env.USER_EMAIL && process.env.USER_EMAIL_PASSWORD) {
-    const transporter = require("nodemailer").createTransport({ service: "gmail", auth: { user: process.env.USER_EMAIL, pass: process.env.USER_EMAIL_PASSWORD }, connectionTimeout: 10000, socketTimeout: 30000 });
+  const transporter = require("./Services/mailTransport").createMailTransport();
+  if (transporter) {
     let busy = false;
     receiptTimer = setInterval(async () => {
       if (busy) return;
@@ -33,8 +34,23 @@ async function startServer() {
     }, 15000);
     receiptTimer.unref();
   }
+  let reservationTimer;
+  if (process.env.PAYMENTS_ENABLED === "true") {
+    let reconciling = false;
+    const reconcile = async () => {
+      if (reconciling) return;
+      reconciling = true;
+      try { await require("./Services/reservationReconciliation").reconcileReservations({ limit: 20 }); }
+      catch (error) { console.error("Inventory reconciliation failed", error.code || "UNAVAILABLE"); }
+      finally { reconciling = false; }
+    };
+    reservationTimer = setInterval(reconcile, 60000);
+    reservationTimer.unref();
+    void reconcile();
+  }
   async function stop() {
     clearInterval(receiptTimer);
+    clearInterval(reservationTimer);
     await new Promise(resolve => http.close(resolve));
     await server.stop();
     await mongoose.disconnect();

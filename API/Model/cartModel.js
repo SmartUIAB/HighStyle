@@ -19,6 +19,8 @@ const cartSchema = new Schema(
       },
     ],
     totalAmount: { type: Number, required: true },
+    // A transaction writes this field to serialize checkout snapshots with cart edits.
+    checkoutRevision: { type: Number, default: 0 },
   },
   { timestamps: true, optimisticConcurrency: true }
 );

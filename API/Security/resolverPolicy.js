@@ -13,7 +13,7 @@ const PUBLIC = new Set([
 ]);
 const CUSTOMER = new Set([
   "Query.getCart", "Query.GetMyOrder", "Query.getFavourites",
-  "Mutation.createCart", "Mutation.updateCart", "Mutation.deleteCart", "Mutation.AddOrder",
+  "Mutation.createCart", "Mutation.updateCart", "Mutation.deleteCart", "Mutation.AddOrder", "Mutation.cancelCheckout",
   "Mutation.addToFavourite", "Mutation.removeFromFavourite", "Mutation.writeReview", "Mutation.updateReview",
 ]);
 const STAFF = new Set([

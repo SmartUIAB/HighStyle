@@ -15,6 +15,7 @@ const paymentRoute = require("./Routes/paymentRoute");
 const { authenticateUser } = require("./Utilities/authUtils");
 const { allowedOrigins } = require("./Security/http");
 const { requireStaff } = require("./Security/access");
+const { releaseIdentity } = require("./Security/paymentPolicy");
 
 async function buildSchema() {
   const { default: Upload } = await import("graphql-upload/GraphQLUpload.mjs");
@@ -63,6 +64,11 @@ async function createApp() {
   app.use((req, res, next) => { res.setHeader("X-Content-Type-Options", "nosniff"); res.setHeader("Referrer-Policy", "no-referrer"); next(); });
   app.get("/health/live", (_, res) => res.json({ status: "alive" }));
   app.get("/health/ready", (_, res) => res.status(mongoose.connection.readyState === 1 ? 200 : 503).json({ status: mongoose.connection.readyState === 1 ? "ready" : "not-ready" }));
+  app.get("/health/release", (_, res) => {
+    res.setHeader("Cache-Control", "no-store");
+    const ready = mongoose.connection.readyState === 1;
+    res.status(ready ? 200 : 503).json({ status: ready ? "ready" : "not-ready", ...releaseIdentity() });
+  });
   // Stripe uses server-to-server requests and the original signed bytes.
   app.use(paymentRoute);
   const origins = allowedOrigins();
