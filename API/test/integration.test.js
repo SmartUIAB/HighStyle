@@ -513,3 +513,19 @@ dbtest("catalog search and discounted-price sort apply before pagination and cou
   const next = await resolvers.Query.physicalProducts(null, { search: prefix, sort: "priceLow", inStock: true, pagination: { page: 2, limit: 1 } }, {});
   assert.equal(String(next.products[0]._id), String(b._id));
 });
+
+dbtest("exact order recovery reaches an older checkout without exposing another customer's order", async () => {
+  const f = await inventoryFixture();
+  const other = await makeCustomer();
+  await Order.collection.updateOne({ _id: f.order._id }, { $set: { createdAt: new Date(0) } });
+  await Order.insertMany(Array.from({ length: 101 }, () => ({ customer: f.context.userId, products: [], finalTotal: 0 })));
+  const recent = await resolvers.Query.GetMyOrder(null, { customerId: f.context.userId }, f.context);
+  assert.equal(recent.length, 100);
+  assert.equal(recent.some(order => String(order._id) === String(f.order._id)), false);
+  const exact = await resolvers.Query.GetMyOrder(null, { customerId: f.context.userId, orderId: String(f.order._id) }, f.context);
+  assert.equal(exact.length, 1);
+  assert.equal(String(exact[0]._id), String(f.order._id));
+  assert.deepEqual(await resolvers.Query.GetMyOrder(null, { customerId: other.userId, orderId: String(f.order._id) }, other), []);
+  await assert.rejects(resolvers.Query.GetMyOrder(null, { customerId: f.context.userId, orderId: String(f.order._id) }, other), error => error.statusCode === 403);
+  await assert.rejects(resolvers.Query.GetMyOrder(null, { customerId: f.context.userId, orderId: "invalid" }, f.context), error => error.statusCode === 400);
+});

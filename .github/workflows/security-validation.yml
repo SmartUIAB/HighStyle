@@ -36,6 +36,8 @@ jobs:
           cache-dependency-path: API/package-lock.json
       - name: Install locked API dependencies without lifecycle scripts
         run: npm ci --ignore-scripts --prefix API
+      - name: Verify protected release and acceptance rejection paths
+        run: node --test scripts/release/test/*.test.mjs
       - name: Start an isolated MongoDB replica set
         run: |
           set -euo pipefail
@@ -93,6 +95,9 @@ jobs:
         run: npm ci --legacy-peer-deps --prefix ${{ matrix.application }}
       - name: Production build
         run: npm run build --prefix ${{ matrix.application }}
+      - name: Storefront price, stock and checkout safety tests
+        if: matrix.application == 'frontend'
+        run: npm test --prefix frontend
   dependency-audit:
     name: Dependency security ${{ matrix.application }}
     runs-on: ubuntu-latest

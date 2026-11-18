@@ -1,0 +1,112 @@
+name: Hosted staging acceptance
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Full reviewed commit currently deployed on staging
+        required: true
+        type: string
+      mode:
+        description: Full provider acceptance or browser-only smoke
+        required: true
+        default: full
+        type: choice
+        options: [full, browser-smoke]
+  push:
+    branches: [fix/security-foundation-20261117]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: highstyle-staging-acceptance
+  cancel-in-progress: false
+
+jobs:
+  acceptance:
+    name: Verify hosted test checkout and browsers
+    if: >-
+      github.repository == 'SmartUIAB/HighStyle' &&
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/fix/security-foundation-20261117') &&
+      (github.event_name == 'workflow_dispatch' || vars.HIGHSTYLE_HOSTED_ACCEPTANCE_ENABLED == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    environment: staging
+    env:
+      RELEASE_SHA: ${{ inputs.source_sha || github.sha }}
+      ACCEPTANCE_MODE: ${{ inputs.mode || 'full' }}
+      STAGING_API_ORIGIN: ${{ vars.STAGING_API_ORIGIN }}
+      STAGING_STOREFRONT_ORIGIN: ${{ vars.STAGING_STOREFRONT_ORIGIN }}
+      STAGING_SMTP_API_ORIGIN: ${{ vars.STAGING_SMTP_API_ORIGIN }}
+      HOSTED_ACCEPTANCE_OUTPUT: ${{ runner.temp }}/highstyle-hosted-evidence/hosted-acceptance.json
+      PLAYWRIGHT_MODULE: ${{ runner.temp }}/highstyle-playwright/node_modules/playwright/index.mjs
+      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/highstyle-playwright-browsers
+      ALLOW_STAGING_FIXTURES: 'true'
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: API/package-lock.json
+      - name: Verify exact reviewed commit and staging secret protection
+        run: |
+          node --input-type=module -e "import {requireSha} from './scripts/release/evidence.mjs'; import {githubClient,verifyProtectedEnvironment} from './scripts/release/github.mjs'; if(requireSha(process.env.RELEASE_SHA)!==process.env.GITHUB_SHA) throw new Error('Staging source differs from the workflow commit'); await verifyProtectedEnvironment(githubClient(), 'staging');"
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GUARD_TOKEN }}
+      - name: Install reviewed API and browser test dependencies
+        run: |
+          set -euo pipefail
+          npm ci --ignore-scripts --prefix API
+          npm install --prefix "$RUNNER_TEMP/highstyle-playwright" --ignore-scripts --no-audit --no-fund playwright@1.65.1
+          node "$RUNNER_TEMP/highstyle-playwright/node_modules/playwright/cli.js" install --with-deps chromium firefox webkit
+      - name: Run genuine hosted acceptance or explicitly limited browser smoke
+        run: |
+          set -euo pipefail
+          case "$ACCEPTANCE_MODE" in
+            full) node scripts/acceptance/hosted-purchase.mjs ;;
+            browser-smoke) node scripts/acceptance/hosted-purchase.mjs --browser-smoke ;;
+            *) exit 1 ;;
+          esac
+        env:
+          STAGING_STRIPE_SECRET_KEY: ${{ secrets.STAGING_STRIPE_SECRET_KEY }}
+          STAGING_STRIPE_WEBHOOK_SECRET: ${{ secrets.STAGING_STRIPE_WEBHOOK_SECRET }}
+          STAGING_MONGODB_URI: ${{ secrets.STAGING_MONGODB_URI }}
+          STAGING_SMTP_API_TOKEN: ${{ secrets.STAGING_SMTP_API_TOKEN }}
+          STAGING_VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.STAGING_VERCEL_AUTOMATION_BYPASS_SECRET }}
+      - name: Validate complete provider evidence before uploading
+        if: env.ACCEPTANCE_MODE == 'full'
+        run: node scripts/release/check-acceptance.mjs
+      - name: Store sanitized successful purchase evidence
+        if: env.ACCEPTANCE_MODE == 'full'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: hosted-acceptance-${{ github.sha }}
+          path: ${{ runner.temp }}/highstyle-hosted-evidence/hosted-acceptance.json
+          if-no-files-found: error
+          retention-days: 7
+      - name: Store browser-only evidence (does not unlock production)
+        if: env.ACCEPTANCE_MODE == 'browser-smoke'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: browser-smoke-${{ github.sha }}
+          path: ${{ runner.temp }}/highstyle-hosted-evidence/hosted-acceptance.json
+          if-no-files-found: error
+          retention-days: 7
+  full-purchase-gate:
+    name: Hosted purchase acceptance gate
+    needs: acceptance
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require full completed provider acceptance for merge
+        run: |
+          node -e "if(process.env.ACCEPTANCE_RESULT !== 'success' || process.env.ACCEPTANCE_MODE !== 'full') { console.error('Merge is blocked until full hosted Stripe test acceptance succeeds; browser-only or skipped checks cannot satisfy this gate.'); process.exit(1); }"
+        env:
+          ACCEPTANCE_RESULT: ${{ needs.acceptance.result }}
+          ACCEPTANCE_MODE: ${{ inputs.mode || 'full' }}

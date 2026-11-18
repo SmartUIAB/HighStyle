@@ -8,6 +8,7 @@ import Icon from "../../../components/storefront/Icon";
 import OrderSummary from "../../../components/storefront/OrderSummary";
 import useStoreText from "../../../components/storefront/useStoreText";
 import useCustomer, { refreshCart } from "../../../components/storefront/useCustomer";
+import { clearCheckoutRecovery, hasReservedCheckout } from "../../../components/storefront/checkoutRecovery.mjs";
 
 export default function OrderSuccess() {
   const { text, locale } = useStoreText();
@@ -15,7 +16,7 @@ export default function OrderSuccess() {
   const { customer, ready } = useCustomer();
   const [timedOut, setTimedOut] = useState(false);
   const id = typeof router.query.order_id === "string" && /^[a-f0-9]{24}$/i.test(router.query.order_id) ? router.query.order_id : null;
-  const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(GET_MY_ORDERS, { variables: { customerId: customer?.id || "000000000000000000000000" }, skip: !customer?.id || !id, fetchPolicy: "network-only", notifyOnNetworkStatusChange: true });
+  const { data, loading, error, refetch, startPolling, stopPolling } = useQuery(GET_MY_ORDERS, { variables: { customerId: customer?.id || "000000000000000000000000", orderId: id }, skip: !customer?.id || !id, fetchPolicy: "network-only", notifyOnNetworkStatusChange: true });
   const order = data?.GetMyOrder?.find(item => item.id === id);
   const paid = order?.paymentStatus === "PAID";
   const failed = order?.paymentStatus === "FAILED" || order?.orderStatus === "CANCELED";
@@ -35,6 +36,11 @@ export default function OrderSuccess() {
   useEffect(() => {
     if (paid) { refreshCart(); try { sessionStorage.removeItem("highstyle:delivery"); } catch (_) {} }
   }, [paid]);
+  useEffect(() => {
+    if (customer?.id && order && !hasReservedCheckout(order)) {
+      try { clearCheckoutRecovery(window.sessionStorage, customer.id, order.id); } catch (_) {}
+    }
+  }, [customer?.id, order]);
   const title = paid ? "paid" : refunded ? "refunded" : failed ? "failed" : "confirming";
   const message = paid ? "paidBody" : refunded ? "refundedBody" : failed ? "failedBody" : timedOut ? "pendingLong" : "confirmingBody";
   return <CommonLayout title={text("confirmation")}><section className="hs-container hs-page-space hs-confirmation">

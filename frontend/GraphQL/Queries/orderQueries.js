@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_MY_ORDERS = gql`
-  query GetMyOrder($customerId: ID!) {
-    GetMyOrder(customerId: $customerId) {
+  query GetMyOrder($customerId: ID!, $orderId: ID) {
+    GetMyOrder(customerId: $customerId, orderId: $orderId) {
       id
       products {
         productType
@@ -16,6 +16,7 @@ export const GET_MY_ORDERS = gql`
       }
       finalTotal
       currency
+      inventoryStatus
       paymentStatus
       orderStatus
       shippingAddress {

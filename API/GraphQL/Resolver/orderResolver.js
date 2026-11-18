@@ -1,15 +1,17 @@
 "use strict";
 const Order = require("../../Model/orderModel");
 const CustomError = require("../../Utilities/CustomError");
-const { requireCustomer } = require("../../Security/access");
+const { requireCustomer, objectId } = require("../../Security/access");
 const { createCheckout } = require("../../Services/checkout");
 const { cancelCheckout } = require("../../Services/reservationReconciliation");
 
 module.exports = {
   Query: {
-    GetMyOrder: async (_, { customerId }, context) => {
+    GetMyOrder: async (_, { customerId, orderId }, context) => {
       requireCustomer(context, customerId);
-      return Order.find({ customer: customerId }).sort({ createdAt: -1 }).limit(100);
+      const filter = { customer: customerId };
+      if (orderId != null) filter._id = objectId(orderId, "Order");
+      return Order.find(filter).sort({ createdAt: -1 }).limit(orderId != null ? 1 : 100);
     },
   },
   Mutation: {

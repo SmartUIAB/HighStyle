@@ -13,7 +13,7 @@ const orderTypeDefs = gql`
   }
 
   type Query {
-    GetMyOrder(customerId: ID!): [Order]
+    GetMyOrder(customerId: ID!, orderId: ID): [Order]
   }
 
   type CreateOrderResponses {

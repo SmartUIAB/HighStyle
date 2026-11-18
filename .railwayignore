@@ -1,0 +1,17 @@
+.git/
+**/node_modules/
+**/.next/
+**/.vercel/
+**/.env
+**/.env.*
+!**/.env.example
+**/.npmrc
+**/*storage-state*.json
+**/*auth-state*.json
+**/playwright-report/
+**/test-results/
+frontend/
+backend/
+docs/
+scripts/
+.github/

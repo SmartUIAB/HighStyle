@@ -1,6 +1,7 @@
 //  @type {import('next').NextConfig}
 const nextConfig = {
   poweredByHeader: false,
+  sassOptions: { implementation: "sass-embedded" },
   rewrites: async () => {
     const value = process.env.API_ORIGIN || process.env.NEXT_PUBLIC_API_URL;
     if (!value) return [];

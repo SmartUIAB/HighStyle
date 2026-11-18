@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  sassOptions: { implementation: "sass-embedded" },
   async rewrites() {
     const value = process.env.API_ORIGIN || process.env.NEXT_PUBLIC_API_KEY;
     if (!value) return [];
