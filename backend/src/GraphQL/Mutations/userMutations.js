@@ -32,7 +32,6 @@ export const UPDATE_USER = gql`
       firstname
       lastname
       company
-      password
       image
       role
       permissions

@@ -1,5 +1,5 @@
 // schema.js
-const { gql } = require("apollo-server-express");
+const gql = require("graphql-tag");
 
 const comingsoonTypeDef = gql`
   type ComingSoon {

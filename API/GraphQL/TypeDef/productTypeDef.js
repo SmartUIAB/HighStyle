@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server-express");
+const gql = require("graphql-tag");
 
 const productTypeDef = gql`
   scalar Upload
@@ -33,6 +33,7 @@ const productTypeDef = gql`
     price: Float!
     discount: Float
     stockQuantity: Int!
+    availableQuantity: Int!
     metaTitle: String
     metaDescription: String
     colors: [String]
@@ -166,9 +167,16 @@ const productTypeDef = gql`
 
   type Query {
     physicalProduct(id: ID!): PhysicalProduct
-    physicalProducts(pagination: PaginationInput): PhysicalProductPagination
+    physicalProducts(pagination: PaginationInput, search: String, sort: CatalogSort, inStock: Boolean): PhysicalProductPagination
     digitalProduct(id: ID!): DigitalProduct
-    digitalProducts(pagination: PaginationInput): DigitalProductPagination
+    digitalProducts(pagination: PaginationInput, search: String, sort: CatalogSort, inStock: Boolean): DigitalProductPagination
+  }
+
+  enum CatalogSort {
+    featured
+    priceLow
+    priceHigh
+    name
   }
 
   type Mutation {

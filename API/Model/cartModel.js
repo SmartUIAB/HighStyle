@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const cartSchema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "Customer", required: true },
+    userId: { type: Schema.Types.ObjectId, ref: "Customer", required: true, unique: true },
     products: [
       {
         ProductID: {
@@ -19,8 +19,10 @@ const cartSchema = new Schema(
       },
     ],
     totalAmount: { type: Number, required: true },
+    // A transaction writes this field to serialize checkout snapshots with cart edits.
+    checkoutRevision: { type: Number, default: 0 },
   },
-  { timestamps: true }
+  { timestamps: true, optimisticConcurrency: true }
 );
 
 const Cart = mongoose.model("Cart", cartSchema);

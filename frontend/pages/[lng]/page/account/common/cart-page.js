@@ -1,425 +1,178 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
-import Link from "next/link";
-import {
-  Container,
-  Row,
-  Col,
-  Media,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  FormGroup,
-  Form,
-  Label,
-  Input,
-  ModalFooter,
-  Button,
-} from "reactstrap";
-import cart from "../../../../../public/assets/images/icon-empty-cart.png";
+import React, { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
+import { useRouter } from "next/router";
 import { GET_CART } from "../../../../../GraphQL/Queries/cartQueries";
-import {
-  DELETE_CART_ITEM,
-  UPDATE_CART_ITEM,
-} from "../../../../../GraphQL/Mutations/cartMutations";
-import { toast } from "react-toastify";
-import { CREATE_ORDER } from "../../../../../GraphQL/Mutations/orderMutations";
-import { loadStripe } from "@stripe/stripe-js";
+import { GET_MY_ORDERS } from "../../../../../GraphQL/Queries/orderQueries";
+import { DELETE_CART_ITEM, UPDATE_CART_ITEM } from "../../../../../GraphQL/Mutations/cartMutations";
+import { CANCEL_CHECKOUT, CREATE_ORDER } from "../../../../../GraphQL/Mutations/orderMutations";
 import LocalLink from "../../../../../components/LocalLink";
-import { useTranslation } from "react-i18next";
-import axios from "axios";
+import Icon from "../../../../../components/storefront/Icon";
+import useStoreText from "../../../../../components/storefront/useStoreText";
+import useCustomer, { refreshCart } from "../../../../../components/storefront/useCustomer";
+import { checkoutDestination, formatMoney, imageSource } from "../../../../../components/storefront/commerce.mjs";
+import { clearCheckoutRecovery, hasReservedCheckout, readCheckoutRecovery, writeCheckoutRecovery } from "../../../../../components/storefront/checkoutRecovery.mjs";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_SECRET_KEY);
+const emptyAddress = { street: "", city: "", state: "", postalCode: "", country: "" };
+const fields = [["street", "street-address"], ["city", "address-level2"], ["state", "address-level1"], ["postalCode", "postal-code"], ["country", "country-name"]];
 
-const CartPage = () => {
-  const userData = JSON.parse(localStorage.getItem("customerDetail"));
-  const [cartId, setCartId] = useState(null);
-  const [deleteCart] = useMutation(DELETE_CART_ITEM);
+export default function CartPage() {
+  const { customer, ready } = useCustomer();
+  const { text, locale } = useStoreText();
+  const router = useRouter();
+  const [address, setAddress] = useState(emptyAddress);
+  const [addressReady, setAddressReady] = useState(false);
+  const [busy, setBusy] = useState(null);
+  const [notice, setNotice] = useState("");
+  const [actionError, setActionError] = useState("");
+  const [recoveryOrderId, setRecoveryOrderId] = useState(null);
+  const pending = useRef(false);
   const [updateCart] = useMutation(UPDATE_CART_ITEM);
+  const [deleteCart] = useMutation(DELETE_CART_ITEM);
   const [createOrder] = useMutation(CREATE_ORDER);
-  const [shippingAddress, setShippingAddress] = useState({
-    street: "",
-    city: "",
-    state: "",
-    postalCode: "",
-    country: "",
+  const [cancelCheckout] = useMutation(CANCEL_CHECKOUT);
+  const { data, loading, error, refetch } = useQuery(GET_CART, {
+    variables: { userId: customer?.id || "000000000000000000000000" },
+    skip: !customer?.id,
+    fetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true,
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const lang = localStorage.getItem("i18nextLng");
-
-  const { t } = useTranslation();
-
-  if (!stripePromise) {
-    return <div>Loading...</div>;
-  }
-
-  const {
-    data: cartItems,
-    loading,
-    refetch,
-  } = useQuery(GET_CART, {
-    variables: { userId: userData?.id },
+  const returnOrderId = typeof router.query.checkout_order === "string" && /^[a-f0-9]{24}$/i.test(router.query.checkout_order) ? router.query.checkout_order : null;
+  const checkoutOrder = returnOrderId || recoveryOrderId;
+  const recovery = useQuery(GET_MY_ORDERS, {
+    variables: { customerId: customer?.id || "000000000000000000000000", orderId: checkoutOrder },
+    skip: !customer?.id || !checkoutOrder,
+    fetchPolicy: "network-only",
+    notifyOnNetworkStatusChange: true,
   });
-
+  const previousOrder = recovery.data?.GetMyOrder?.find(order => order.id === checkoutOrder);
+  const activeCheckout = hasReservedCheckout(previousOrder);
   useEffect(() => {
-    if (cartItems && cartItems.getCart) {
-      setCartId(cartItems.getCart.id);
-    }
-  }, [cartItems]);
-
-  const [rates, setRates] = useState({});
-
-  const fetchRates = async () => {
-    try {
-      const response = await axios.get(
-        "https://v6.exchangerate-api.com/v6/8c6fe5d5c563341bd11be392/latest/USD"
-      );
-      setRates(response.data);
-    } catch (err) {
-      console.log("Failed to fetch exchange rates");
-    }
-  };
-
+    if (!customer?.id) { setRecoveryOrderId(null); return; }
+    try { setRecoveryOrderId(readCheckoutRecovery(window.sessionStorage, customer.id)); } catch (_) {}
+  }, [customer?.id]);
   useEffect(() => {
-    fetchRates();
-  }, []);
-
-  const handleQtyUpdate = async (item, quantity) => {
-    const { data } = await updateCart({
-      variables: {
-        cartId: cartItems.getCart.id,
-        productId: item._id,
-        newQuantity: parseInt(quantity),
-      },
-    });
-    if (data) {
-      refetch();
-    } else {
-      toast.error("Failed to update cart");
-    }
-  };
-
-  const removeFromCart = async (item) => {
-    const { data } = await deleteCart({
-      variables: {
-        cartId: cartItems.getCart.id,
-        productId: item._id,
-      },
-    });
-    if (data) {
-      refetch();
-    } else {
-      toast.error("Failed to remove item from cart");
-    }
-  };
-
-  const handleCheckout = async () => {
-    if (
-      !shippingAddress.street ||
-      !shippingAddress.city ||
-      !shippingAddress.state ||
-      !shippingAddress.postalCode ||
-      !shippingAddress.country
-    ) {
-      toast.warning(
-        "Please add your shipping address before proceeding to checkout."
-      );
-      return;
-    }
-
+    if (!customer?.id || !checkoutOrder || recovery.loading || recovery.error || !recovery.data) return;
+    if (activeCheckout) return;
+    try { clearCheckoutRecovery(window.sessionStorage, customer.id, checkoutOrder); } catch (_) {}
+    setRecoveryOrderId(null);
+    if (returnOrderId) router.replace(`/${locale}/page/account/cart`, undefined, { shallow: true }).catch(() => {});
+  }, [customer?.id, checkoutOrder, activeCheckout, recovery.loading, recovery.error, recovery.data, returnOrderId, locale, router]);
+  useEffect(() => {
+    const restore = event => {
+      if (!event.persisted) return;
+      pending.current = false;
+      setBusy(null);
+      setActionError("");
+      if (!customer?.id) return;
+      try { setRecoveryOrderId(previous => readCheckoutRecovery(window.sessionStorage, customer.id) || previous); } catch (_) {}
+      refetch().catch(() => {});
+      if (checkoutOrder) recovery.refetch().catch(() => {});
+      refreshCart();
+    };
+    window.addEventListener("pageshow", restore);
+    return () => window.removeEventListener("pageshow", restore);
+  }, [customer?.id, checkoutOrder, refetch, recovery.refetch]);
+  useEffect(() => {
+    if (!customer?.id) return;
     try {
-      const { data } = await createOrder({
-        variables: {
-          customerId: userData?.id,
-          cartId: cartItems.getCart.id,
-          shippingAddress: shippingAddress,
-          locale: localStorage.getItem("i18nextLng"),
-        },
-      });
-
-      if (data) {
-        window.location.href = data.AddOrder.paymentIntentClientSecret;
-      } else {
-        toast.error("Failed to create order");
+      const stored = JSON.parse(sessionStorage.getItem("highstyle:delivery") || "null");
+      if (stored?.customerId === customer.id) setAddress(Object.fromEntries(fields.map(([key]) => [key, typeof stored.address?.[key] === "string" ? stored.address[key].slice(0, 200) : ""])));
+    } catch (_) {}
+    setAddressReady(true);
+  }, [customer?.id]);
+  useEffect(() => {
+    if (!customer?.id || !addressReady) return;
+    try { sessionStorage.setItem("highstyle:delivery", JSON.stringify({ customerId: customer.id, address })); } catch (_) {}
+  }, [address, addressReady, customer?.id]);
+  const cart = data?.getCart;
+  const items = cart?.products || [];
+  const count = items.reduce((sum, item) => sum + item.quantity, 0);
+  const checkoutEnabled = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED === "true";
+  const mutateLine = async (item, quantity) => {
+    if (pending.current || checkoutOrder || !cart?.id) return;
+    pending.current = true;
+    setBusy(item._id);
+    setActionError("");
+    setNotice("");
+    try {
+      if (quantity === 0) await deleteCart({ variables: { cartId: cart.id, productId: item._id } });
+      else await updateCart({ variables: { cartId: cart.id, productId: item._id, newQuantity: quantity } });
+      await refetch();
+      refreshCart();
+      setNotice(text(quantity === 0 ? "itemRemoved" : "cartUpdated"));
+    } catch (_) { setActionError(text("updateError")); }
+    finally { pending.current = false; setBusy(null); }
+  };
+  const beginCheckout = async event => {
+    event.preventDefault();
+    if (pending.current || checkoutOrder || !checkoutEnabled || !items.length || !cart?.id || error) return;
+    if (fields.some(([key]) => !address[key].trim())) { setActionError(text("addressRequired")); return; }
+    pending.current = true;
+    setBusy("checkout");
+    setActionError("");
+    try {
+      const result = await createOrder({ variables: { customerId: customer.id, cartId: cart.id, shippingAddress: Object.fromEntries(fields.map(([key]) => [key, address[key].trim()])), locale } });
+      const destination = checkoutDestination(result.data?.AddOrder?.paymentIntentClientSecret);
+      if (!destination) throw new Error("Invalid checkout destination");
+      const orderId = result.data?.AddOrder?.order;
+      if (typeof orderId === "string" && /^[a-f0-9]{24}$/i.test(orderId)) {
+        setRecoveryOrderId(orderId);
+        try { writeCheckoutRecovery(window.sessionStorage, customer.id, orderId); } catch (_) {}
+        // Keep the recovery reference in the existing history entry too: browser
+        // Back must work even when Safari denies sessionStorage or reloads the page.
+        await router.replace({ pathname: router.pathname, query: { ...router.query, checkout_order: orderId } }, undefined, { shallow: true, scroll: false });
       }
-    } catch (error) {
-      console.error("Error during checkout:", error);
-      toast.error("Error: " + error.message);
+      window.location.assign(destination);
+    } catch (_) {
+      setActionError(text("checkoutError"));
+      pending.current = false;
+      setBusy(null);
     }
   };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setShippingAddress({
-      ...shippingAddress,
-      [name]: value,
-    });
+  const cancelPrevious = async () => {
+    if (pending.current || !checkoutOrder || !activeCheckout) return;
+    pending.current = true;
+    setBusy("cancel");
+    setActionError("");
+    try {
+      await cancelCheckout({ variables: { orderId: checkoutOrder } });
+      try { clearCheckoutRecovery(window.sessionStorage, customer.id, checkoutOrder); } catch (_) {}
+      setRecoveryOrderId(null);
+      setNotice(text("checkoutCancelled"));
+      await router.replace(`/${locale}/page/account/cart`, undefined, { shallow: true });
+      await refetch();
+      refreshCart();
+    } catch (_) { setActionError(text("cancelError")); recovery.refetch().catch(() => {}); }
+    finally { pending.current = false; setBusy(null); }
   };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    toast.success("Shipping address submitted!");
-    setIsModalOpen(false);
-  };
-
-  if (loading) return <div>Loading...</div>;
-
-  return (
-    <div>
-      {cartItems?.getCart?.products?.length > 0 && (
-        <button onClick={() => setIsModalOpen(true)} style={{ float: "right" }}>
-          {t("shipping_address.btn_title")}
-        </button>
-      )}
-      {cartItems?.getCart?.products?.length > 0 ? (
-        <section className="cart-section section-b-space">
-          <Container>
-            <Row>
-              <Col sm="12">
-                <table className="table cart-table table-responsive-xs">
-                  <thead>
-                    <tr className="table-head">
-                      <th scope="col">{t("cart_details.image")}</th>
-                      <th scope="col">{t("cart_details.product_name")}</th>
-                      <th scope="col">{t("cart_details.price")}</th>
-                      <th scope="col">{t("cart_details.quantity")}</th>
-                      <th scope="col">{t("cart_details.action")}</th>
-                      <th scope="col">{t("cart_details.total")}</th>
-                    </tr>
-                  </thead>
-                  {cartItems?.getCart.products?.map((item, index) => (
-                    <tbody key={index}>
-                      <tr>
-                        <td>
-                          <LocalLink
-                            href={`/product-details/` + item.ProductID}
-                          >
-                            <Media
-                              src={
-                                item.images
-                                  ? process.env.NEXT_PUBLIC_API_KEY + item.image
-                                  : process.env.NEXT_PUBLIC_API_KEY + item.image
-                              }
-                              alt=""
-                            />
-                          </LocalLink>
-                        </td>
-                        <td>
-                          <LocalLink
-                            href={`/product-details/` + item.ProductID}
-                          >
-                            {item.title}
-                          </LocalLink>
-                        </td>
-                        <td>
-                          <h2>
-                            $
-                            {(
-                              item?.price.toFixed(2) *
-                              ((lang === "en" &&
-                                rates?.conversion_rates?.USD) ||
-                                (lang === "es" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "pt" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "fr" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "ar" &&
-                                  rates?.conversion_rates?.SRD) ||
-                                (lang === "sv" &&
-                                  rates?.conversion_rates?.SEK) ||
-                                1)
-                            ).toFixed(2)}
-                          </h2>
-                        </td>
-                        <td>
-                          <div className="qty-box">
-                            <div className="input-group">
-                              <input
-                                type="number"
-                                name="quantity"
-                                onChange={(e) =>
-                                  handleQtyUpdate(item, e.target.value)
-                                }
-                                className="form-control input-number"
-                                value={item.quantity}
-                              />
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <i
-                            className="fa fa-times"
-                            onClick={() => removeFromCart(item)}
-                          ></i>
-                        </td>
-                        <td>
-                          <h2 className="td-color">
-                            $
-                            {(
-                              item.totalAmount.toFixed(2) *
-                              ((lang === "en" &&
-                                rates?.conversion_rates?.USD) ||
-                                (lang === "es" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "pt" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "fr" &&
-                                  rates?.conversion_rates?.EUR) ||
-                                (lang === "ar" &&
-                                  rates?.conversion_rates?.SRD) ||
-                                (lang === "sv" &&
-                                  rates?.conversion_rates?.SEK) ||
-                                1)
-                            ).toFixed(2)}
-                          </h2>
-                        </td>
-                      </tr>
-                    </tbody>
-                  ))}
-                </table>
-                <table className="table cart-table table-responsive-md">
-                  <tfoot>
-                    <tr>
-                      <td>{t("cart_details.total_price")} :</td>
-                      <td>
-                        {/* <h2>${cartItems?.getCart?.totalAmount.toFixed(2)}</h2> */}
-                        <h2>
-                          $
-                          {(
-                            cartItems?.getCart?.totalAmount.toFixed(2) *
-                            ((lang === "en" && rates?.conversion_rates?.USD) ||
-                              (lang === "es" && rates?.conversion_rates?.EUR) ||
-                              (lang === "pt" && rates?.conversion_rates?.EUR) ||
-                              (lang === "fr" && rates?.conversion_rates?.EUR) ||
-                              (lang === "ar" && rates?.conversion_rates?.SRD) ||
-                              (lang === "sv" && rates?.conversion_rates?.SEK) ||
-                              1)
-                          ).toFixed(2)}
-                        </h2>
-                      </td>
-                    </tr>
-                  </tfoot>
-                </table>
-              </Col>
-            </Row>
-            <Row className="cart-buttons">
-              <Col xs="6">
-                <LocalLink href={`/`} className="btn btn-solid">
-                  {t("cart_details.continue_shopping")}
-                </LocalLink>
-              </Col>
-              <Col xs="6">
-                <button onClick={handleCheckout} className="btn btn-solid">
-                  {t("cart_details.check_out")}
-                </button>
-              </Col>
-            </Row>
-          </Container>
-        </section>
-      ) : (
-        <section className="cart-section section-b-space">
-          <Container>
-            <Row>
-              <Col sm="12">
-                <div>
-                  <div className="col-sm-12 empty-cart-cls text-center">
-                    <Media
-                      src={cart}
-                      className="img-fluid mb-4 mx-auto"
-                      alt=""
-                    />
-                    <h3>
-                      <strong>{t("cart_details.cart_empty")}</strong>
-                    </h3>
-                    <h4>{t("cart_details.explore_more")}</h4>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </section>
-      )}
-      {isModalOpen && (
-        <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)}>
-          <ModalHeader toggle={() => setIsModalOpen(false)}>
-            {t("shipping_address.modal_title")}
-          </ModalHeader>
-          <ModalBody>
-            <Form onSubmit={handleSubmit}>
-              <FormGroup>
-                <Label for="street">{t("shipping_address.street")}</Label>
-                <Input
-                  type="text"
-                  name="street"
-                  id="street"
-                  value={shippingAddress.street}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="city">{t("shipping_address.city")}</Label>
-                <Input
-                  type="text"
-                  name="city"
-                  id="city"
-                  value={shippingAddress.city}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="state">{t("shipping_address.state")}</Label>
-                <Input
-                  type="text"
-                  name="state"
-                  id="state"
-                  value={shippingAddress.state}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="postalCode">
-                  {t("shipping_address.postal_code")}
-                </Label>
-                <Input
-                  type="text"
-                  name="postalCode"
-                  id="postalCode"
-                  value={shippingAddress.postalCode}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="country">{t("shipping_address.country")}</Label>
-                <Input
-                  type="text"
-                  name="country"
-                  id="country"
-                  value={shippingAddress.country}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-              <ModalFooter>
-                <Button color="primary" type="submit">
-                  {t("shipping_address.submit")}
-                </Button>{" "}
-                <Button color="secondary" onClick={() => setIsModalOpen(false)}>
-                  {t("shipping_address.cancel")}
-                </Button>
-              </ModalFooter>
-            </Form>
-          </ModalBody>
-        </Modal>
-      )}
-    </div>
-  );
-};
-
-export default CartPage;
+  if (!ready || (loading && !data && customer)) return <div className="hs-container hs-empty" role="status"><span className="hs-spinner" />{text("bag")}…</div>;
+  if (!customer) return <section className="hs-container hs-empty hs-page-space"><Icon name="bag" size={48} /><h1>{text("signInBag")}</h1><p>{text("signInBagBody")}</p><LocalLink href={`/page/account/login?returnTo=${encodeURIComponent(`/${locale}/page/account/cart`)}`} className="hs-button">{text("signIn")}<Icon name="arrow" /></LocalLink></section>;
+  return <section className="hs-container hs-page-space hs-cart">
+    <div className="hs-page-heading"><span className="hs-eyebrow">HIGHSTYLE / {text("bag")}</span><h1>{text("cartIntro")}</h1><p>{text("cartBody")}</p></div>
+    <ol className="hs-steps" aria-label={text("checkout")}><li aria-current="step"><span>1</span>{text("orderReview")}</li><li><span>2</span>{text("delivery")}</li><li><span>3</span>{text("payment")}</li></ol>
+    <div aria-live="polite">{notice && <p className="hs-notice hs-notice-success"><Icon name="check" />{notice}</p>}</div>
+    {actionError && <p className="hs-notice hs-notice-error" role="alert"><Icon name="info" />{actionError}</p>}
+    {checkoutOrder && recovery.error && <div className="hs-notice" role="alert"><Icon name="info" /><div><p>{text("confirmationError")}</p><button type="button" className="hs-text-button" onClick={() => recovery.refetch()}>{text("checkStatus")}</button></div></div>}
+    {checkoutOrder && !recovery.error && recovery.loading && <p className="hs-notice" role="status">{text("confirming")}</p>}
+    {checkoutOrder && activeCheckout && <div className="hs-notice hs-cancel-notice"><Icon name="info" /><div><strong>{text("cancelled")}</strong><p>{text("cancelledBody")}</p><button type="button" className="hs-text-button" disabled={!!busy} onClick={cancelPrevious}>{text(busy === "cancel" ? "cancelling" : "cancelCheckout")}</button></div></div>}
+    {error ? <div className="hs-empty" role="alert"><p>{text("cartError")}</p><button className="hs-button hs-button-outline" type="button" onClick={() => refetch()}>{text("retry")}</button><LocalLink href="/page/account/login" className="hs-text-button">{text("signIn")}</LocalLink></div> : items.length === 0 ? <div className="hs-empty"><Icon name="bag" size={50} /><h2>{text("emptyBag")}</h2><p>{text("emptyBagBody")}</p><LocalLink href="/#collection" className="hs-button">{text("explore")}<Icon name="arrow" /></LocalLink></div> : <form data-testid="cart-checkout" className="hs-checkout-grid" onSubmit={beginCheckout} aria-busy={!!busy}>
+      <div>
+        <div className="hs-card hs-cart-items"><div className="hs-card-heading"><h2>{text("bag")}</h2><span>{count} {text("items")}</span></div>
+          {items.map(item => <article className="hs-cart-item" key={item._id}>
+            <LocalLink href={`/product-details/${item.ProductID}`} className="hs-cart-image"><img src={imageSource(item.image)} alt={item.title} width="112" height="140" /></LocalLink>
+            <div className="hs-cart-item-details"><h3><LocalLink href={`/product-details/${item.ProductID}`}>{item.title}</LocalLink></h3>{(item.size || item.color) && <p>{[item.size, item.color].filter(Boolean).join(" / ")}</p>}<span className="hs-unit-price">{formatMoney(item.price, locale)}</span><div className="hs-cart-item-controls"><div className="hs-quantity"><button type="button" aria-label={`${text("decrease")}: ${item.title}`} disabled={!!busy || loading || !!checkoutOrder || item.quantity <= 1} onClick={() => mutateLine(item, item.quantity - 1)}><Icon name="minus" size={16} /></button><output aria-label={`${text("quantity")}: ${item.title}`}>{item.quantity}</output><button type="button" aria-label={`${text("increase")}: ${item.title}`} disabled={!!busy || loading || !!checkoutOrder || item.quantity >= 99} onClick={() => mutateLine(item, item.quantity + 1)}><Icon name="plus" size={16} /></button></div><button type="button" className="hs-remove" aria-label={`${text("remove")}: ${item.title}`} disabled={!!busy || loading || !!checkoutOrder} onClick={() => mutateLine(item, 0)}><Icon name="remove" size={17} /><span>{text("remove")}</span></button></div></div>
+            <strong className="hs-line-total">{formatMoney(item.totalAmount, locale)}</strong>
+          </article>)}
+          <p className="hs-small hs-stock-note"><Icon name="info" size={17} />{text("latestPrice")}</p>
+        </div>
+        <section className="hs-card hs-address" aria-labelledby="delivery-heading"><div className="hs-card-heading"><h2 id="delivery-heading">{text("address")}</h2><Icon name="box" /></div><p>{text("addressBody")}</p><div className="hs-form-grid">{fields.map(([key, autoComplete]) => <label key={key} className={key === "street" ? "hs-field hs-field-wide" : "hs-field"}><span>{text(key)} <span aria-hidden="true">*</span></span><input name={key} autoComplete={autoComplete} value={address[key]} onChange={event => setAddress(previous => ({ ...previous, [key]: event.target.value }))} required maxLength={200} disabled={busy === "checkout"} /></label>)}</div></section>
+        <LocalLink href="/#collection" className="hs-continue"><Icon name="arrow" size={18} />{text("resume")}</LocalLink>
+      </div>
+      <aside className="hs-order-summary hs-card"><span className="hs-eyebrow">HIGHSTYLE</span><h2>{text("summary")}</h2><dl><div><dt>{text("subtotal")} ({count})</dt><dd>{formatMoney(cart.totalAmount, locale)}</dd></div><div className="hs-summary-total"><dt>{text("total")}</dt><dd>{formatMoney(cart.totalAmount, locale)}</dd></div></dl><p className="hs-small">{text("paymentTotal")}</p>
+        {!checkoutEnabled && <p className="hs-notice" role="status">{text("checkoutUnavailable")}</p>}
+        {process.env.NEXT_PUBLIC_PAYMENT_MODE === "test" && <p className="hs-test-note">{text("testCheckout")}</p>}
+        <button data-testid="checkout-submit" type="submit" className="hs-button hs-button-wide" disabled={!checkoutEnabled || !!busy || loading || !!checkoutOrder}><span>{text(busy === "checkout" ? "checkoutBusy" : "checkout")}</span>{busy === "checkout" ? <span className="hs-spinner" /> : <Icon name="arrow" size={20} />}</button><p className="hs-secure-note"><Icon name="lock" size={16} /><span>{text("securePayment")}</span></p><p className="hs-small">{text("detailsSafe")}</p>
+      </aside>
+    </form>}
+  </section>;
+}

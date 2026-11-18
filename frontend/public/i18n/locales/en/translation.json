@@ -243,7 +243,7 @@
       "email": "Email is required",
       "emailInvalid": "Email is not valid",
       "password": "Password is required",
-      "passwordLength": "Password must be at least 6 characters long"
+      "passwordLength": "Password must be at least 10 characters long"
     },
     "successMessage": "Customer Created Successfully",
     "errorMessage": "An error occurred while creating the account"

@@ -1,33 +1,13 @@
-const nodemailer = require("nodemailer");
+"use strict";
+const { createMailTransport } = require("../Services/mailTransport");
 
-const sendEmail = async ({ to, subject, text, html }) => {
+module.exports = async function sendEmail({ to, subject, text, html }) {
+  const transporter = createMailTransport();
+  if (!transporter) throw new Error("Email delivery is not configured");
   try {
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT || 587,
-      secure: false,
-      auth: {
-        user: process.env.USER_EMAIL,
-        pass: process.env.USER_EMAIL_PASSWORD,
-      },
-    });
-
-    // Email options
-    const mailOptions = {
-      from: process.env.USER_EMAIL || "no-reply@example.com",
-      to,
-      subject,
-      text,
-      html,
-    };
-
-    // Send email
-    await transporter.sendMail(mailOptions);
+    await transporter.sendMail({ from: process.env.SMTP_FROM || process.env.USER_EMAIL, to, subject, text, html });
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("Email delivery failed", error.code || "SEND_FAILED");
     throw new Error("Failed to send email. Please try again.");
   }
 };
-
-module.exports = sendEmail;

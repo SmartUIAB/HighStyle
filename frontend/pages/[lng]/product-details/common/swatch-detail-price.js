@@ -23,12 +23,15 @@ const SwatchDetailsWithPrice = (params) => {
   const plusQty = cartContext.plusQty;
   const minusQty = cartContext.minusQty;
   const quantity = cartContext.quantity;
+  const setQuantity = cartContext.setQuantity;
   const uniqueColor = [];
   const uniqueSize = [];
 
   const changeQty = (e) => {
     setQuantity(parseInt(e.target.value));
   };
+  if (!product) return null;
+
   return (
     <>
       <div className={`product-right ${params.stickyClass}`}>
@@ -44,7 +47,7 @@ const SwatchDetailsWithPrice = (params) => {
           {symbol}
           {product.price - (product.price * product.discount) / 100}{" "}
         </h3>
-        {product.variants.map((vari) => {
+        {(product.variants || []).map((vari) => {
           var findItem = uniqueColor.find((x) => x.color === vari.color);
           if (!findItem) uniqueColor.push(vari);
           var findItemSize = uniqueSize.find((x) => x === vari.size);
@@ -71,7 +74,7 @@ const SwatchDetailsWithPrice = (params) => {
           <li className="active">
             <a href="#">
               <img
-                src={image}
+                src={image.src}
                 alt=""
                 className="img-fluid blur-up lazyloaded"
               />

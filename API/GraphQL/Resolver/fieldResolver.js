@@ -34,6 +34,7 @@ const fieldResolver = {
   },
 
   PhysicalProduct: {
+    availableQuantity: (parent) => require("../../Services/inventory").availableQuantity(parent),
     category: (parent) => fetchCategory(parent.category),
     subcategory: (parent) => fetchSubcategory(parent.subcategory),
   },

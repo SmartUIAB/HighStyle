@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Table, Spinner } from "reactstrap";
 import LocalLink from "../../../../../components/LocalLink";
 import { toast } from "react-toastify";
@@ -13,7 +13,8 @@ const WishlistPage = () => {
 
   const [createcart] = useMutation(CREATE_ADD_TO_CART);
   const [removeFavourite] = useMutation(REMOVE_FAVOURITE);
-  const userData = JSON.parse(localStorage.getItem("customerDetail"));
+  const [userData, setUserData] = useState(null);
+  useEffect(() => { try { setUserData(JSON.parse(window.localStorage.getItem("customerDetail") || "null")); } catch (_) { setUserData(null); } }, []);
 
   const {
     data: favouriteData,
@@ -21,8 +22,9 @@ const WishlistPage = () => {
     refetch,
   } = useQuery(GET_FAVOURITE_PRODUCT, {
     variables: {
-      userId: userData?.id,
+      userId: userData?.id || "000000000000000000000000",
     },
+    skip: !userData?.id,
   });
 
   const handleAddToCart = async (product) => {

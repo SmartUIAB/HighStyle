@@ -1,36 +1,14 @@
-import { Unlock, User } from "react-feather";
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import { Card, CardBody, Col } from "reactstrap";
 import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
 
-const LoginTabs = () => {
+export default function LoginTabs() {
   return (
     <Col md="7" className="p-0 card-right">
-      <Card className="tab2-card">
-        <CardBody>
-          <Tabs>
-            <TabList className="nav nav-tabs tab-coupon">
-              <Tab className="nav-link">
-                <User />
-                Login
-              </Tab>
-              <Tab className="nav-link">
-                <Unlock />
-                Register
-              </Tab>
-            </TabList>
-            <TabPanel>
-              <LoginForm />
-            </TabPanel>
-            <TabPanel>
-              <RegisterForm />
-            </TabPanel>
-          </Tabs>
-        </CardBody>
-      </Card>
+      <Card className="tab2-card"><CardBody>
+        <h1 className="h4">HighStyle administration</h1>
+        <LoginForm />
+        <p className="text-muted mt-3">Staff accounts must be provisioned by an authorized administrator.</p>
+      </CardBody></Card>
     </Col>
   );
-};
-
-export default LoginTabs;
+}

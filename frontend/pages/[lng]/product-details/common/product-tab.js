@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Container,
   Row,
@@ -42,15 +42,15 @@ const ProductTab = ({ item }) => {
   const [update_review] = useMutation(UPDATE_REVIEW);
   const router = useRouter();
 
-  const userData = JSON.parse(localStorage.getItem("customerDetail"));
+  const [userData, setUserData] = useState(null);
+  useEffect(() => { try { setUserData(JSON.parse(window.localStorage.getItem("customerDetail") || "null")); } catch (_) { setUserData(null); } }, []);
   const {
     data: reviewsData,
     loading,
     refetch,
   } = useQuery(GET_REVIEWS, {
-    variables: {
-      productId: item?.id,
-    },
+    variables: { productId: item?.id || "000000000000000000000000" },
+    skip: !item?.id,
   });
 
   const totalReviews = reviewsData?.getReviews?.length || 0;
@@ -148,6 +148,8 @@ const ProductTab = ({ item }) => {
     setRating(review.rating);
     setComment(review.comment);
   };
+
+  if (!item) return null;
 
   return (
     <section className="tab-product m-0">

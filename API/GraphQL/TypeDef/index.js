@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server");
+const gql = require("graphql-tag");
 const userTypeDefs = require("./userTypeDef");
 const categorySubcategoryTypeDef = require("./categorySubcategoryTypeDef");
 const productTypeDef = require("./productTypeDef");

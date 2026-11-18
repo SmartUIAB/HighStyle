@@ -1,6 +1,13 @@
 {
-  "dependencies": {
-    "node-cron": "^3.0.3",
-    "uuid": "^10.0.0"
+  "name": "highstyle",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.16 <25"
+  },
+  "scripts": {
+    "test:api": "npm test --prefix API",
+    "build:store": "npm run build --prefix frontend",
+    "build:admin": "npm run build --prefix backend"
   }
 }

@@ -5,9 +5,9 @@ const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const menuResolvers = {
   Query: {
-    menus: async () => {
+    menus: async (_, args, context) => {
       try {
-        return await Menu.find();
+        return await Menu.find({ company: context.user.company });
       } catch (error) {
         throw new CustomError("Error fetching menus: " + error.message);
       }

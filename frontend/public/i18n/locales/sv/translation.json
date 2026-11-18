@@ -243,7 +243,7 @@
       "email": "E-post krävs",
       "emailInvalid": "E-post är inte giltig",
       "password": "Lösenord krävs",
-      "passwordLength": "Lösenordet måste vara minst 6 tecken långt"
+      "passwordLength": "Lösenordet måste vara minst 10 tecken långt"
     },
     "successMessage": "Kund skapad framgångsrikt",
     "errorMessage": "Ett fel uppstod vid skapande av kontot"

@@ -7,28 +7,11 @@ const {
 } = require("../../Utilities/miscellaneousUtils");
 const Company = require("../../Model/companyModel");
 const { checkPermission } = require("../../Utilities/permissionMiddleware");
+const { listCatalog } = require("../../Services/catalogListing");
 
 const productResolvers = {
   Query: {
-    physicalProducts: async (_, { pagination }) => {
-      const { page = 1, limit = 10 } = pagination || {};
-      try {
-        const products = await PhysicalProduct.find()
-          .skip((page - 1) * limit)
-          .limit(limit);
-        return {
-          products,
-          totalPages: Math.ceil(
-            (await PhysicalProduct.countDocuments()) / limit
-          ),
-          currentPage: page,
-          total: await PhysicalProduct.countDocuments(),
-        };
-      } catch (error) {
-        console.log(error);
-        throw new CustomError(error.message, 500);
-      }
-    },
+    physicalProducts: (_, args) => listCatalog(PhysicalProduct, args, true),
     physicalProduct: async (_, { id }) => {
       try {
         return await PhysicalProduct.findById(id);
@@ -36,24 +19,7 @@ const productResolvers = {
         throw new CustomError("Physical product not found", 404);
       }
     },
-    digitalProducts: async (_, { pagination }) => {
-      const { page = 1, limit = 10 } = pagination || {};
-      try {
-        const products = await DigitalProduct.find()
-          .skip((page - 1) * limit)
-          .limit(limit);
-        return {
-          products,
-          totalPages: Math.ceil(
-            (await DigitalProduct.countDocuments()) / limit
-          ),
-          currentPage: page,
-          total: await DigitalProduct.countDocuments(),
-        };
-      } catch (error) {
-        throw new CustomError("Failed to fetch digital products", 500);
-      }
-    },
+    digitalProducts: (_, args) => listCatalog(DigitalProduct, args),
     digitalProduct: async (_, { id }) => {
       try {
         return await DigitalProduct.findById(id);
@@ -104,6 +70,9 @@ const productResolvers = {
         let company = await Company.findById(context.user.company);
         const product = await PhysicalProduct.findById(id).populate("category");
         if (!product) throw new CustomError("Product not found", 404);
+        if (input.stockQuantity != null && (!Number.isSafeInteger(input.stockQuantity) || input.stockQuantity < product.reservedQuantity)) {
+          throw new CustomError("Stock cannot be negative or lower than the quantity reserved by checkouts", 409);
+        }
 
         const existingImages = product.images;
         const remainingImages = existingImages.filter(
@@ -146,7 +115,8 @@ const productResolvers = {
       } catch (error) {
         console.log(error);
 
-        throw new CustomError(error.message, 500);
+        if (error.name === "VersionError") throw new CustomError("Stock changed during this edit. Refresh the product and retry.", 409);
+        throw new CustomError(error.message, error.statusCode || 500);
       }
     }),
 
@@ -158,18 +128,22 @@ const productResolvers = {
         const product = await PhysicalProduct.findById(id);
         if (!product) throw new CustomError("Product not found", 404);
 
+        const result = await PhysicalProduct.findOneAndDelete({
+          _id: product._id, __v: product.__v,
+          $or: [{ reservedQuantity: 0 }, { reservedQuantity: { $exists: false } }],
+        });
+        if (!result) throw new CustomError("This product has active reservations or changed. Refresh and try again after its checkouts finish.", 409);
+
         if (product.images && product.images.length > 0) {
           await Promise.all(
             product.images.map((imageUrl) => deleteImageFromStorage(imageUrl))
           );
         }
 
-        const result = await PhysicalProduct.findByIdAndDelete(id);
-
         return !!result;
       } catch (error) {
         console.log(error);
-        throw new CustomError(error.message, 500);
+        throw new CustomError(error.message, error.statusCode || 500);
       }
     }),
 

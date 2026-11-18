@@ -9,17 +9,17 @@ const { checkPermission } = require("../../Utilities/permissionMiddleware");
 
 const mediaResolvers = {
   Query: {
-    getAllImages: async (_, { page, limit }) => {
+    getAllImages: async (_, { page, limit }, context) => {
       try {
         const skip = (page - 1) * limit;
-        const totalCount = await Media.countDocuments();
+        const totalCount = await Media.countDocuments({ company: context.user.company });
 
-        const images = await Media.find().skip(skip).limit(limit);
+        const images = await Media.find({ company: context.user.company }).skip(skip).limit(limit);
 
         return {
           images,
           totalCount,
-          totalPages: Math.ceil((await Media.countDocuments()) / limit),
+          totalPages: Math.ceil((await Media.countDocuments({ company: context.user.company })) / limit),
           currentPage: page,
         };
       } catch (error) {
@@ -44,12 +44,14 @@ const mediaResolvers = {
         }
 
         const uploadedFiles = [];
-        for (let image of images) {
-          if (!image.file || !image.file.filename || !image.file.mimetype) {
+        for (const uploadValue of images) {
+          const resolved = await uploadValue;
+          const image = resolved?.file || resolved;
+          if (!image || !image.filename || !image.mimetype) {
             throw new Error("Invalid file structure");
           }
 
-          const { filename, mimetype } = image.file;
+          const { filename, mimetype } = image;
           const uploadedImagePath = await upload(
             image,
             `${company.name.replace(/\s+/g, "")}/Media`

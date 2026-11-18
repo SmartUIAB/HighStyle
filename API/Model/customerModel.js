@@ -6,6 +6,7 @@ const customerSchema = new Schema({
   lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  authVersion: { type: Number, default: 0, min: 0 },
   resetPasswordToken: { type: String }, // Token for password reset
   resetPasswordExpire: { type: Date }, // Expiration time for the token
 });

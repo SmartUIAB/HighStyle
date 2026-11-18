@@ -10,7 +10,9 @@ const physicalProductSchema = new Schema(
     SKU: { type: String, required: true, unique: true },
     price: { type: Number, required: true },
     discount: { type: Number, default: 0 },
-    stockQuantity: { type: Number, required: true },
+    // On-hand stock includes units held by an unfinished checkout.
+    stockQuantity: { type: Number, required: true, min: 0, validate: Number.isSafeInteger },
+    reservedQuantity: { type: Number, default: 0, min: 0, validate: Number.isSafeInteger },
     metaTitle: { type: String },
     metaDescription: { type: String },
     colors: { type: [String] },
@@ -37,8 +39,14 @@ const physicalProductSchema = new Schema(
       required: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true, optimisticConcurrency: true }
 );
+
+physicalProductSchema.pre("validate", function () {
+  if (this.reservedQuantity > this.stockQuantity) {
+    this.invalidate("stockQuantity", "Stock cannot be lower than the quantity reserved by checkouts");
+  }
+});
 
 const PhysicalProduct = mongoose.model(
   "PhysicalProduct",

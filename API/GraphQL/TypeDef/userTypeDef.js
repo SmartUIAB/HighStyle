@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server-express");
+const gql = require("graphql-tag");
 
 const userTypeDefs = gql`
   scalar Upload
@@ -53,7 +53,6 @@ const userTypeDefs = gql`
     firstname: String!
     lastname: String!
     company: String
-    password: String
     image: String
     role: String
     permissions: [ID!]!

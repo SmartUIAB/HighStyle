@@ -72,4 +72,4 @@ const resolver = {
   },
 };
 
-module.exports = resolver;
+module.exports = require("../../Security/resolverPolicy").secureResolvers(resolver);

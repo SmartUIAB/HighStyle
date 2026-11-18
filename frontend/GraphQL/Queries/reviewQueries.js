@@ -7,7 +7,6 @@ export const GET_REVIEWS = gql`
       productId
       userId {
         id
-        email
         firstname
         lastname
       }

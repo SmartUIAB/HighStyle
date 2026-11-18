@@ -12,7 +12,7 @@ const transactionSchema = new Schema({
   transactionAmount: { type: Number, required: true },
   transactionStatus: {
     type: String,
-    enum: ["PENDING", "SUCCESSFUL", "FAILED", "REFUNDED"],
+    enum: ["PENDING", "SUCCESSFUL", "FAILED", "PARTIALLY_REFUNDED", "REFUNDED"],
     default: "PENDING",
   },
   paymentGateway: { type: String, required: true },

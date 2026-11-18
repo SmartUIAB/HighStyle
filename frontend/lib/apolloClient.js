@@ -1,10 +1,12 @@
-// lib/apolloClient.js
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+
+// Fail closed in production when the required deployment endpoint is absent.
+const endpoint = typeof window === "undefined"
+  ? (process.env.API_ORIGIN ? `${process.env.API_ORIGIN}/graphql` : "http://127.0.0.1:2024/graphql")
+  : (process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "/api/graphql");
 
 const client = new ApolloClient({
-  uri:
-    process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || "http://localhost:2024/graphql",
-  credentials: "include",
+  link: new HttpLink({ uri: endpoint, credentials: "include" }),
   cache: new InMemoryCache(),
 });
 
