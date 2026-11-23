@@ -2,6 +2,23 @@ import { createRequire } from 'node:module';
 import { randomBytes, randomUUID } from 'node:crypto';
 import { ensure } from './hosted-clients.mjs';
 
+const require = createRequire(new URL('../../API/package.json', import.meta.url));
+
+export function stagingDatabaseName(mongoUri) {
+  // WHATWG URL rejects valid multi-host MongoDB URIs with explicit ports.
+  // Use the API's own driver parser, but never connect or perform an operation.
+  const { MongoClient } = require('mongoose').mongo;
+  let database;
+  try {
+    database = new MongoClient(mongoUri).db().databaseName;
+  } catch {
+    // Driver errors can contain the input URI; do not retain credentials in logs.
+    throw new Error('Invalid staging MongoDB connection configuration');
+  }
+  ensure(/^highstyle_staging(?:_[a-z0-9_]+)?$/.test(database), 'Fixture database name must be highstyle_staging (or highstyle_staging_<suffix>)');
+  return database;
+}
+
 async function createCustomer(clients, run, label) {
   const email = `hs-acceptance-${label}-${run}@example.invalid`;
   const password = `Hs!${randomBytes(24).toString('base64url')}9`;
@@ -42,13 +59,11 @@ export async function stagingBrowserFixtures(clients) {
 
 export async function stagingFixtures(config, clients) {
   ensure(process.env.ALLOW_STAGING_FIXTURES === 'true', 'ALLOW_STAGING_FIXTURES=true is required for dedicated acceptance data');
-  let database;
-  try { database = decodeURIComponent(new URL(config.mongoUri).pathname.slice(1)); } catch { throw new Error('Invalid staging MongoDB connection configuration'); }
-  ensure(/^highstyle_staging(?:_[a-z0-9_]+)?$/.test(database), 'Fixture database name must be highstyle_staging (or highstyle_staging_<suffix>)');
-  const require = createRequire(new URL('../../API/package.json', import.meta.url));
+  const database = stagingDatabaseName(config.mongoUri);
   const mongoose = require('mongoose');
   try {
   await mongoose.connect(config.mongoUri, { serverSelectionTimeoutMS: 15_000, autoIndex: false });
+  ensure(mongoose.connection.name === database, 'Connected fixture database differs from the validated staging database');
   const hello = await mongoose.connection.db.admin().command({ hello: 1 });
   ensure(hello.isWritablePrimary === true && !!hello.setName, 'Hosted staging MongoDB must be a writable replica set');
   const models = {
