@@ -39,3 +39,41 @@ test("staging fixtures refuse production or an unexpected database before connec
     }
   }
 });
+
+test("staging seed parser accepts canonical replica-set, SRV, IPv6 and encoded URIs without connecting", () => {
+  const { seedDatabaseName } = require("../scripts/seed-staging");
+  for (const uri of [
+    "mongodb://mongo.invalid:27017/highstyle_staging",
+    "mongodb://one.invalid:27017,two.invalid:27017,three.invalid:27017/highstyle_staging?replicaSet=rs0",
+    "mongodb://seed:p%40ss%3Aword@one.invalid:27017,two.invalid:27017/highstyle_staging?replicaSet=rs0&authSource=admin",
+    "mongodb+srv://cluster.invalid/highstyle_staging?authSource=admin",
+    "mongodb://[::1]:27017,[::2]:27017/highstyle_staging?replicaSet=rs0",
+    "mongodb://mongo.invalid/%68ighstyle_staging",
+  ]) assert.equal(seedDatabaseName(uri), "highstyle_staging");
+});
+
+test("staging seed parser preserves the exact database allowlist instead of trusting authSource or a suffix", () => {
+  const { seedDatabaseName } = require("../scripts/seed-staging");
+  for (const uri of [
+    "mongodb://mongo.invalid/highstyle_production",
+    "mongodb://seed:password@mongo.invalid/production?authSource=highstyle_staging",
+    "mongodb://seed:password@mongo.invalid/?authSource=highstyle_staging",
+    "mongodb://mongo.invalid/highstyle_staging_ci",
+    "mongodb://mongo.invalid/highstyle_stagingproduction",
+    "mongodb://mongo.invalid/highstyle_staging/production",
+    "mongodb://mongo.invalid/highstyle_staging%2Fproduction",
+    "https://mongo.invalid/highstyle_staging",
+    "mongodb+srv://one.invalid,two.invalid/highstyle_staging",
+    "",
+    undefined,
+  ]) assert.throws(() => seedDatabaseName(uri), /Invalid staging database configuration|refusing connection/);
+});
+
+test("staging seed parser errors never disclose a connection password", () => {
+  const { seedDatabaseName } = require("../scripts/seed-staging");
+  const password = "DO_NOT_LOG_SEED_PASSWORD";
+  assert.throws(
+    () => seedDatabaseName(`mongodb://seed:${password}@mongo.invalid/highstyle_staging?tls=invalid`),
+    error => error.message === "Invalid staging database configuration" && !error.message.includes(password),
+  );
+});
