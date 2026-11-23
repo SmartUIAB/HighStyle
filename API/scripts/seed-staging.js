@@ -6,17 +6,29 @@ const Company = require("../Model/companyModel");
 const Category = require("../Model/categoryModel");
 const PhysicalProduct = require("../Model/physicalProductModel");
 
+function seedDatabaseName(mongoUri) {
+  let database;
+  try {
+    // Use the real driver parser: WHATWG URL rejects valid multi-host URIs.
+    // Constructing a client and selecting a database does not open a connection.
+    database = new mongoose.mongo.MongoClient(mongoUri).db().databaseName;
+  } catch {
+    // Never include the URI or a driver exception that may contain credentials.
+    throw new Error("Invalid staging database configuration");
+  }
+  if (database !== "highstyle_staging") {
+    throw new Error("Unexpected staging database; refusing connection before any model initialization");
+  }
+  return database;
+}
+
 async function seedStaging() {
   if (process.env.SEED_STAGING_CATALOG !== "true") return;
   if (process.env.APP_ENV !== "staging") throw new Error("Catalog fixtures are restricted to staging");
-  let uri;
-  try { uri = new URL(process.env.MONGODB_ATLAS); } catch (_) { throw new Error("Invalid staging database configuration"); }
-  if (!["mongodb:", "mongodb+srv:"].includes(uri.protocol) || uri.pathname !== "/highstyle_staging") {
-    throw new Error("Unexpected staging database; refusing connection before any model initialization");
-  }
+  const database = seedDatabaseName(process.env.MONGODB_ATLAS);
   await require("../Config/DataBase")();
   try {
-    if (mongoose.connection.name !== "highstyle_staging") throw new Error("Unexpected staging database; no fixtures were written");
+    if (mongoose.connection.name !== database) throw new Error("Unexpected staging database; no fixtures were written");
     if (await PhysicalProduct.exists({ SKU: { $not: /^STAGING-/ } })) throw new Error("Non-fixture catalog found; refusing automatic seeding");
     await Promise.all([Company.init(), Category.init(), PhysicalProduct.init()]);
     const company = await Company.findOneAndUpdate({ name: "HighStyle Staging Fixtures" }, { $setOnInsert: { name: "HighStyle Staging Fixtures" } }, { upsert: true, new: true });
@@ -45,4 +57,4 @@ async function seedStaging() {
   }
 }
 if (require.main === module) seedStaging().catch(error => { console.error("Staging catalog initialization failed:", error.message); process.exitCode = 1; });
-module.exports = { seedStaging };
+module.exports = { seedStaging, seedDatabaseName };
