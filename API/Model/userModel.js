@@ -6,12 +6,13 @@ const userSchema = new Schema({
   lastname: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  authVersion: { type: Number, default: 0, min: 0 },
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Company",
     required: true,
   },
-  role: { type: String, required: true, default: "Admin" },
+  role: { type: String, enum: ["Admin", "User"], required: true, default: "User" },
   image: { type: String }, // Optional
   permissions: [{ type: mongoose.Schema.ObjectId, ref: "Permission" }],
 });

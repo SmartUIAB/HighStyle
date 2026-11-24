@@ -1,173 +1,42 @@
-import React, { useState } from "react";
-import CommonLayout from "../../../../components/shop/common-layout";
-import { Input, Container, Row, Form, Label, Col, Button } from "reactstrap";
+import React, { useRef, useState } from "react";
 import { useMutation } from "@apollo/client";
-import { REGISTER_USER } from "../../../../GraphQL/Mutations/authMutations";
-import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { useTranslation } from "react-i18next";
+import CommonLayout from "../../../../components/shop/common-layout";
+import LocalLink from "../../../../components/LocalLink";
+import Icon from "../../../../components/storefront/Icon";
+import useStoreText from "../../../../components/storefront/useStoreText";
+import useFormReady from "../../../../components/storefront/useFormReady";
+import { safeReturnPath } from "../../../../components/storefront/commerce.mjs";
+import { REGISTER_USER } from "../../../../GraphQL/Mutations/authMutations";
 
-const Register = () => {
-  const [formData, setFormData] = useState({
-    fname: "",
-    lname: "",
-    email: "",
-    password: "",
-  });
-
-  const [errors, setErrors] = useState({});
-  const [createCustomer] = useMutation(REGISTER_USER);
+export default function Register() {
+  const { text, locale } = useStoreText();
   const router = useRouter();
-  const { t } = useTranslation();
-
-  const handleChange = (event) => {
-    const { id, value } = event.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.fname.trim()) newErrors.fname = t("register.error.firstName");
-    if (!formData.lname.trim()) newErrors.lname = t("register.error.lastName");
-    if (!formData.email.trim()) {
-      newErrors.email = t("register.error.email");
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = t("register.error.emailInvalid");
-    }
-    if (!formData.password.trim()) {
-      newErrors.password = t("register.error.password");
-    } else if (formData.password.length < 6) {
-      newErrors.password = t("register.error.passwordLength");
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (event) => {
+  const ready = useFormReady(router.isReady);
+  const [form, setForm] = useState({ firstname: "", lastname: "", email: "", password: "" });
+  const [error, setError] = useState("");
+  const [createCustomer, { loading }] = useMutation(REGISTER_USER);
+  const pending = useRef(false);
+  const returnTo = safeReturnPath(router.query.returnTo, locale);
+  const field = (name, label, autoComplete, type = "text") => <label className="hs-field"><span>{text(label)}</span><input name={name} type={type} autoComplete={autoComplete} value={form[name]} onChange={event => setForm(previous => ({ ...previous, [name]: event.target.value }))} required minLength={name === "password" ? 10 : 1} maxLength={name === "email" ? 254 : name === "password" ? 128 : 100} aria-describedby={name === "password" ? "password-hint" : undefined} disabled={!ready || loading} /></label>;
+  const submit = async event => {
     event.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
+    if (!ready || pending.current) return;
+    if (form.password.length < 10) { setError(text("passwordShort")); return; }
+    if (!form.firstname.trim() || !form.lastname.trim()) { setError(text("required")); return; }
+    pending.current = true;
+    setError("");
     try {
-      const { data } = await createCustomer({
-        variables: {
-          input: {
-            email: formData.email,
-            firstname: formData.fname,
-            lastname: formData.lname,
-          },
-          password: formData.password,
-        },
-      });
-
-      if (data) {
-        toast.success(t("register.successMessage"));
-        router.replace("/");
-      }
-    } catch (error) {
-      toast.error(t("register.errorMessage"));
-    }
+      await createCustomer({ variables: { input: { firstname: form.firstname.trim(), lastname: form.lastname.trim(), email: form.email.trim() }, password: form.password } });
+      await router.replace({ pathname: `/${locale}/page/account/login`, query: { registered: "1", returnTo } });
+    } catch (_) { setError(text("registerError")); }
+    finally { pending.current = false; }
   };
+  return <CommonLayout title={text("createAccount")}><section className="hs-container hs-page-space hs-auth"><div className="hs-page-heading"><span className="hs-eyebrow">HIGHSTYLE / {text("account")}</span><h1>{text("createTitle")}</h1><p>{text("createBody")}</p></div><div className="hs-card">{error && <p className="hs-notice hs-notice-error" role="alert">{error}</p>}<form method="post" onSubmit={submit} aria-busy={!ready || loading} data-ready={ready} data-testid="register-form"><div className="hs-form-grid">{field("firstname", "firstName", "given-name")}{field("lastname", "lastName", "family-name")}</div>{field("email", "email", "email", "email")}{field("password", "password", "new-password", "password")}<p id="password-hint" className="hs-small">{text("passwordHint")}</p><button type="submit" className="hs-button hs-button-wide" disabled={!ready || loading}>{text(loading ? "creating" : "createAccount")}<Icon name="arrow" size={18} /></button></form></div><p className="hs-auth-alternate">{text("haveAccount")} <LocalLink href={`/page/account/login?returnTo=${encodeURIComponent(returnTo)}`}>{text("signIn")}</LocalLink></p></section></CommonLayout>;
+}
 
-  return (
-    <CommonLayout parent={t("route_name.home")} title={t("register.title")}>
-      <section className="register-page section-b-space">
-        <Container>
-          <Row>
-            <Col lg="12">
-              <h3>{t("register.title")}</h3>
-              <div className="theme-card">
-                <Form className="theme-form" onSubmit={handleSubmit}>
-                  <Row>
-                    <Col md="6">
-                      <Label className="form-label" for="fname">
-                        {t("register.firstName")}
-                      </Label>
-                      <Input
-                        type="text"
-                        className="form-control"
-                        id="fname"
-                        placeholder={t("register.firstName")}
-                        required
-                        value={formData.fname}
-                        onChange={handleChange}
-                      />
-                      {errors.fname && (
-                        <p className="text-danger">{errors.fname}</p>
-                      )}
-                    </Col>
-                    <Col md="6">
-                      <Label className="form-label" for="lname">
-                        {t("register.lastName")}
-                      </Label>
-                      <Input
-                        type="text"
-                        className="form-control"
-                        id="lname"
-                        placeholder={t("register.lastName")}
-                        required
-                        value={formData.lname}
-                        onChange={handleChange}
-                      />
-                      {errors.lname && (
-                        <p className="text-danger">{errors.lname}</p>
-                      )}
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col md="6">
-                      <Label className="form-label" for="email">
-                        {t("register.email")}
-                      </Label>
-                      <Input
-                        type="email"
-                        className="form-control"
-                        id="email"
-                        placeholder={t("register.email")}
-                        required
-                        value={formData.email}
-                        onChange={handleChange}
-                      />
-                      {errors.email && (
-                        <p className="text-danger">{errors.email}</p>
-                      )}
-                    </Col>
-                    <Col md="6">
-                      <Label className="form-label" for="password">
-                        {t("register.password")}
-                      </Label>
-                      <Input
-                        type="password"
-                        className="form-control"
-                        id="password"
-                        placeholder={t("register.password")}
-                        required
-                        value={formData.password}
-                        onChange={handleChange}
-                      />
-                      {errors.password && (
-                        <p className="text-danger">{errors.password}</p>
-                      )}
-                    </Col>
-                    <Col md="12">
-                      <Button type="submit" className="btn btn-solid w-auto">
-                        {t("register.createAccount")}
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </div>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-    </CommonLayout>
-  );
-};
-
-export default Register;
+// Render a fresh document for the requested locale; static auto-optimization
+// otherwise emits one English/LTR HTML shell for every dynamic [lng] route.
+export async function getServerSideProps() {
+  return { props: {} };
+}

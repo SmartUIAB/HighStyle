@@ -1,298 +1,57 @@
+"use strict";
 const Order = require("../../Model/orderModel");
 const Transaction = require("../../Model/transactionModel");
-const PhysicalProduct = require("../../Model/physicalProductModel");
-const DigitalProduct = require("../../Model/digitalProductModel");
-const {
-  calculateOrderTotalWithCoupon,
-} = require("../../Utilities/miscellaneousUtils");
-const Coupon = require("../../Model/couponModel");
-const { checkPermission } = require("../../Utilities/permissionMiddleware");
+const CustomError = require("../../Utilities/CustomError");
+const { objectId, pagination } = require("../../Security/access");
 
-const salesResolver = {
+function orderView(order) {
+  if (!order) return null;
+  const row = order.toObject ? order.toObject() : order;
+  const customer = row.customer;
+  if (!customer?._id || !customer.email) throw new CustomError("Legacy order requires customer-data reconciliation", 409);
+  return { ...row, id: String(row._id), user: { id: String(customer._id), email: customer.email, firstname: customer.firstname, lastname: customer.lastname } };
+}
+function transactionView(transaction) {
+  const row = transaction.toObject ? transaction.toObject() : transaction;
+  return { ...row, id: String(row._id), order: row.order ? orderView(row.order) : null };
+}
+const customerFields = "firstname lastname email";
+const transition = { PENDING: ["SHIPPED", "CANCELED"], SHIPPED: ["DELIVERED"], DELIVERED: ["COMPLETED"], COMPLETED: [], CANCELED: [] };
+const disabled = async () => { throw new CustomError("Financial state changes require the payment workflow", 403); };
+
+// Every operation in this module is protected by resolverPolicy at the schema boundary.
+module.exports = {
   Query: {
-    getOrderById: async (_, { id }) => {
-      const order = await Order.findById(id)
-        .populate("user")
-        .populate("transaction");
-
-      if (!order) throw new Error("Order not found");
-
-      const {
-        user,
-        transaction,
-        products,
-        finalTotal,
-        paymentStatus,
-        orderStatus,
-        shippingAddress,
-        createdAt,
-        updatedAt,
-      } = order;
-
-      return {
-        id: order._id.toString(),
-        user: {
-          ...user.toObject(),
-          id: user._id.toString(),
-          permissions:
-            user.permissions?.map((permission) => permission.toString()) || [],
-        },
-        transaction: transaction
-          ? { ...transaction.toObject(), id: transaction._id.toString() }
-          : null,
-        products,
-        finalTotal,
-        paymentStatus,
-        orderStatus,
-        shippingAddress,
-        createdAt,
-        updatedAt,
-      };
+    getOrderById: async (_, { id }) => orderView(await Order.findById(objectId(id)).populate("customer", customerFields)),
+    getAllOrders: async (_, args) => {
+      const { page, limit, skip } = pagination(args.page ?? 1, args.limit ?? 10);
+      const [orders, totalCount] = await Promise.all([Order.find().sort({ createdAt: -1 }).populate("customer", customerFields).skip(skip).limit(limit), Order.countDocuments()]);
+      return { orders: orders.map(orderView), totalCount, totalPages: Math.ceil(totalCount / limit), currentPage: page };
     },
-
-    getAllOrders: async (_, { page = 1, limit = 10 }) => {
-      try {
-        const totalCount = await Order.countDocuments();
-        const totalPages = Math.ceil(totalCount / limit);
-
-        const orders = await Order.find()
-          .populate("customer")
-          .populate("transaction")
-          .skip((page - 1) * limit)
-          .limit(limit)
-          .lean();
-
-        const updatedOrder = orders.map((order) => {
-          return {
-            id: order._id.toString(),
-            ...order,
-            user: {
-              ...order.customer,
-              id: order.customer._id.toString(),
-            },
-          };
-        });
-
-        return {
-          totalCount,
-          totalPages,
-          currentPage: page,
-          orders: updatedOrder,
-        };
-      } catch (error) {
-        throw new Error(`Error fetching orders: ${error.message}`);
-      }
-    },
-
     getTransactionById: async (_, { id }) => {
-      const transaction = await Transaction.findById(id).populate("order");
-      if (!transaction) throw new Error("Transaction not found");
-
-      const order = transaction.order
-        ? {
-            ...transaction.order.toObject(),
-            id: transaction.order._id.toString(),
-            user: {
-              ...transaction.order.user,
-              id: transaction.order.user._id.toString(),
-              permissions: transaction.order.user.permissions.map(
-                (permission) => permission.toString()
-              ),
-            },
-          }
-        : null;
-
-      return {
-        ...transaction.toObject(),
-        id: transaction._id.toString(),
-        order,
-      };
+      const item = await Transaction.findById(objectId(id)).populate({ path: "order", populate: { path: "customer", select: customerFields } });
+      return item ? transactionView(item) : null;
     },
-
-    getAllTransactions: async (_, { page = 1, limit = 10 }) => {
-      try {
-        const totalCount = await Transaction.countDocuments();
-        const totalPages = Math.ceil(totalCount / limit);
-
-        const transactions = await Transaction.find()
-          .populate({
-            path: "order",
-            populate: {
-              path: "customer",
-              model: "Customer",
-            },
-          })
-          .skip((page - 1) * limit)
-          .limit(limit)
-          .lean();
-
-        const sanitizedTransactions = transactions.map((transaction) => {
-          const sanitizedOrder = transaction.order
-            ? {
-                ...transaction.order,
-                id: transaction.order._id.toString(),
-                user: transaction.order.customer
-                  ? {
-                      ...transaction.order.customer,
-                      id: transaction.order.customer._id.toString(),
-                      // permissions:
-                      //   transaction.order.customer.permissions?.map(
-                      //     (permission) => permission.toString()
-                      //   ) || [],
-                    }
-                  : null,
-              }
-            : null;
-
-          return {
-            id: transaction._id.toString(),
-            order: sanitizedOrder,
-            transactionAmount: transaction.transactionAmount,
-            transactionStatus: transaction.transactionStatus,
-            paymentGateway: transaction.paymentGateway,
-            transactionId: transaction.transactionId,
-            createdAt: transaction.createdAt,
-          };
-        });
-
-        return {
-          totalCount,
-          totalPages,
-          currentPage: page,
-          transactions: sanitizedTransactions,
-        };
-      } catch (err) {
-        console.error("Error fetching transactions:", err.message);
-        throw new Error("Failed to fetch transactions");
-      }
+    getAllTransactions: async (_, args) => {
+      const { page, limit, skip } = pagination(args.page ?? 1, args.limit ?? 10);
+      const [items, totalCount] = await Promise.all([Transaction.find().sort({ createdAt: -1 }).populate({ path: "order", populate: { path: "customer", select: customerFields } }).skip(skip).limit(limit), Transaction.countDocuments()]);
+      return { transactions: items.map(transactionView), totalCount, totalPages: Math.ceil(totalCount / limit), currentPage: page };
     },
   },
-
   Mutation: {
-    createOrder: async (
-      _,
-      { userId, products, shippingAddress, couponCode }
-    ) => {
-      const physicalProductIds = products
-        .filter((p) => p.productType === "PHYSICAL")
-        .map((p) => p.productId);
-
-      const digitalProductIds = products
-        .filter((p) => p.productType === "DIGITAL")
-        .map((p) => p.productId);
-
-      const physicalProductDetails = await PhysicalProduct.find({
-        _id: { $in: physicalProductIds },
-      });
-      const digitalProductDetails = await DigitalProduct.find({
-        _id: { $in: digitalProductIds },
-      });
-
-      const productDetails = [
-        ...physicalProductDetails,
-        ...digitalProductDetails,
-      ];
-      const coupon = await Coupon.findOne({ code: couponCode }).lean();
-
-      const {
-        orderTotal,
-        finalTotal,
-        discountApplied = 0,
-        couponApplied,
-        appliedCouponCode,
-      } = calculateOrderTotalWithCoupon(products, productDetails, coupon);
-
-      const newOrder = new Order({
-        user: userId,
-        products,
-        finalTotal: finalTotal.toFixed(2),
-        shippingAddress,
-        paymentStatus: "PENDING",
-        orderStatus: "PENDING",
-        couponApplied,
-        appliedCouponCode,
-      });
-
-      await newOrder.save();
-      return {
-        user: userId,
-        orderId: newOrder._id.toString(),
-        products: newOrder.products,
-        finalTotal: newOrder.finalTotal,
-        discountApplied,
-        shippingAddress: newOrder.shippingAddress,
-        paymentStatus: newOrder.paymentStatus,
-        orderStatus: newOrder.orderStatus,
-      };
-    },
-
+    createOrder: disabled,
+    updateTransactionStatus: disabled,
     updateOrderStatus: async (_, { orderId, orderStatus, paymentStatus }) => {
-      const updatedOrder = await Order.findByIdAndUpdate(
-        orderId,
-        { orderStatus, paymentStatus },
-        { new: true }
-      )
-        .populate("user")
-        .populate("transaction");
-
-      if (!updatedOrder) {
-        throw new Error("Order not found");
-      }
-
-      return {
-        ...updatedOrder.toObject(),
-        id: updatedOrder._id.toString(),
-        user: {
-          ...updatedOrder.user,
-          id: updatedOrder.user._id.toString(),
-          permissions: updatedOrder.user.permissions.map((permission) =>
-            permission.toString()
-          ),
-        },
-        transaction: updatedOrder.transaction
-          ? {
-              ...updatedOrder.transaction.toObject(),
-              id: updatedOrder.transaction._id.toString(),
-            }
-          : null,
-      };
-    },
-
-    updateTransactionStatus: async (
-      _,
-      { transactionId, transactionStatus }
-    ) => {
-      const updatedTransaction = await Transaction.findByIdAndUpdate(
-        transactionId,
-        { transactionStatus },
-        { new: true }
-      )
-        .populate("user")
-        .populate("order");
-
-      if (!updatedTransaction) {
-        throw new Error("Transaction not found");
-      }
-
-      return {
-        ...updatedTransaction.toObject(),
-        id: updatedTransaction._id.toString(),
-        user: {
-          ...updatedTransaction.user,
-          id: updatedTransaction.user._id.toString(),
-          permissions: updatedTransaction.user.permissions.map((permission) =>
-            permission.toString()
-          ),
-        },
-        order: updatedTransaction.order
-          ? {
-              ...updatedTransaction.order.toObject(),
-              id: updatedTransaction.order._id.toString(),
-            }
-          : null,
-      };
+      const order = await Order.findById(objectId(orderId));
+      if (!order) throw new CustomError("Order not found", 404);
+      if (paymentStatus !== order.paymentStatus) throw new CustomError("Payment status cannot be changed manually", 403);
+      if (orderStatus !== order.orderStatus && !transition[order.orderStatus]?.includes(orderStatus)) throw new CustomError("Invalid fulfillment transition", 409);
+      if (orderStatus === "SHIPPED" && !["PAID", "CASH_ON_DELIVERY"].includes(order.paymentStatus)) throw new CustomError("Payment is required before shipment", 409);
+      if (orderStatus === "CANCELED" && ["PAID", "PARTIALLY_REFUNDED"].includes(order.paymentStatus)) throw new CustomError("Reconcile/refund the payment before cancellation", 409);
+      if (orderStatus === "CANCELED" && order.inventoryStatus === "RESERVED") throw new CustomError("Cancel the Stripe checkout through the reservation workflow before changing fulfillment", 409);
+      const updated = await Order.findOneAndUpdate({ _id: order._id, orderStatus: order.orderStatus, paymentStatus: order.paymentStatus }, { $set: { orderStatus } }, { new: true, runValidators: true }).populate("customer", customerFields);
+      if (!updated) throw new CustomError("Order changed; refresh and retry", 409);
+      return orderView(updated);
     },
   },
 };
-
-module.exports = salesResolver;

@@ -1,0 +1,170 @@
+name: Protected production release
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Full main commit SHA that passed current CI
+        required: true
+        type: string
+      acceptance_run_id:
+        description: Successful Hosted staging acceptance run with the same source tree
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: highstyle-production-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Verify, stage, smoke and promote
+    if: github.repository == 'SmartUIAB/HighStyle' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: production
+    env:
+      RELEASE_SHA: ${{ inputs.source_sha }}
+      ACCEPTANCE_RUN_ID: ${{ inputs.acceptance_run_id }}
+      STAGING_API_ORIGIN: ${{ vars.STAGING_API_ORIGIN }}
+      STAGING_STOREFRONT_ORIGIN: ${{ vars.STAGING_STOREFRONT_ORIGIN }}
+      PRODUCTION_API_ORIGIN: ${{ vars.PRODUCTION_API_ORIGIN }}
+      VERCEL_ORG_ID: ${{ vars.VERCEL_ORG_ID }}
+      VERCEL_STOREFRONT_PROJECT_ID: ${{ vars.VERCEL_STOREFRONT_PROJECT_ID }}
+      VERCEL_ADMIN_PROJECT_ID: ${{ vars.VERCEL_ADMIN_PROJECT_ID }}
+      RAILWAY_PROJECT_ID: ${{ vars.RAILWAY_PROJECT_ID }}
+      RAILWAY_ENVIRONMENT_ID: ${{ vars.RAILWAY_ENVIRONMENT_ID }}
+      RAILWAY_SERVICE_ID: ${{ vars.RAILWAY_SERVICE_ID }}
+      VERCEL_CLI_VERSION: ${{ vars.VERCEL_CLI_VERSION }}
+      RAILWAY_CLI_VERSION: ${{ vars.RAILWAY_CLI_VERSION }}
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Initialize isolated runner paths
+        run: |
+          printf 'STOREFRONT_SOURCE_DIR=%s/highstyle-production-storefront\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+          printf 'ADMIN_SOURCE_DIR=%s/highstyle-production-admin\n' "$RUNNER_TEMP" >> "$GITHUB_ENV"
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Verify exact main, protection and trusted acceptance provenance
+        id: gates
+        run: node scripts/release/check-production-gates.mjs
+        env:
+          # Read-only administration permission is needed to inspect branch protection.
+          # This credential is accessible only after the protected environment review.
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GUARD_TOKEN }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: ${{ steps.gates.outputs.artifact_name }}
+          run-id: ${{ inputs.acceptance_run_id }}
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/highstyle-hosted-evidence
+      - name: Reject incomplete, stale, mismatched or live-mode evidence
+        run: node scripts/release/check-acceptance.mjs
+        env:
+          ACCEPTANCE_SHA: ${{ steps.gates.outputs.acceptance_sha }}
+          EXPECTED_SOURCE_TREE: ${{ steps.gates.outputs.source_tree }}
+          HOSTED_ACCEPTANCE_OUTPUT: ${{ runner.temp }}/highstyle-hosted-evidence/hosted-acceptance.json
+      - name: Install reviewed deployment CLI versions
+        run: |
+          set -euo pipefail
+          node --input-type=module -e "import {requireExactVersion} from './scripts/release/evidence.mjs'; requireExactVersion(process.env.VERCEL_CLI_VERSION, 'Vercel CLI'); requireExactVersion(process.env.RAILWAY_CLI_VERSION, 'Railway CLI');"
+          npm install --global "vercel@$VERCEL_CLI_VERSION" "@railway/cli@$RAILWAY_CLI_VERSION"
+      - name: Prepare isolated exact-source monorepo roots for Vercel
+        run: |
+          set -euo pipefail
+          mkdir -p "$STOREFRONT_SOURCE_DIR" "$ADMIN_SOURCE_DIR"
+          git archive "$RELEASE_SHA" | tar -x -C "$STOREFRONT_SOURCE_DIR"
+          git archive "$RELEASE_SHA" | tar -x -C "$ADMIN_SOURCE_DIR"
+      - name: Pull storefront production build settings
+        run: vercel pull --yes --environment=production --cwd "$STOREFRONT_SOURCE_DIR"
+        env:
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_STOREFRONT_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_PRODUCTION_TOKEN }}
+      - name: Verify storefront project identity and production API configuration
+        run: node scripts/release/check-vercel-settings.mjs
+        env:
+          VERCEL_SOURCE_DIR: ${{ env.STOREFRONT_SOURCE_DIR }}
+          VERCEL_EXPECTED_PROJECT_ID: ${{ vars.VERCEL_STOREFRONT_PROJECT_ID }}
+          VERCEL_EXPECTED_ROOT_DIRECTORY: frontend
+      - name: Pull admin production build settings
+        run: vercel pull --yes --environment=production --cwd "$ADMIN_SOURCE_DIR"
+        env:
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_PRODUCTION_TOKEN }}
+      - name: Verify admin project identity and production API configuration
+        run: node scripts/release/check-vercel-settings.mjs
+        env:
+          VERCEL_SOURCE_DIR: ${{ env.ADMIN_SOURCE_DIR }}
+          VERCEL_EXPECTED_PROJECT_ID: ${{ vars.VERCEL_ADMIN_PROJECT_ID }}
+          VERCEL_EXPECTED_ROOT_DIRECTORY: backend
+      - name: Upload exact source to Railway and verify terminal health
+        id: api
+        run: node scripts/release/deploy-railway.mjs
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_PRODUCTION_TOKEN }}
+      - name: Build storefront production artifact
+        run: vercel build --prod --cwd "$STOREFRONT_SOURCE_DIR"
+        env:
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_STOREFRONT_PROJECT_ID }}
+      - name: Stage storefront without assigning production domains
+        id: storefront
+        run: |
+          set -euo pipefail
+          deployment_url="$(vercel deploy --prebuilt --prod --skip-domain --meta "highstyleCommit=$RELEASE_SHA" --cwd "$STOREFRONT_SOURCE_DIR")"
+          DEPLOYMENT_URL="$deployment_url" node --input-type=module -e "import {requireHttpsOrigin} from './scripts/release/evidence.mjs'; const u=requireHttpsOrigin(process.env.DEPLOYMENT_URL); if (!new URL(u).hostname.endsWith('.vercel.app')) process.exit(1);"
+          printf 'url=%s\n' "$deployment_url" >> "$GITHUB_OUTPUT"
+        env:
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_STOREFRONT_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_PRODUCTION_TOKEN }}
+      - name: Build admin production artifact
+        run: vercel build --prod --cwd "$ADMIN_SOURCE_DIR"
+        env:
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_PROJECT_ID }}
+      - name: Stage admin without assigning production domains
+        id: admin
+        run: |
+          set -euo pipefail
+          deployment_url="$(vercel deploy --prebuilt --prod --skip-domain --meta "highstyleCommit=$RELEASE_SHA" --cwd "$ADMIN_SOURCE_DIR")"
+          DEPLOYMENT_URL="$deployment_url" node --input-type=module -e "import {requireHttpsOrigin} from './scripts/release/evidence.mjs'; const u=requireHttpsOrigin(process.env.DEPLOYMENT_URL); if (!new URL(u).hostname.endsWith('.vercel.app')) process.exit(1);"
+          printf 'url=%s\n' "$deployment_url" >> "$GITHUB_OUTPUT"
+        env:
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_PRODUCTION_TOKEN }}
+      - name: Verify API and both staged production builds before promotion
+        run: node scripts/release/smoke-production.mjs
+        env:
+          STOREFRONT_DEPLOYMENT_URL: ${{ steps.storefront.outputs.url }}
+          ADMIN_DEPLOYMENT_URL: ${{ steps.admin.outputs.url }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_PRODUCTION_TOKEN }}
+          VERCEL_STOREFRONT_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_STOREFRONT_AUTOMATION_BYPASS_SECRET }}
+          VERCEL_ADMIN_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_ADMIN_AUTOMATION_BYPASS_SECRET }}
+      - name: Promote verified storefront production artifact
+        run: vercel promote "$DEPLOYMENT_URL" --yes --cwd "$STOREFRONT_SOURCE_DIR"
+        env:
+          DEPLOYMENT_URL: ${{ steps.storefront.outputs.url }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_STOREFRONT_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_PRODUCTION_TOKEN }}
+      - name: Promote verified admin production artifact
+        run: vercel promote "$DEPLOYMENT_URL" --yes --cwd "$ADMIN_SOURCE_DIR"
+        env:
+          DEPLOYMENT_URL: ${{ steps.admin.outputs.url }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_ADMIN_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_PRODUCTION_TOKEN }}
+      - name: Record deployment identity and rollback pointer
+        if: always()
+        run: |
+          node --input-type=module -e "import {appendFileSync} from 'node:fs'; const rows=[['Commit',process.env.RELEASE_SHA],['Railway deployment',process.env.API_DEPLOYMENT],['Previous Railway deployment',process.env.PREVIOUS_API_DEPLOYMENT],['Storefront staged URL',process.env.STORE_URL],['Admin staged URL',process.env.ADMIN_URL],['Payment state','Disabled; live activation requires separate permission']]; appendFileSync(process.env.GITHUB_STEP_SUMMARY, rows.map(([k,v])=>'- '+k+': '+(v||'not reached')).join('\n')+'\n');"
+        env:
+          API_DEPLOYMENT: ${{ steps.api.outputs.deployment_id }}
+          PREVIOUS_API_DEPLOYMENT: ${{ steps.api.outputs.previous_deployment_id }}
+          STORE_URL: ${{ steps.storefront.outputs.url }}
+          ADMIN_URL: ${{ steps.admin.outputs.url }}

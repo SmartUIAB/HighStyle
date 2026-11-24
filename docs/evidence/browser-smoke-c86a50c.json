@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "kind": "browser-smoke",
+  "repository": "SmartUIAB/HighStyle",
+  "environment": "staging",
+  "stripeMode": "test",
+  "startedAt": "2026-11-18T07:45:41.735Z",
+  "checks": {
+    "inventoryConcurrency": "blocked",
+    "checkoutSuccess": "blocked",
+    "checkoutCancel": "blocked",
+    "webhookIdempotency": "blocked",
+    "refund": "blocked",
+    "sessionExpiry": "blocked",
+    "receiptDelivery": "blocked",
+    "browserChromium": "passed",
+    "browserFirefox": "passed",
+    "browserWebkit": "passed",
+    "mobileViewport": "passed",
+    "rtl": "passed"
+  },
+  "commit": "c86a50cafde13b05cafe9e1008c167edc65e1b77",
+  "sourceTree": "fe86a6d44cfe392567fd9000ce57c56198d22964",
+  "apiOrigin": "https://highstyle-api-staging.up.railway.app",
+  "storefrontOrigin": "https://highstyle-staging-web.vercel.app",
+  "browserResults": [
+    {
+      "engine": "chromium",
+      "version": "159.0.8154.6",
+      "viewport": "1365x900",
+      "rtl": "passed",
+      "checks": [
+        "login",
+        "product-options",
+        "add-to-cart",
+        "quantity-change",
+        "delivery-address",
+        "session-and-cart-reload",
+        "keyboard-focus",
+        "rtl-layout"
+      ]
+    },
+    {
+      "engine": "firefox",
+      "version": "159.0",
+      "viewport": "1365x900",
+      "rtl": "passed",
+      "checks": [
+        "login",
+        "product-options",
+        "add-to-cart",
+        "quantity-change",
+        "delivery-address",
+        "session-and-cart-reload",
+        "keyboard-focus",
+        "rtl-layout"
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": "390x844",
+      "rtl": "passed",
+      "checks": [
+        "login",
+        "product-options",
+        "add-to-cart",
+        "quantity-change",
+        "delivery-address",
+        "session-and-cart-reload",
+        "keyboard-focus",
+        "rtl-layout",
+        "mobile-overflow"
+      ]
+    }
+  ],
+  "finishedAt": "2026-11-18T07:46:20.679Z",
+  "outcome": "browser-smoke-passed"
+}

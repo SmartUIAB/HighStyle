@@ -1,10 +1,12 @@
 {
-  "name": "multikart-api",
+  "name": "highstyle-api",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node --experimental-modules server.js"
+    "start": "node server.js",
+    "test": "node --test test/*.test.js",
+    "test:unit": "node --test test/access.test.js test/pricing.test.js test/http.test.js test/policy.test.js test/auth.test.js"
   },
   "repository": {
     "type": "git",
@@ -17,30 +19,30 @@
   },
   "homepage": "",
   "dependencies": {
-    "@graphql-tools/schema": "^10.0.6",
-    "apollo-server": "^3.13.0",
-    "apollo-server-express": "^3.13.0",
-    "bcrypt": "^5.1.1",
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
-    "class-transformer": "^0.2.3",
-    "cookie-parser": "^1.4.6",
-    "crypto": "^1.0.1",
-    "dotenv": "^16.4.5",
-    "easygraphql-format-error": "0.0.3",
-    "express": "^4.21.0",
+    "@apollo/server": "^5.5.2",
+    "@as-integrations/express4": "^1.1.2",
+    "@graphql-tools/schema": "^10.0.0",
+    "bcryptjs": "^3.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.0",
+    "express": "^4.22.3",
     "fuse.js": "^3.4.3",
-    "graphql": "^16.8.2",
-    "graphql-tools": "^9.0.1",
-    "graphql-upload": "^13.0.0",
+    "graphql": "^16.11.0",
+    "graphql-tag": "^2.12.7",
+    "graphql-upload": "^17.1.0",
     "jsonwebtoken": "^9.0.2",
-    "lodash": "^4.17.15",
-    "mongoose": "^8.6.2",
-    "multer": "^1.4.5-lts.1",
-    "node-cron": "^3.0.3",
-    "nodemailer": "^6.9.16",
-    "nodemon": "^2.0.4",
-    "react-slide-toggle": "^0.3.5",
-    "stripe": "^15.11.0"
+    "lodash": "^4.17.24",
+    "mongoose": "^8.24.10",
+    "nodemailer": "^10.6.0",
+    "stripe": "^23.1.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=22.16 <25"
+  },
+  "private": true,
+  "overrides": {
+    "@graphql-tools/utils": "12.0.2"
   }
 }

@@ -1,8 +1,3 @@
-'use client'
-import DummyLogin from "@/Components/DummyLogin";
-
-const LoginPage = () => {
-  return <DummyLogin />;
-};
-
-export default LoginPage;
+"use client";
+import Login from "@/Layout/Login";
+export default function LoginPage() { return <Login />; }

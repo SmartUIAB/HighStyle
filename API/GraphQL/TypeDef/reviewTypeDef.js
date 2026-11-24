@@ -1,17 +1,16 @@
-const { gql } = require("apollo-server-express");
+const gql = require("graphql-tag");
 
 const reviewTypeDef = gql`
-  type Customer {
+  type Reviewer {
     id: ID!
     firstname: String!
     lastname: String!
-    email: String!
   }
 
   type Review {
     id: ID!
     productId: ID!
-    userId: Customer!
+    userId: Reviewer!
     rating: Int!
     comment: String!
     createdAt: String!

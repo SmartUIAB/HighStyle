@@ -24,3 +24,13 @@ export const ORDER_SEND_EMAIL = gql`
     sendOrderEmail(userEmail: $userEmail)
   }
 `;
+
+export const CANCEL_CHECKOUT = gql`
+  mutation CancelCheckout($orderId: ID!) {
+    cancelCheckout(orderId: $orderId) {
+      id
+      paymentStatus
+      orderStatus
+    }
+  }
+`;

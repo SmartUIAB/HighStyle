@@ -12,11 +12,14 @@ const DetailBox = ({ item, changeColorVar }) => {
   const plusQty = cartContext.plusQty;
   const minusQty = cartContext.minusQty;
   const quantity = cartContext.quantity;
+  const setQuantity = cartContext.setQuantity;
   const uniqueColor = [];
   const uniqueSize = [];
   const changeQty = (e) => {
     setQuantity(parseInt(e.target.value));
   };
+
+  if (!item) return null;
 
   return (
     <div className="product-right product-form-box">
@@ -29,7 +32,7 @@ const DetailBox = ({ item, changeColorVar }) => {
         {item.price}
       </h3>
       <ul>
-        {item.variants.map((vari) => {
+        {(item.variants || []).map((vari) => {
           var findItem = uniqueColor.find((x) => x.color === vari.color);
           if (!findItem) uniqueColor.push(vari);
           var findItemSize = uniqueSize.find((x) => x === vari.size);

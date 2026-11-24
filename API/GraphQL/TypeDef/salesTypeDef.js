@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server-express");
+const gql = require("graphql-tag");
 
 const salesTypeDef = gql`
   type Order {
@@ -6,6 +6,9 @@ const salesTypeDef = gql`
     user: User!
     products: [OrderProduct!]!
     finalTotal: Float!
+    currency: String
+    inventoryStatus: String
+    reservationExpiresAt: String
     paymentStatus: PaymentStatus!
     orderStatus: OrderStatus!
     shippingAddress: ShippingAddressType
@@ -27,6 +30,7 @@ const salesTypeDef = gql`
     PENDING
     SUCCESSFUL
     FAILED
+    PARTIALLY_REFUNDED
     REFUNDED
   }
 
@@ -39,6 +43,11 @@ const salesTypeDef = gql`
     productType: ProductType!
     productId: ID!
     quantity: Int!
+    title: String
+    unitAmountMinor: Int
+    totalAmountMinor: Int
+    color: String
+    size: String
   }
 
   type ShippingAddressType {
@@ -62,6 +71,8 @@ const salesTypeDef = gql`
     PAID
     FAILED
     CASH_ON_DELIVERY
+    PARTIALLY_REFUNDED
+    REFUNDED
   }
 
   type CreateOrderResponse {

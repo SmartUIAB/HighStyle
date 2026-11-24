@@ -1,0 +1,139 @@
+name: Security and build validation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main, fix/security-foundation-20261117]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  api:
+    name: API security, HTTP and MongoDB transactions
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NODE_ENV: test
+      JWT_SECRET: highstyle-ci-only-not-a-deployment-secret-20261117
+      STRIPE_SECRET_KEY: sk_test_ci_placeholder_not_a_real_key
+      MONGODB_TEST_URI: mongodb://127.0.0.1:27017/highstyle_ci?replicaSet=rs0
+      RUN_DB_TESTS: 'true'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Validate GitHub Actions workflow semantics
+        run: |
+          set -euo pipefail
+          actionlint_dir="$(mktemp -d "$RUNNER_TEMP/highstyle-actionlint.XXXXXX")"
+          trap 'rm -rf "$actionlint_dir"' EXIT
+          curl --fail --location --retry 2 --connect-timeout 15 --max-time 60 \
+            --output "$actionlint_dir/actionlint.tar.gz" \
+            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+          printf '%s  %s\n' '8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8' "$actionlint_dir/actionlint.tar.gz" | sha256sum --check --strict
+          tar -xzf "$actionlint_dir/actionlint.tar.gz" -C "$actionlint_dir" actionlint
+          "$actionlint_dir/actionlint" -shellcheck= -pyflakes=
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+          cache: npm
+          cache-dependency-path: API/package-lock.json
+      - name: Install locked API dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts --prefix API
+      - name: Verify protected release and acceptance rejection paths
+        run: node --test scripts/release/test/*.test.mjs
+      - name: Start an isolated MongoDB replica set
+        run: |
+          set -euo pipefail
+          docker run --detach --name highstyle-ci-mongo --publish 127.0.0.1:27017:27017 mongo:7 --replSet rs0 --bind_ip_all
+          for attempt in $(seq 1 60); do
+            if docker exec highstyle-ci-mongo mongosh --quiet --eval 'quit(db.adminCommand({ping:1}).ok ? 0 : 1)' >/dev/null 2>&1; then break; fi
+            sleep 1
+          done
+          docker exec highstyle-ci-mongo mongosh --quiet --eval 'rs.initiate({_id:"rs0",members:[{_id:0,host:"127.0.0.1:27017"}]})'
+          for attempt in $(seq 1 60); do
+            if docker exec highstyle-ci-mongo mongosh --quiet --eval 'quit(db.hello().isWritablePrimary ? 0 : 1)' >/dev/null 2>&1; then exit 0; fi
+            sleep 1
+          done
+          echo 'MongoDB replica set did not become ready'
+          exit 1
+      - name: Run schema, authorization, HTTP, storage and transaction tests
+        working-directory: API
+        run: |
+          set -euo pipefail
+          mkdir -p ../test-results
+          node -e "require('./app').buildSchema().then(() => console.log('GraphQL schema constructed'))"
+          node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=../test-results/api-junit.xml test/*.test.js
+      - name: Retain API test evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: api-test-results-${{ github.sha }}
+          path: test-results/api-junit.xml
+          retention-days: 14
+      - name: Stop isolated database
+        if: always()
+        run: docker rm --force highstyle-ci-mongo || true
+  web:
+    name: Build ${{ matrix.application }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        application: [frontend, backend]
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      NEXT_PUBLIC_GRAPHQL_ENDPOINT: http://127.0.0.1:2024/graphql
+      NEXT_PUBLIC_API_KEY: http://127.0.0.1:2024
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+          cache: npm
+          cache-dependency-path: ${{ matrix.application }}/package-lock.json
+      - name: Install existing lockfile (legacy peer dependencies)
+        run: npm ci --legacy-peer-deps --prefix ${{ matrix.application }}
+      - name: Production build
+        run: npm run build --prefix ${{ matrix.application }}
+      - name: Storefront price, stock and checkout safety tests
+        if: matrix.application == 'frontend'
+        run: npm test --prefix frontend
+  dependency-audit:
+    name: Dependency security ${{ matrix.application }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        application: [API, frontend, backend]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - name: Audit runtime dependency lockfile (high and critical are blocking)
+        working-directory: ${{ matrix.application }}
+        run: npm audit --package-lock-only --omit=dev --audit-level=high --json > dependency-audit.json
+      - name: Retain dependency advisory evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dependency-audit-${{ matrix.application }}-${{ github.sha }}
+          path: ${{ matrix.application }}/dependency-audit.json
+          retention-days: 14

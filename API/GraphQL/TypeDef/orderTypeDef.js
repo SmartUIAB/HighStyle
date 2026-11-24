@@ -1,4 +1,4 @@
-const { gql } = require("apollo-server-express");
+const gql = require("graphql-tag");
 
 const orderTypeDefs = gql`
   type Mutation {
@@ -8,11 +8,12 @@ const orderTypeDefs = gql`
       shippingAddress: ShippingAddressInput!
       locale: String
     ): CreateOrderResponses
+    cancelCheckout(orderId: ID!): Order
     deleteOldPendingOrders: Int
   }
 
   type Query {
-    GetMyOrder(customerId: ID!): [Order]
+    GetMyOrder(customerId: ID!, orderId: ID): [Order]
   }
 
   type CreateOrderResponses {

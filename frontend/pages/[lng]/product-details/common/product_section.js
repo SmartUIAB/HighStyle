@@ -26,7 +26,6 @@ const ProductSection = () => {
 
   const [createcart] = useMutation(CREATE_ADD_TO_CART);
   const [addtofavourite] = useMutation(ADD_TO_FAVOURITE);
-  const userData = JSON.parse(localStorage.getItem("customerDetail"));
 
   const handleAddToCart = async (product) => {
     const customerDetail = JSON.parse(localStorage.getItem("customerDetail"));

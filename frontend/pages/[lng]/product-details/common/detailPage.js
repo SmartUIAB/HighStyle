@@ -16,6 +16,7 @@ const PaymentData = [
 ];
 
 const Detail = ({ item }) => {
+  if (!item) return null;
   return (
     <div className="product-right product-description-box">
       <h2>{item.title}</h2>
@@ -54,7 +55,7 @@ const Detail = ({ item }) => {
         </div>
       </div>
       <div className="border-product">
-        <h6 className="product-title">100% SECURE PAYMENT</h6>
+        <h6 className="product-title">Accepted payment methods</h6>
         <div className="payment-card-bottom">
           <ul>
             {PaymentData.map((data, index) => {

@@ -1,14 +1,19 @@
 /** @type {import('next').NextConfig} */
-
 const nextConfig = {
-  env: {
-    API_URL: "http://localhost:4000/graphql",
+  reactStrictMode: true,
+  poweredByHeader: false,
+  sassOptions: { implementation: "sass-embedded" },
+  async rewrites() {
+    const value = process.env.API_ORIGIN || process.env.NEXT_PUBLIC_API_KEY;
+    if (!value) return [];
+    const origin = new URL(value);
+    if (origin.origin !== value || !["https:", "http:"].includes(origin.protocol) || origin.username || origin.password) throw new Error("API_ORIGIN must be an HTTP(S) origin");
+    return [
+      { source: "/api/graphql", destination: `${origin.origin}/graphql` },
+      { source: "/api/release", destination: `${origin.origin}/health/release` },
+      { source: "/uploads/:path*", destination: `${origin.origin}/uploads/:path*` },
+    ];
   },
-
-  // if you want to run with local graphQl un-comment below one and comment the above code
-  // env: {
-  //   API_URL: "http://localhost:4000/graphql",
-  // },
-  reactStrictMode: false,
 };
+
 module.exports = nextConfig;

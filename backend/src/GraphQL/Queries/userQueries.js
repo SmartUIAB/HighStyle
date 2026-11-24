@@ -34,7 +34,6 @@ export const USER_BY_ID = gql`
       firstname
       lastname
       company
-      password
       image
       role
       permissions
@@ -49,10 +48,7 @@ export const GET_USER = gql`
       email
       firstname
       lastname
-      company {
-        id
-        name
-      }
+      company
       image
       role
       permissions {

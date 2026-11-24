@@ -1,20 +1,4 @@
-const fs = require("fs");
-const path = require("path");
-const CustomError = require("./CustomError");
-
-async function deleteImageFromStorage(imagePath) {
-  const fullPath = path.join(__dirname, "../", imagePath); // Adjust path as needed
-  return new Promise((resolve, reject) => {
-    fs.unlink(fullPath, (err) => {
-      if (err) {
-        console.error(`Failed to delete image: ${fullPath}`, err);
-        reject(new CustomError("Failed to delete image from storage", 500));
-      } else {
-        resolve();
-      }
-    });
-  });
-}
+const { deleteImageFromStorage, moveImageInStorage } = require("../Security/storage");
 
 /* ---------------- Function to calculate total order amount ---------------- */
 const calculateOrderTotalWithCoupon = (products, productDetails, coupon) => {
@@ -92,4 +76,4 @@ const calculateOrderTotalWithCoupon = (products, productDetails, coupon) => {
 };
 
 //order total is after calculating dicounted then final amount is calculating both coupon and discount
-module.exports = { deleteImageFromStorage, calculateOrderTotalWithCoupon };
+module.exports = { deleteImageFromStorage, moveImageInStorage, calculateOrderTotalWithCoupon };

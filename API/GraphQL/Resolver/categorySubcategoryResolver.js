@@ -4,6 +4,7 @@ const Subcategory = require("../../Model/subCategoryModel");
 const CustomError = require("../../Utilities/CustomError");
 const {
   deleteImageFromStorage,
+  moveImageInStorage,
 } = require("../../Utilities/miscellaneousUtils");
 const Company = require("../../Model/companyModel");
 const { checkPermission } = require("../../Utilities/permissionMiddleware");
@@ -32,7 +33,7 @@ const categorySubcategoryResolver = {
         throw new CustomError("Not authenticated", 401);
       }
       try {
-        const category = await Category.find();
+        const category = await Category.find({ company: context.user.company });
         if (!category) {
           throw new CustomError("Category not found", 404);
         }
@@ -70,7 +71,7 @@ const categorySubcategoryResolver = {
         throw new CustomError("Not authenticated", 401);
       }
       try {
-        const subcategory = await Subcategory.find();
+        const subcategory = await Subcategory.find({ company: context.user.company });
         if (!subcategory) {
           throw new CustomError("Subcategory not found", 404);
         }
@@ -153,8 +154,7 @@ const categorySubcategoryResolver = {
               ""
             )}/categories/${type}/${oldImagePath.split("/").pop()}`;
 
-            await moveImageInStorage(oldImagePath, newImagePath);
-            updateFields.image = newImagePath;
+            updateFields.image = await moveImageInStorage(oldImagePath, newImagePath);
           }
         }
         return await Category.findByIdAndUpdate(id, updateFields, {
