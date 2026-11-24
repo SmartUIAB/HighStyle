@@ -1,11 +1,11 @@
 
 import Document, { Html, Head, Main, NextScript } from 'next/document'
-import { localeOf } from '../components/storefront/commerce.mjs'
+import { documentLocale } from '../components/storefront/commerce.mjs'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
     const initialProps = await Document.getInitialProps(ctx)
-    return { ...initialProps, language: localeOf(ctx.query.lng) }
+    return { ...initialProps, language: documentLocale(ctx) }
   }
 
   render() {

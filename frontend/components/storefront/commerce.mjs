@@ -4,6 +4,16 @@ export function localeOf(value) {
   return supportedLocales.includes(value) ? value : "en";
 }
 
+export function documentLocale(ctx = {}) {
+  if (supportedLocales.includes(ctx.query?.lng)) return ctx.query.lng;
+  for (const path of [ctx.asPath, ctx.req?.url]) {
+    if (typeof path !== "string" || !path.startsWith("/") || path.startsWith("//")) continue;
+    const first = path.split(/[/?#]/)[1];
+    if (supportedLocales.includes(first)) return first;
+  }
+  return "en";
+}
+
 export function localizedPath(path = "/", locale = "en") {
   const language = localeOf(locale);
   if (typeof path !== "string" || !path.startsWith("/") || path.startsWith("//") || path.includes("\\")) return `/${language}`;
