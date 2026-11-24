@@ -42,3 +42,9 @@ export default function Login() {
     <p className="hs-auth-alternate">{text("newHere")} <LocalLink href={`/page/account/register?returnTo=${encodeURIComponent(returnTo)}`}>{text("createAccount")}</LocalLink></p>
   </section></CommonLayout>;
 }
+
+// Render a fresh document for the requested locale; static auto-optimization
+// otherwise emits one English/LTR HTML shell for every dynamic [lng] route.
+export async function getServerSideProps() {
+  return { props: {} };
+}

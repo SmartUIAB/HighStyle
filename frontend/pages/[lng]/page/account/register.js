@@ -34,3 +34,9 @@ export default function Register() {
   };
   return <CommonLayout title={text("createAccount")}><section className="hs-container hs-page-space hs-auth"><div className="hs-page-heading"><span className="hs-eyebrow">HIGHSTYLE / {text("account")}</span><h1>{text("createTitle")}</h1><p>{text("createBody")}</p></div><div className="hs-card">{error && <p className="hs-notice hs-notice-error" role="alert">{error}</p>}<form method="post" onSubmit={submit} aria-busy={!ready || loading} data-ready={ready} data-testid="register-form"><div className="hs-form-grid">{field("firstname", "firstName", "given-name")}{field("lastname", "lastName", "family-name")}</div>{field("email", "email", "email", "email")}{field("password", "password", "new-password", "password")}<p id="password-hint" className="hs-small">{text("passwordHint")}</p><button type="submit" className="hs-button hs-button-wide" disabled={!ready || loading}>{text(loading ? "creating" : "createAccount")}<Icon name="arrow" size={18} /></button></form></div><p className="hs-auth-alternate">{text("haveAccount")} <LocalLink href={`/page/account/login?returnTo=${encodeURIComponent(returnTo)}`}>{text("signIn")}</LocalLink></p></section></CommonLayout>;
 }
+
+// Render a fresh document for the requested locale; static auto-optimization
+// otherwise emits one English/LTR HTML shell for every dynamic [lng] route.
+export async function getServerSideProps() {
+  return { props: {} };
+}
