@@ -31,7 +31,9 @@ jobs:
       github.repository == 'SmartUIAB/HighStyle' &&
       (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/fix/security-foundation-20261117') &&
       (github.event_name == 'workflow_dispatch' || vars.HIGHSTYLE_HOSTED_ACCEPTANCE_ENABLED == 'true')
-    runs-on: ubuntu-latest
+    # Playwright 1.65.1 browser dependencies require the Ubuntu 24.04 package set.
+    # ubuntu-latest moved to Ubuntu 26.04, where libavif16 is unavailable.
+    runs-on: ubuntu-24.04
     timeout-minutes: 40
     environment: staging
     env:
